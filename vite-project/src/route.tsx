@@ -1,15 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// src/route.tsx
+import { Route, Routes } from 'react-router-dom';  // Import Routes and Route
 import Login from './Login';  
-import Home  from './Home'
+import Home from './Home';
 
 const RouteConfig = () => {
   return (
-    
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Login />} />  {/* Default route */}
-      </Routes>
+    <Routes>  {/* Just use Routes here without another Router */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Login />} />  {/* Default route */}
+    </Routes>
   );
 };
 
