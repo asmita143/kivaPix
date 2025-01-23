@@ -1,8 +1,8 @@
 // src/Login.tsx
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
-import { auth } from "./firebase";  // Firebase auth
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { auth } from "./firebase"; // Firebase auth
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
@@ -10,17 +10,21 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();  // Initialize navigate
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       console.log("Logged in as:", user.email);
 
       // Navigate to the home page after successful login
-      navigate("/home");  // Redirect to home after login
+      navigate("/home"); // Redirect to home after login
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -31,16 +35,16 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-gray-800 text-white">
+    <div className="h-screen flex flex-col justify-center items-center bg-red-800 text-white">
       <h1 className="text-3xl font-bold mb-4">Login to Your Account</h1>
-      <form onSubmit={handleLogin} className="w-80 space-y-4">
+      <form onSubmit={handleLogin} className="w-48 space-y-4">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
-          className="w-full p-3 rounded-md bg-gray-700 text-white"
+          className="w-48 p-3 rounded-md bg-gray-700 text-white"
         />
         <input
           type="password"
@@ -50,7 +54,10 @@ const Login = () => {
           required
           className="w-full p-3 rounded-md bg-gray-700 text-white"
         />
-        <button type="submit" className="w-full py-2 bg-blue-500 text-white rounded-md">
+        <button
+          type="submit"
+          className="w-full py-2 bg-blue-500 text-white rounded-md"
+        >
           Login
         </button>
       </form>
