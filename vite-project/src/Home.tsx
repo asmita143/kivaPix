@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-const products = [
+const events = [
   {
     id: 1,
     name: "Football Competition",
@@ -191,23 +191,23 @@ const Home: React.FC = () => {
             <div className="bg-white">
               <h1 className="p-5 font-bold">All Events</h1>
               <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-                <h2 className="sr-only">Products</h2>
+                <h2 className="sr-only">events</h2>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                  {products.map((product) => (
-                    <a key={product.id} className="group">
+                  {events.map((event) => (
+                    <a key={event.id} className="group">
                       <img
-                        alt={product.name}
-                        src={product.imageSrc}
+                        alt={event.name}
+                        src={event.imageSrc}
                         className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                       />
                       <h3 className="mt-4 text-md text-gray-700 font-bold">
-                        {product.name}
+                        {event.name}
                       </h3>
                       <p className="mt-1 text-sm text-gray-600 font-bold">
-                        Date: {product.date}
+                        Date: {event.date}
                       </p>
                       <p className="mt-1 text-sm text-black-100">
-                        Location: {product.location}
+                        Location: {event.location}
                       </p>
                       {/* Buttons for Accept and Interested */}
                       <div className="mt-4 flex space-x-4">
