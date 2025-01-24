@@ -8,7 +8,7 @@ body {
 
 .app-container {
   display: flex;
-  flex-direction: column; /* Top bar sits above the layout */
+  flex-direction: column;
   height: 100vh;
   overflow: hidden;
 }
@@ -16,33 +16,28 @@ body {
 /* Top Bar */
 .header {
   width: 100%;
-  height: 60px;
+  height: 150px; /* Adjusted height */
   display: flex;
-  justify-content: space-between;
+  justify-content:center; /* This spaces out the left and right content */
   align-items: center;
   padding: 0 1rem;
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  position: relative;
-  z-index: 2;
 }
 
 .header .left-header {
   font-weight: bold;
+  flex:85%;
   font-size: 1.2rem;
+  flex-grow: 1; /* This makes the left header take up remaining space */
 }
 
 .header .right-header {
   display: flex;
-  align-items: center;
+  flex:1;
+  align-items: flex-end;
   gap: 1rem;
-}
-
-.header .search-bar {
-  width: 150px;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  justify-content: flex-end; /* Ensures the right content aligns at the far right */
 }
 
 .header .profile {
@@ -69,12 +64,13 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 400px;
-  background-color: #6366f1;
-  color: white;
+  width: 350px;
+  background-color: white;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 3rem;
+  padding-left: 3rem;
   flex-shrink: 0;
 }
 
@@ -114,19 +110,16 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  background:grey ;
+  background: #f9fafb;
   padding: 2rem;
   overflow: auto;
-  display: flex;
-  
-
 }
+
 .sub-main-content {
   flex: 1;
-  background:  #f9fafb;
+  background: #f9fafb;
   padding: 1rem;
   overflow: auto;
   display: flex;
-  
   border-radius: 8px;
 }

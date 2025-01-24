@@ -16,7 +16,11 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       console.log("Logged in as:", user.email);
       navigate("/home");  
@@ -94,8 +98,7 @@ const Login = () => {
     </div>
   </div>
 </div>
-
-  );
+);
 };
 
 export default Login;
