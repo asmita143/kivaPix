@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SideBarItemList, { sidebarItems } from './Sidebar';
+import { getDownloadURL, getStorage, listAll, ref } from 'firebase/storage';
 
 const PhotoGallery = () => {
-  const images = [
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-    "https://picsum.photos/400/400",
-  ];
+  interface Image  {
+    url: string;
+  };
+
+  const [images, setImages] = useState<Image[]>([]);
+
+  useEffect(() => {
+    const fetchImagesFromStorage = async () => {
+      try {
+        const storage = getStorage(); // Initialize Firebase Storage
+        const imagesRef = ref(storage, "VlUEwROzvUSQuj1gUm6E/"); // Replace "images/" with your folder path in Firebase Storage
+        const imageList = await listAll(imagesRef);
+
+        // Get download URLs for all items in the folder
+        const urls = await Promise.all(
+          imageList.items.map((itemRef) => getDownloadURL(itemRef))
+        );
+        const imageObjects = urls.map((url) => ({ url }));
+
+        setImages(imageObjects); // Update state with image URLs
+      } catch (error) {
+        console.error("Error fetching images from Firebase Storage:", error);
+      }
+    };
+
+    fetchImagesFromStorage();
+  }, []);
 
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex mx-w-full h-screen bg-gray-100">
       {/* Sidebar */}
       <aside className="sidebar">
           <div className="w-64 bg-white shadow-md pt-6 pb-6 px-4">
@@ -57,12 +71,12 @@ const PhotoGallery = () => {
               </div>
             </div>
             {/* Scrollable Grid */}
-            <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                {images.map((src, index) => (
+            <div className="mx-auto w-full px-4 py-8 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
+                {images.map((url, index) => (
                   <img
                     key={index}
-                    src={src}
+                    src={url.url}
                     className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                   />
                 ))}
