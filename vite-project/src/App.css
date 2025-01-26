@@ -123,3 +123,13 @@ body {
   display: flex;
   border-radius: 8px;
 }
+.event-details-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 20px;
+}
+
+.group:hover {
+  opacity: 0.75;
+}

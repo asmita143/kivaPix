@@ -1,154 +1,20 @@
-import { useState } from "react";
 import "./App.css";
-import useEvent from "./assets/components/hooks/useEvent";
-
-const events = [
-  {
-    id: 1,
-    name: "Football Competition",
-    location: "Leppavaara ´Football Ground",
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    date: "11.02.2024",
-  },
-  {
-    id: 2,
-    name: "Wedding of X and Y",
-    location: "Huopalahti Hall",
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    date: "12.05.2024",
-  },
-  {
-    id: 3,
-    name: "Birthday of a Kid",
-    location: "Kilonkallio 10 E 39, Espoo",
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    date: "20.10.2025",
-  },
-  {
-    id: 4,
-    name: " Naming Cremony",
-    location: "Kilonkuja 10 E 20, Espoo",
-    imageSrc:
-      "https://tailwindui.com/plus/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    date: "10.11.2025.",
-  },
-  {
-    id: 5,
-    name: "Earthen Bottle",
-    location: "#",
-    imageSrc: "https://picsum.photos/200/300",
-    date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 6,
-    name: "Earthen Bottle",
-    location: "#",
-    imageSrc: "https://picsum.photos/200/300",
-    date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 7,
-    name: "Earthen Bottle",
-    location: "#",
-    imageSrc: "https://picsum.photos/200/300",
-    date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 8,
-    name: "Earthen Bottle",
-    location: "#",
-    imageSrc: "https://picsum.photos/200/300",
-    date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 9,
-    name: "Earthen Bottle",
-    location: "#",
-    imageSrc: "https://picsum.photos/200/300",
-    date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-];
-
-const sidebarItems = [
-  { label: "Home", isDropdown: false },
-  {
-    label: "Your Events",
-    isDropdown: true,
-    dropdownItems: ["Accepted", "Interested", "Past Events"],
-  },
-  { label: "Notifications", isDropdown: false },
-];
-
-interface SideBarItemListProps {
-  label: string;
-  dropdownItems?: string[];
-}
-
-const SideBarItemList: React.FC<SideBarItemListProps> = ({
-  label,
-  dropdownItems,
-}) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  return (
-    <>
-      <li
-        className={`px-4 py-2 text-black hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200 ${
-          dropdownItems ? "relative" : ""
-        }`}
-        onClick={dropdownItems ? toggleDropdown : undefined}
-      >
-        {label}
-      </li>
-      {isDropdownOpen && dropdownItems && (
-        <ul className="ml-6 mt-1 space-y-1">
-          {dropdownItems.map((item, index) => (
-            <li
-              key={index}
-              className="px-4 py-2 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-};
-const StarRating = () => {
-  const [isSelected, setIsSelected] = useState(false);
-
-  const handleClick = () => {
-    setIsSelected(!isSelected); // Toggle the star color
-  };
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={`w-8 h-8 cursor-pointer ${
-        isSelected ? "text-yellow-500" : "text-gray-300"
-      }`}
-      fill="currentColor"
-      viewBox="0 0 20 20"
-      onClick={handleClick}
-    >
-      <path
-        fillRule="evenodd"
-        d="M10 15l-3.5 2 1-4.5L3 8.5l4.5-.5L10 3l2.5 4.5 4.5.5-3.5 4.5 1 4.5L10 15z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-};
+import { useNavigate } from "react-router-dom";
+import events from "./assets/components/hooks/useEvents";
+import StarRating from "./assets/components/utils/starRating";
+import {
+  SideBarItemList,
+  sidebarItems,
+} from "./assets/components/section/SideBar";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleEventClick = (id: number) => {
+    // Navigate to SingleEvent page and pass the event ID as a route parameter
+    navigate(`/event/${id}`);
+  };
+
   return (
     <div className="app-container">
       {/* Top Bar */}
@@ -197,7 +63,11 @@ const Home: React.FC = () => {
                 <h2 className="sr-only">events</h2>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                   {events.map((event) => (
-                    <a key={event.id} className="group">
+                    <div
+                      key={event.id}
+                      className="group cursor-pointer"
+                      onClick={() => handleEventClick(event.id)}
+                    >
                       <img
                         alt={event.name}
                         src={event.imageSrc}
@@ -212,14 +82,13 @@ const Home: React.FC = () => {
                       <p className="mt-1 text-sm text-black-100">
                         Location: {event.location}
                       </p>
-                      {/* Buttons for Accept and Interested */}
                       <div className="mt-4 flex space-x-4">
                         <button className="px-10 py-2 bg-gray-200 text-black rounded-lg hover:bg-green-700 w-4/5">
                           Accept
                         </button>
                         <StarRating />
                       </div>
-                    </a>
+                    </div>
                   ))}
                 </div>
               </div>

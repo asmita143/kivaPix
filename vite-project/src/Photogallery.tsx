@@ -1,5 +1,5 @@
 
-import SideBarItemList, { sidebarItems } from './Sidebar';
+import { sidebarItems, SideBarItemList } from '../src/assets/components/section/SideBar';
 import useImage from './assets/components/hooks/useImage';
 
 const PhotoGallery = () => {
