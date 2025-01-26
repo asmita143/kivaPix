@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./App.css";
+import useEvent from "./assets/components/hooks/useEvent";
+
 const events = [
   {
     id: 1,
@@ -69,6 +71,7 @@ const events = [
     date: "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
   },
 ];
+
 const sidebarItems = [
   { label: "Home", isDropdown: false },
   {

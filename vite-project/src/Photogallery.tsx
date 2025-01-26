@@ -1,36 +1,10 @@
-import React, { useEffect, useState } from 'react';
+
 import SideBarItemList, { sidebarItems } from './Sidebar';
-import { getDownloadURL, getStorage, listAll, ref } from 'firebase/storage';
+import useImage from './assets/components/hooks/useImage';
 
 const PhotoGallery = () => {
-  interface Image  {
-    url: string;
-  };
-
-  const [images, setImages] = useState<Image[]>([]);
-
-  useEffect(() => {
-    const fetchImagesFromStorage = async () => {
-      try {
-        const storage = getStorage(); // Initialize Firebase Storage
-        const imagesRef = ref(storage, "VlUEwROzvUSQuj1gUm6E/"); // Replace "images/" with your folder path in Firebase Storage
-        const imageList = await listAll(imagesRef);
-
-        // Get download URLs for all items in the folder
-        const urls = await Promise.all(
-          imageList.items.map((itemRef) => getDownloadURL(itemRef))
-        );
-        const imageObjects = urls.map((url) => ({ url }));
-
-        setImages(imageObjects); // Update state with image URLs
-      } catch (error) {
-        console.error("Error fetching images from Firebase Storage:", error);
-      }
-    };
-
-    fetchImagesFromStorage();
-  }, []);
-
+  const { images } = useImage()
+  console.log("Fetched images : ", images)
 
   return (
     <div className="flex mx-w-full h-screen bg-gray-100">
@@ -76,7 +50,7 @@ const PhotoGallery = () => {
                 {images.map((url, index) => (
                   <img
                     key={index}
-                    src={url.url}
+                    src={url}
                     className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                   />
                 ))}
