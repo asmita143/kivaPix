@@ -186,7 +186,7 @@ const Home: React.FC = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="main-content ">
+        <main className="main-content">
           <div className="sub-main-content overflow-y-auto max-h-screen">
             <div className="bg-white">
               <h1 className="p-5 font-bold">All Events</h1>
