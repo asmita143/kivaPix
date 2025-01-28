@@ -9,7 +9,7 @@ const useImage = (eventId: string) => {
       useEffect(() => {
         const fetchImagesFromStorage = async () => {
           try {
-            const imagesRef = ref(storage, `${eventId}/`); 
+            const imagesRef = ref(storage, `VlUEwROzvUSQuj1gUm6E`); 
             const imageList = await listAll(imagesRef);
     
             // Get download URLs for all items in the folder
