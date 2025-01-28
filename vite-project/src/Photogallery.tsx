@@ -1,10 +1,11 @@
 
+import { useParams } from 'react-router-dom';
 import { sidebarItems, SideBarItemList } from '../src/assets/components/section/SideBar';
 import useImage from './assets/components/hooks/useImage';
 
 const PhotoGallery = () => {
-  const { images } = useImage()
-  console.log("Fetched images : ", images)
+  const { eventId } = useParams<{ eventId: string }>(); 
+  const { images } = useImage(eventId || ""); 
 
   return (
     <div className="flex mx-w-full h-screen bg-gray-100">

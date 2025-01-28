@@ -8,6 +8,7 @@ interface Event {
   organizer: string;
   contact: string;
 }
+
 const events: Event[] = [
   {
     id: 1,

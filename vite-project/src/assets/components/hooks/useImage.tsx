@@ -2,14 +2,14 @@ import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import { storage } from '../../../firebase';
 import { useEffect, useState } from 'react';
 
-const useImage = () => {
+const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
 
       useEffect(() => {
         const fetchImagesFromStorage = async () => {
           try {
-            const imagesRef = ref(storage, `VlUEwROzvUSQuj1gUm6E/`); 
+            const imagesRef = ref(storage, `${eventId}/`); 
             const imageList = await listAll(imagesRef);
     
             // Get download URLs for all items in the folder
