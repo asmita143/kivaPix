@@ -17,7 +17,6 @@ const RouteConfig = () => {
       <Route path="/PhotoGallery" element={<PhotoGallery />} />
       <Route path="/" element={<Login />} />  {/* Default route */}
       <Route path="/event/:id" element={<SingleEvent />} />
-      <Route path="/" element={<Login />} /> {/* Default route */}
     </Routes>
   );
 };
