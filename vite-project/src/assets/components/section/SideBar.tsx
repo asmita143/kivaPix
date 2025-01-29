@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const sidebarItems = [
@@ -73,7 +74,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
         <div className="p-4 mt-6">
           <button
             className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            onClick={() => navigate("/Photogallery")}
+            onClick={() => navigate(`/Photogallery/${id}`)}
           >
             View Gallery
           </button>

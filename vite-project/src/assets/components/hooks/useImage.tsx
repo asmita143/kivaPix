@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react';
 const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
+    const [loading, setLoading] = useState(true);
 
       useEffect(() => {
         const fetchImagesFromStorage = async () => {
+          setLoading(true);
           try {
-            const imagesRef = ref(storage, `VlUEwROzvUSQuj1gUm6E`); 
+            const imagesRef = ref(storage, `${eventId}`); 
             const imageList = await listAll(imagesRef);
     
             // Get download URLs for all items in the folder
@@ -21,12 +23,14 @@ const useImage = (eventId: string) => {
             
           } catch (error) {
             console.error("Error fetching images from Firebase Storage:", error);
+          } finally {
+            setLoading(false); 
           }
         };
     
         fetchImagesFromStorage();
       }, []);
-      return { images }
+      return { images, loading }
 }
 
 export default useImage;
