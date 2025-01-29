@@ -15,9 +15,9 @@ const RouteConfig = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/Register" element={<Register />} />
       <Route path="/PhotoGallery" element={<PhotoGallery />} />
-      <Route path="/" element={<Login />} />  {/* Default route */}
-      <Route path="/event/:id" element={<SingleEvent />} />
       <Route path="/" element={<Login />} /> {/* Default route */}
+      <Route path="/event/:id" element={<SingleEvent />} />
+      <Route path="/" element={<Home />} /> {/* Default route */}
     </Routes>
   );
 };
