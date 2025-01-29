@@ -1,14 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
+  const navigate = useNavigate();
+
   const sidebarItems = [
-    { label: "Home", isDropdown: false },
+    { label: "Home", isDropdown: false, onClick: () => navigate("") },
     {
       label: "Your Events",
       isDropdown: true,
       dropdownItems: ["Accepted", "Interested", "Past Events"],
     },
     { label: "Notifications", isDropdown: false },
+    { label: "Settings", isDropdown: false },
+    { label: "Profile", isDropdown: false },
   ];
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
@@ -62,6 +67,18 @@ const Sidebar: React.FC = () => {
           ))}
         </ul>
       </div>
+
+      {/* ✅ Button Appears Only When `showButton` is True */}
+      {showButton && (
+        <div className="p-4 mt-6">
+          <button
+            className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+            onClick={() => navigate("/Photogallery")}
+          >
+            View Gallery
+          </button>
+        </div>
+      )}
     </div>
   );
 };
