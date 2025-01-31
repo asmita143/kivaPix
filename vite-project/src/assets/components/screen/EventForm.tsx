@@ -2,22 +2,18 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SideBar from "../section/SideBar";
 import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
-const libraries = ["places"];
-const GOOGLE_MAPS_API_KEY = "AIzaSyD9HHvERObvfEK9kquxQSaMpvj2W465DTY";
+import AutoCompleteInput from "../utils/AutoComplete";
+
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventForm = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [location, setLocation] = useState("");
+  const autocompleteRef = useRef(null);
 
-  const handlePlaceSelect = (autocomplete) => {
-    const place = autocomplete.getPlace();
-    if (place.formatted_address) {
-      setLocation(place.formatted_address);
-    }
-  };
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
       {/* Header */}
@@ -46,76 +42,76 @@ const EventForm = () => {
           }`}
         >
           <div className="flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)]">
-            <form className="flexflex-col space-y-6">
+            <form className="flex flex-col space-y-6">
               <div className="space-y-12">
-                <div className=" pb-2">
+                <div className="pb-2">
                   <h2 className="text-base/7 font-semibold text-gray-900">
                     Create a new event
                   </h2>
 
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    {/* Event Name */}
                     <div className="sm:col-span-4">
                       <label
                         htmlFor="eventName"
-                        className="block text-sm/6 font-medium text-gray-900"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         Name of Event
                       </label>
                       <div className="mt-2">
-                        <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                          <input
-                            id="eventName"
-                            name="eventName"
-                            type="text"
-                            placeholder="Event name"
-                            className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                          />
-                        </div>
+                        <input
+                          id="eventName"
+                          name="eventName"
+                          type="text"
+                          placeholder="Event name"
+                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
+                        />
                       </div>
                     </div>
+
+                    {/* Event Date */}
                     <div className="sm:col-span-4">
                       <label
-                        htmlFor="eventName"
-                        className="block text-sm/6 font-medium text-gray-900"
+                        htmlFor="eventDate"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         Date of Event
                       </label>
                       <div className="mt-2">
-                        <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                          <input
-                            id="eventDate"
-                            name="eventDate"
-                            type="date"
-                            placeholder="Event date"
-                            className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                          />
-                        </div>
+                        <input
+                          id="eventDate"
+                          name="eventDate"
+                          type="date"
+                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
+                        />
                       </div>
                     </div>
+
+                    {/* Event Location (Google Maps Autocomplete) */}
                     <div className="sm:col-span-4">
                       <label
                         htmlFor="eventLocation"
-                        className="block text-sm/6 font-medium text-gray-900"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         Location
                       </label>
                       <div className="mt-2">
-                        <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                          <input
-                            id="eventLocation"
-                            name="eventLocation"
-                            type="url"
-                            placeholder="Event Location"
-                            className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                          />
-                        </div>
+                        <LoadScript
+                          googleMapsApiKey={apiKey}
+                          libraries={["places"]}
+                        >
+                          <div className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600">
+                            <AutoCompleteInput />
+                          </div>
+                        </LoadScript>
                       </div>
                     </div>
 
+                    {/* About the Event */}
                     <div className="col-span-full">
                       <label
                         htmlFor="about"
-                        className="block text-sm/6 font-medium text-gray-900"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         About
                       </label>
@@ -124,19 +120,17 @@ const EventForm = () => {
                           id="about"
                           name="about"
                           rows={3}
-                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                          defaultValue={""}
+                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
+                          placeholder="Write a few sentences about the event."
                         />
                       </div>
-                      <p className="mt-3 text-sm/6 text-gray-600">
-                        Write a few sentences about Event.
-                      </p>
                     </div>
 
+                    {/* Cover Photo Upload */}
                     <div className="col-span-full">
                       <label
                         htmlFor="cover-photo"
-                        className="block text-sm/6 font-medium text-gray-900"
+                        className="block text-sm font-medium text-gray-900"
                       >
                         Cover photo
                       </label>
@@ -144,12 +138,12 @@ const EventForm = () => {
                         <div className="text-center">
                           <PhotoIcon
                             aria-hidden="true"
-                            className="mx-auto size-12 text-gray-300"
+                            className="mx-auto h-12 text-gray-300"
                           />
-                          <div className="mt-4 flex text-sm/6 text-gray-600">
+                          <div className="mt-4 flex text-sm text-gray-600">
                             <label
                               htmlFor="file-upload"
-                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:outline-hidden hover:text-indigo-500"
+                              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500"
                             >
                               <span>Upload a file</span>
                               <input
@@ -161,7 +155,7 @@ const EventForm = () => {
                             </label>
                             <p className="pl-1">or drag and drop</p>
                           </div>
-                          <p className="text-xs/5 text-gray-600">
+                          <p className="text-xs text-gray-600">
                             PNG, JPG, GIF up to 10MB
                           </p>
                         </div>
@@ -169,12 +163,10 @@ const EventForm = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="border-b border-gray-900/10 pb-12">
                   <h2 className="text-base/7 font-semibold text-gray-900">
                     Hosted by
                   </h2>
-
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div className="sm:col-span-3">
                       <label
@@ -193,7 +185,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-3">
                       <label
                         htmlFor="last-name"
@@ -211,7 +202,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-4">
                       <label
                         htmlFor="email"
@@ -246,7 +236,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-3">
                       <label
                         htmlFor="country"
@@ -262,9 +251,6 @@ const EventForm = () => {
                           className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         >
                           <option>Finland</option>
-                          <option>United States</option>
-                          <option>Canada</option>
-                          <option>Mexico</option>
                         </select>
                         <ChevronDownIcon
                           aria-hidden="true"
@@ -272,7 +258,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="col-span-full">
                       <label
                         htmlFor="street-address"
@@ -290,7 +275,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-2 sm:col-start-1">
                       <label
                         htmlFor="city"
@@ -308,7 +292,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-2">
                       <label
                         htmlFor="region"
@@ -326,7 +309,6 @@ const EventForm = () => {
                         />
                       </div>
                     </div>
-
                     <div className="sm:col-span-2">
                       <label
                         htmlFor="postal-code"
@@ -346,16 +328,18 @@ const EventForm = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Submit & Cancel Buttons */}
                 <div className="mt-6 flex items-center justify-end gap-x-6">
                   <button
                     type="button"
-                    className="text-sm/6 font-semibold text-gray-900"
+                    className="text-sm font-semibold text-gray-900"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-indigo-600"
                   >
                     Save
                   </button>
@@ -368,4 +352,5 @@ const EventForm = () => {
     </div>
   );
 };
+
 export default EventForm;
