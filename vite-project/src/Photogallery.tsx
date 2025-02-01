@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { Upload as UploadIcon } from "@mui/icons-material";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./firebase";
@@ -8,6 +8,8 @@ import useImage from "./assets/components/hooks/useImage";
 import SideBar from "./assets/components/section/SideBar";
 import HamburgerMenu from "./assets/components/utils/HamBurgerMenu";
 import HeaderSection from "./assets/components/section/HeaderSection";
+import { Modal } from "@mui/material";
+import { PhotoEditorSDK } from "./PhotoEditor";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -15,6 +17,7 @@ const PhotoGallery = () => {
   const { images, loading } = useImage(id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [editingImage, setEditingImage] = useState<string | null>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -43,6 +46,20 @@ const PhotoGallery = () => {
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
     setUploading(false);
   };
+
+    // Function to open the editor modal for a specific image
+  const handleEdit = (url: string) => {
+    setEditingImage(url);
+  };
+  
+  // Function to close the editor modal
+  const closeEditor = () => {
+    console.log("closeEditor called");
+    setEditingImage(null);
+    window.location.reload();
+  };
+
+
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
@@ -116,35 +133,52 @@ const PhotoGallery = () => {
             ) : (
               // Show this section when images are available
               <div className=" grid grid-cols-1 gap-6 sm:grid-cols-2 bg-white p-6 rounded-lg md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full min-h-[300px]">
+                
                 {[...images, ...uploadedImages].map((url, index) => (
+                  <div key={index} className="relative">
                   <img
                     key={index}
                     src={url}
                     alt={`Image ${index}`}
                     className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75"
                   />
-                ))}
-                {[...images, ...uploadedImages].map((url, index) => (
-                  <img
-                    key={index}
-                    src={url}
-                    alt={`Image ${index}`}
-                    className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75"
-                  />
-                ))}
-                {[...images, ...uploadedImages].map((url, index) => (
-                  <img
-                    key={index}
-                    src={url}
-                    alt={`Image ${index}`}
-                    className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75"
-                  />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className="absolute top-2"
+                    onClick={() => handleEdit(url)}
+                  >
+                    Edit
+                  </Button>
+                </div>
                 ))}
               </div>
             )}
           </div>
         </main>
       </div>
+        <Modal
+          open={Boolean(editingImage)}
+          onClose={closeEditor}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            style={{
+              width: "100vw",
+              height: "100vh",
+              backgroundColor: "white",
+              position: "relative",
+            }}
+          >
+            {editingImage && (
+              <PhotoEditorSDK image={editingImage} onClose={closeEditor} />
+            )}
+          </Box>
+        </Modal>
     </div>
   );
 };
