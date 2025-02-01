@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, CircularProgress } from "@mui/material";
-import { Upload as UploadIcon } from "@mui/icons-material";
+import { Delete, Edit, EditLocation, EditNotifications, Upload as UploadIcon } from "@mui/icons-material";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./firebase";
 import useImage from "./assets/components/hooks/useImage";
@@ -58,8 +58,6 @@ const PhotoGallery = () => {
     setEditingImage(null);
     window.location.reload();
   };
-
-
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
@@ -135,21 +133,30 @@ const PhotoGallery = () => {
               <div className=" grid grid-cols-1 gap-6 sm:grid-cols-2 bg-white p-6 rounded-lg md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full min-h-[300px]">
                 
                 {[...images, ...uploadedImages].map((url, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative group">
                   <img
                     key={index}
                     src={url}
                     alt={`Image ${index}`}
-                    className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75"
+                    className="aspect-square w-full rounded-lg object-cover group-hover:opacity-95"
                   />
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className="absolute top-2"
-                    onClick={() => handleEdit(url)}
-                  >
-                    Edit
-                  </Button>
+                  <input
+                    type="checkbox"
+                    className="absolute top-1 left-1 w-5 h-5 bg-white border border-gray-400 rounded-lg cursor-pointer"
+                    onChange={() => console.log('Checkbox clicked')}
+                  />
+                  <div className="absolute bottom-0 w-full h-10 bg-black/40 flex items-center justify-between rounded-b-lg">
+                    <Edit
+                      onClick={() => handleEdit(url)}
+                      className="text-white p-1 bg-gray-800/60 rounded-full hover:bg-gray-600 cursor-pointer"
+                      style={{ width: "32px", height: "32px" }}
+                    />
+                    <Delete
+                      onClick={() => console.log("Delete clicked")}
+                      className="text-white p-1 bg-gray-800/60 rounded-full hover:bg-red-900 cursor-pointer"
+                      style={{ width: "32px", height: "32px" }}
+                    />
+                  </div>
                 </div>
                 ))}
               </div>
