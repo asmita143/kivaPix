@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, CircularProgress } from "@mui/material";
-import { Delete, Edit, EditLocation, EditNotifications, Upload as UploadIcon } from "@mui/icons-material";
+import { CheckCircle, Delete, Edit, EditLocation, EditNotifications, Upload as UploadIcon } from "@mui/icons-material";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./firebase";
 import useImage from "./assets/components/hooks/useImage";
@@ -17,7 +17,9 @@ const PhotoGallery = () => {
   const { images, loading } = useImage(id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [editingImage, setEditingImage] = useState<string | null>(null);
+  const [editingImage, setEditingImage] = useState<string | null>();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(true);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -27,7 +29,7 @@ const PhotoGallery = () => {
     const uploadedUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      const storageRef = ref(storage, `uploads/${file.name}`);
+      const storageRef = ref(storage, `${id}/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       try {
@@ -45,6 +47,15 @@ const PhotoGallery = () => {
 
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
     setUploading(false);
+    setUploadSuccess(true); 
+  };
+
+  const handleImageClick = (url: string) => {
+    setSelectedImage(url);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
   };
 
     // Function to open the editor modal for a specific image
@@ -54,9 +65,7 @@ const PhotoGallery = () => {
   
   // Function to close the editor modal
   const closeEditor = () => {
-    console.log("closeEditor called");
-    setEditingImage(null);
-    window.location.reload();
+      setEditingImage(null);
   };
 
   return (
@@ -88,14 +97,14 @@ const PhotoGallery = () => {
           }`}
         >
           {/* Top Bar */}
-          <div className="bg-green-500 flex p-4 w-full justify-between shadow-lg rounded-lg sticky top-0 z-10 shadow-lg">
-            <h1 className="font-bold text-white">Photo Gallery</h1>
+          <div className="bg-green-500 flex p-1 sm:p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg">
+            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-white">Photo Gallery</h1>
 
             {/* Upload Button */}
             <label htmlFor="file-upload">
               <Button
-                variant="contained"
-                color="primary"
+                variant="outlined"
+                color="inherit"
                 startIcon={<UploadIcon />}
                 component="span"
                 disabled={uploading}
@@ -130,7 +139,7 @@ const PhotoGallery = () => {
               </div>
             ) : (
               // Show this section when images are available
-              <div className=" grid grid-cols-1 gap-6 sm:grid-cols-2 bg-white p-6 rounded-lg md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full min-h-[300px]">
+              <div className=" grid grid-cols-3 gap-3 sm:grid-cols-4 bg-white p-4 rounded-lg md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 w-full ">
                 
                 {[...images, ...uploadedImages].map((url, index) => (
                   <div key={index} className="relative group">
@@ -139,24 +148,13 @@ const PhotoGallery = () => {
                     src={url}
                     alt={`Image ${index}`}
                     className="aspect-square w-full rounded-lg object-cover group-hover:opacity-95"
+                    onClick={() => handleImageClick(url)}
                   />
                   <input
                     type="checkbox"
                     className="absolute top-1 left-1 w-5 h-5 bg-white border border-gray-400 rounded-lg cursor-pointer"
                     onChange={() => console.log('Checkbox clicked')}
                   />
-                  <div className="absolute bottom-0 w-full h-10 bg-black/40 flex items-center justify-between rounded-b-lg">
-                    <Edit
-                      onClick={() => handleEdit(url)}
-                      className="text-white p-1 bg-gray-800/60 rounded-full hover:bg-gray-600 cursor-pointer"
-                      style={{ width: "32px", height: "32px" }}
-                    />
-                    <Delete
-                      onClick={() => console.log("Delete clicked")}
-                      className="text-white p-1 bg-gray-800/60 rounded-full hover:bg-red-900 cursor-pointer"
-                      style={{ width: "32px", height: "32px" }}
-                    />
-                  </div>
                 </div>
                 ))}
               </div>
@@ -164,6 +162,47 @@ const PhotoGallery = () => {
           </div>
         </main>
       </div>
+        <Modal
+          open={Boolean(selectedImage)}
+          onClose={closeModal}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+          <Box
+            sx={{
+              width: "80vw",
+              maxWidth: "600px",
+              backgroundColor: "white",
+              borderRadius: 2,
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            {selectedImage && (
+              <div>
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="w-full max-h-[70vh] object-contain pb-2"
+                />
+                  <div className="bottom-0 w-full h-10 bg-white flex items-center justify-between rounded-b-lg">
+                    <Edit
+                      onClick={() => handleEdit(selectedImage)}
+                      className="text-white p-2 bg-gray-800/60 rounded-full bg-green-500 cursor-pointer"
+                      style={{ width: "40px", height: "40px" }}
+                    />
+                    <Delete
+                      onClick={() => console.log("Delete clicked")}
+                      className="text-white p-2 bg-gray-800/60 rounded-full bg-red-500 cursor-pointer"
+                      style={{ width: "40px", height: "40px" }}
+                    />
+                  </div>
+              </div>
+            )}
+          </Box>
+        </Modal>
         <Modal
           open={Boolean(editingImage)}
           onClose={closeEditor}
@@ -174,11 +213,10 @@ const PhotoGallery = () => {
           }}
         >
           <Box
-            style={{
-              width: "100vw",
-              height: "100vh",
+            sx={{
+              width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
+              height: { xs: "80vh", sm: "85vh", md: "90vh" },
               backgroundColor: "white",
-              position: "relative",
             }}
           >
             {editingImage && (
@@ -186,6 +224,24 @@ const PhotoGallery = () => {
             )}
           </Box>
         </Modal>
+
+      {uploading && (
+        <Modal
+          open={uploading}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+          <div className="flex flex-col justify-center items-center w-64 h-64 lg:w-1/2 lg:h-1/2 md:w-96 md:h-96 bg-gray-200 rounded-lg">
+            <div>
+              <CircularProgress color="primary"/>
+            </div>
+            <div>
+              <p className="p-5 text-gray-700 text-xl font-medium">
+                Uploading Image...
+              </p>
+            </div>
+          </div>
+        </Modal>
+        )}
     </div>
   );
 };

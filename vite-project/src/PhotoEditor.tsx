@@ -15,13 +15,23 @@ export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
     console.log("Loading image:", this.props.image);
     const editor = await PhotoEditorSDKUI.init({
       container: "#editor",
-      image: this.props.image, // Image url or Image path relative to assets folder
-      // Please replace this with your license: https://img.ly/dashboard
+      image: this.props.image, 
       license: '',
+      layout: 'basic',
+      enableZoom: true,
+      scaleImageToFit: true,
     });
     console.log("PhotoEditorSDK for Web is ready!");
+
     editor.on(UIEvent.EXPORT, (imageSrc) => {
       console.log("Exported ", imageSrc);
+    });
+
+    editor.on(UIEvent.CLOSE, () => {
+      if (this.props.onClose) {
+        this.props.onClose(); 
+      }
+      console.log("Editor Closed ");
     });
   }
 
@@ -29,7 +39,6 @@ export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
     return (
       <div
         id="editor"
-        style={{width: "100vw", height: "100vh" }}
       />
     );
   }

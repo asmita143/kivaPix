@@ -1,4 +1,4 @@
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
+import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../../firebase';
 import { useEffect, useState } from 'react';
 
@@ -6,6 +6,7 @@ const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
 
       useEffect(() => {
         const fetchImagesFromStorage = async () => {
@@ -30,7 +31,37 @@ const useImage = (eventId: string) => {
     
         fetchImagesFromStorage();
       }, []);
-      return { images, loading }
+
+      const uploadImage = async (file: File) => {
+        setUploading(true);
+        try {
+          const fileRef = ref(storage, `${eventId}/${file.name}`);
+          const uploadTask = uploadBytesResumable(fileRef, file);
+    
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              // Optionally track upload progress here
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log(`Upload is ${progress}% done`);
+            },
+            (error) => {
+              console.error("Error uploading image:", error);
+            },
+            async () => {
+              // Get the download URL after the upload is complete
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              setImages((prevImages) => [...prevImages, downloadURL]); // Add the new URL to the state
+            }
+          );
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        } finally {
+          setUploading(false);
+        }
+      };
+      
+      return { images, loading, uploading, uploadImage };
 }
 
 export default useImage;
