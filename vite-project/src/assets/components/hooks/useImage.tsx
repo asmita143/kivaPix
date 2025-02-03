@@ -1,6 +1,6 @@
 import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../../firebase';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const useImage = (eventId: string) => {
 
@@ -32,34 +32,26 @@ const useImage = (eventId: string) => {
         fetchImagesFromStorage();
       }, []);
 
-      const uploadImage = async (file: File) => {
-        setUploading(true);
-        try {
-          const fileRef = ref(storage, `${eventId}/${file.name}`);
-          const uploadTask = uploadBytesResumable(fileRef, file);
+      const uploadImage = useCallback(
+        async (file: File) => {
+          setUploading(true);
+          try {
+            const fileRef = ref(storage, `${eventId}/${file.name}`);
+            const uploadTask = uploadBytesResumable(fileRef, file);
     
-          uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-              // Optionally track upload progress here
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-              console.error("Error uploading image:", error);
-            },
-            async () => {
-              // Get the download URL after the upload is complete
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              setImages((prevImages) => [...prevImages, downloadURL]); // Add the new URL to the state
-            }
-          );
-        } catch (error) {
-          console.error("Error uploading image:", error);
-        } finally {
-          setUploading(false);
-        }
-      };
+            // You can remove the snapshot progress tracking
+            await uploadTask;  // Wait for the upload to complete
+    
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            setImages((prevImages) => [...prevImages, downloadURL]); // Add the new URL to the state
+          } catch (error) {
+            console.error("Error uploading image:", error);
+          } finally {
+            setUploading(false);
+          }
+        },
+        [eventId]
+      );
       
       return { images, loading, uploading, uploadImage };
 }

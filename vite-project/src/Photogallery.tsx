@@ -1,53 +1,40 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, CircularProgress } from "@mui/material";
-import { CheckCircle, Delete, Edit, EditLocation, EditNotifications, Upload as UploadIcon } from "@mui/icons-material";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "./firebase";
+import { Delete, Edit, Print, Upload as UploadIcon } from "@mui/icons-material";
 import useImage from "./assets/components/hooks/useImage";
 import SideBar from "./assets/components/section/SideBar";
 import HamburgerMenu from "./assets/components/utils/HamBurgerMenu";
 import HeaderSection from "./assets/components/section/HeaderSection";
 import { Modal } from "@mui/material";
 import { PhotoEditorSDK } from "./PhotoEditor";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { images, loading } = useImage(id || "");
+  const { images, loading, uploadImage, uploading } = useImage(id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [uploading, setUploading] = useState(false);
+  //const [uploading, setUploading] = useState(false);
   const [editingImage, setEditingImage] = useState<string | null>();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [uploadSuccess, setUploadSuccess] = useState<boolean>(true);
+  const [saving, setSaving] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    setUploading(true);
+    //setUploading(true);
     const uploadedUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      const storageRef = ref(storage, `${id}/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      try {
-        await new Promise<void>((resolve, reject) => {
-          uploadTask.on("state_changed", null, reject, async () => {
-            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            uploadedUrls.push(downloadUrl);
-            resolve();
-          });
-        });
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
+      await uploadImage(file);
     }
 
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
-    setUploading(false);
-    setUploadSuccess(true); 
+    //setUploading(false);
   };
 
   const handleImageClick = (url: string) => {
@@ -58,14 +45,77 @@ const PhotoGallery = () => {
     setSelectedImage(null);
   };
 
-    // Function to open the editor modal for a specific image
+  // Function to open the editor modal for a specific image
   const handleEdit = (url: string) => {
     setEditingImage(url);
+    console.log(editingImage, url)
   };
   
   // Function to close the editor modal
   const closeEditor = () => {
       setEditingImage(null);
+  };
+
+  const handleCheckboxClick = (url: string) => {
+    setSelectedImages((prevSelectedImages) => {
+      // If the image is already selected, remove it
+      if (prevSelectedImages.includes(url)) {
+        return prevSelectedImages.filter((imageUrl) => imageUrl !== url);
+      }
+      // If the image is not selected, add it
+      return [...prevSelectedImages, url];
+    });
+  };
+
+  const handleExportedImage = async (editedImage: any) => {
+    setSaving(true)
+    console.log("Edited Image Data:", editedImage); // Check the object structure
+    console.log("Type of Edited Image:", typeof editedImage);
+  
+    if (!editingImage) return;
+    //setUploading(true);
+  
+    try {
+      // Extract Base64 string (adjust based on object structure)
+      const base64Data = editedImage?.imageData || editedImage?.src;
+      if (!base64Data) {
+        console.error("Error: Base64 data is not found in the exported image!");
+        return;
+      }
+  
+      // Check if the string contains the "data:image/png;base64," prefix and remove it
+      const base64Cleaned = base64Data.startsWith('data:image/png;base64,') 
+                            ? base64Data.split(',')[1] 
+                            : base64Data;
+  
+      // Ensure the Base64 string is valid
+      if (!/^[A-Za-z0-9+/=]+$/.test(base64Cleaned)) {
+        console.error("Error: The Base64 string is not valid.");
+        return;
+      }
+  
+      // Extract file name from the original image URL
+      const fileName = editingImage.split('/').pop() || `image_${Date.now()}.png`; // Keep the same name
+  
+      const byteCharacters = atob(base64Cleaned);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/png" });
+
+      const file = new File([blob], fileName, { type: "image/png" });
+
+      await uploadImage(file)
+  
+    } catch (error) {
+      console.error("Error uploading edited image:", error);
+    } finally {
+      //setUploading(false);
+      setSaving(false)
+      setEditingImage(null);
+    }
   };
 
   return (
@@ -97,14 +147,35 @@ const PhotoGallery = () => {
           }`}
         >
           {/* Top Bar */}
-          <div className="bg-green-500 flex p-1 sm:p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-white">Photo Gallery</h1>
+          {selectedImages.length > 0 ? (
+            <div className="flex items-center gap-4 mt-3 bg-blue-600 p-1 sm:p-2 md:p-3 rounded-lg">
+              <ClearIcon 
+                style={{ color:"white"}}   
+                onClick={() => {
+                  setSelectedImages([]); 
+                  setSelectedImage(null);
+                }}
+              />
+              <h3 className="text-base text-white">{selectedImages.length} selected</h3>
+              <div className="flex items-center gap-2 bg-white p-1.5 rounded-lg cursor-pointer">
+                <Print />
+                <p className="pr-1 hidden sm:block">Print</p>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 bg-white p-1.5 rounded-md cursor-pointer hover:bg-red-200">
+                <Delete style={{ color:"red"}}  />
+                <p className="pr-1 text-sm text-red-500 hidden sm:block">DELETE</p>
+              </div>
+            </div>
+          ):(
+          <div className="flex p-1 sm:p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg">
+            <h1 className="font-bolds text-base sm:text-lg md:text-xl lg:text-2xl text-black">Photo Gallery</h1>
 
             {/* Upload Button */}
             <label htmlFor="file-upload">
               <Button
-                variant="outlined"
-                color="inherit"
+                variant="contained"
+                color="primary"
                 startIcon={<UploadIcon />}
                 component="span"
                 disabled={uploading}
@@ -121,6 +192,9 @@ const PhotoGallery = () => {
               style={{ display: "none" }}
             />
           </div>
+          )
+        }
+
 
           {/* Image Grid */}
           <div className="w-full flex-grow mt-4 max-h-screen overflow-y-auto">
@@ -153,7 +227,7 @@ const PhotoGallery = () => {
                   <input
                     type="checkbox"
                     className="absolute top-1 left-1 w-5 h-5 bg-white border border-gray-400 rounded-lg cursor-pointer"
-                    onChange={() => console.log('Checkbox clicked')}
+                    onChange={() => handleCheckboxClick(url)} 
                   />
                 </div>
                 ))}
@@ -220,7 +294,7 @@ const PhotoGallery = () => {
             }}
           >
             {editingImage && (
-              <PhotoEditorSDK image={editingImage} onClose={closeEditor} />
+              <PhotoEditorSDK image={editingImage} onClose={closeEditor} onExport={handleExportedImage} />
             )}
           </Box>
         </Modal>
@@ -236,7 +310,7 @@ const PhotoGallery = () => {
             </div>
             <div>
               <p className="p-5 text-gray-700 text-xl font-medium">
-                Uploading Image...
+                {saving ? "Saving Image" : "Uploading Image..."}
               </p>
             </div>
           </div>

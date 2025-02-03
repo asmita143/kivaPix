@@ -1,9 +1,11 @@
+
 import { UIEvent, PhotoEditorSDKUI } from "photoeditorsdk";
 import React from "react";
 
 interface PhotoEditorSDKProps {
   image: string;
   onClose: () => void; // optional callback when closing the editor
+  onExport: (editedImage: string) => void; 
 }
 
 export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
@@ -20,11 +22,13 @@ export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
       layout: 'basic',
       enableZoom: true,
       scaleImageToFit: true,
+    
     });
     console.log("PhotoEditorSDK for Web is ready!");
 
     editor.on(UIEvent.EXPORT, (imageSrc) => {
       console.log("Exported ", imageSrc);
+      this.props.onExport(imageSrc);
     });
 
     editor.on(UIEvent.CLOSE, () => {
