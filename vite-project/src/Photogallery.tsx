@@ -68,6 +68,7 @@ const PhotoGallery = () => {
   const handleDeleteSelectedImages = async () => {
     const deletePromises = selectedImages.map(img => deleteImage(img));
     await Promise.all(deletePromises);
+    setSelectedImages([])
   };
 
   const handleExportedImage = async (editedImage: any) => {
@@ -229,6 +230,7 @@ const PhotoGallery = () => {
                   <input
                     type="checkbox"
                     className="absolute top-1 left-1 w-5 h-5 bg-white border border-gray-400 rounded-lg cursor-pointer"
+                    checked={selectedImages.includes(imageNames[index])}
                     onChange={() => handleCheckboxClick(index)} 
                   />
                 </div>
