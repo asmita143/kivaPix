@@ -1,13 +1,31 @@
 import { useEffect, useState } from "react";
 import { db, collection, getDocs } from "../../../firebase";
-import { Timestamp } from "firebase/firestore";
+import { addDoc, Timestamp } from "firebase/firestore";
 
+// Define a type for the location
+interface EventLocation {
+  name: string; // The name of the location (e.g., "Leppavaara, Espoo")
+  coordinates: {
+    lat: number; // Latitude
+    lng: number; // Longitude
+  };
+}
 interface Event {
-  imageSrc: string | undefined;
-  id: string;
+  imageSrc?: string;
+  id?: string;
   name: string;
-  date: string; // ISO string representation of the date
+  date?: Date | null; // ISO string representation of the date
   description: string;
+  location: EventLocation;
+  hostFirstName: string;
+  hostLastName: string;
+  hostPhone: string;
+  hostEmail: string;
+  hostCountry: string;
+  hostStreetAddress: string;
+  hostPostalCode: string;
+  hostCity: string;
+  participants: number;
 }
 
 const useEvent = () => {
@@ -26,7 +44,11 @@ const useEvent = () => {
           return {
             ...data,
             id: doc.id,
-            date: (data.date as Timestamp)?.toDate().toISOString() || "", // Handle Firestore Timestamp conversion
+            date: data.date?.toDate ? data.date.toDate() : null,
+            location: data.location || {
+              name: "",
+              coordinates: { lat: 0, lng: 0 },
+            },
           } as Event;
         });
 
@@ -38,8 +60,19 @@ const useEvent = () => {
 
     fetchEvents();
   }, []);
+  const addEvent = async (newEvent: Event) => {
+    try {
+      await addDoc(eventRef, {
+        ...newEvent,
+        date: newEvent.date ? Timestamp.fromDate(newEvent.date) : null,
+      });
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+  };
 
-  return { events1 };
+  return { events1, addEvent };
 };
 
 export default useEvent;

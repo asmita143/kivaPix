@@ -6,15 +6,19 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   const navigate = useNavigate();
 
   const sidebarItems = [
-    { label: "Home", isDropdown: false, onClick: () => navigate("") },
+    { label: "Home", isDropdown: false, path: "/home" },
     {
       label: "Your Events",
       isDropdown: true,
-      dropdownItems: ["Accepted", "Interested", "Past Events"],
+      dropdownItems: [
+        { label: "Accepted", path: "/events/accepted" },
+        { label: "Interested", path: "/events/interested" },
+        { label: "Past Events", path: "/events/past" },
+      ],
     },
-    { label: "Notifications", isDropdown: false },
-    { label: "Settings", isDropdown: false },
-    { label: "Profile", isDropdown: false },
+    { label: "Notifications", isDropdown: false, path: "/notifications" },
+    { label: "Settings", isDropdown: false, path: "/settings" },
+    { label: "Profile", isDropdown: false, path: "/profile" },
   ];
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
@@ -34,8 +38,14 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                 className={`px-4 py-2 flex items-center justify-between text-black hover:bg-gray-100 cursor-pointer transition duration-200 ${
                   item.isDropdown ? "relative" : ""
                 }`}
-                onClick={() => item.isDropdown && toggleDropdown(index)}
-                role={item.isDropdown ? "button" : undefined}
+                onClick={() => {
+                  if (!item.isDropdown && item.path) {
+                    navigate(item.path);
+                  } else {
+                    toggleDropdown(index);
+                  }
+                }}
+                role="button"
                 aria-expanded={openDropdown === index}
                 aria-label={
                   item.isDropdown ? `${item.label} dropdown` : item.label
@@ -58,8 +68,9 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                     <li
                       key={dropdownIndex}
                       className="px-4 py-2 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200"
+                      onClick={() => navigate(dropdownItem.path)}
                     >
-                      {dropdownItem}
+                      {dropdownItem.label}
                     </li>
                   ))}
                 </ul>

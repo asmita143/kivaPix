@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const Header = () => {
   return (
     <div className="h-[100px] w-full flex items-center justify-center p-[0.1rem] bg-neutral-50  border-b border-black ">
@@ -8,7 +10,21 @@ const Header = () => {
 };
 
 const HeaderLeft = () => {
-  return <div className="font-bold flex-none w-1/4 text-xl px-10">KIVAPIX</div>;
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/home"); // Navigates to the /home route
+  };
+
+  return (
+    <div
+      className="font-bold flex-none w-1/4 text-xl px-10 cursor-pointer hover:text-green-500 transition duration-200"
+      onClick={handleLogoClick}
+      aria-label="Go to Home"
+    >
+      KIVAPIX
+    </div>
+  );
 };
 
 const HeaderRight = () => {

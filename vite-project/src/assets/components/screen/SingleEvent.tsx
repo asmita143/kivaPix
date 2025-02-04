@@ -7,10 +7,10 @@ import Sidebar from "../section/SideBar";
 
 const SingleEvent = () => {
   // Get event ID from URL params
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>();
 
   // Fetch events using the useEvent hook
-  const { events1 } = useEvent();
+  const { events1 = [] } = useEvent();
 
   // Find the event by ID
   const event = events1.find((e) => e.id === id); // Use id as string directly if it's string in Firestore
@@ -19,7 +19,16 @@ const SingleEvent = () => {
   if (!event) {
     return <p>Event not found.</p>;
   }
+  // Destructure location with fallback to prevent undefined errors
+  const { location } = event;
+  const locationName = location?.name || "Location not available";
+  const locationLat = location?.coordinates?.lat || "Latitude not available";
+  const locationLng = location?.coordinates?.lng || "Longitude not available";
 
+  const formattedDate =
+    event.date instanceof Date
+      ? event.date.toLocaleDateString()
+      : "No date available";
   return (
     <div className="app-container">
       <HeaderSection />
@@ -69,8 +78,8 @@ const SingleEvent = () => {
                       <p className="mt-2 text-lg font-medium tracking-tight text-gray-950 max-lg:text-center">
                         When?
                       </p>
-                      <p className="mt-2 max-w-lg text-sm/6 text-gray-600 max-lg:text-center">
-                        {event.date}
+                      <p className="mt-2 text-sm text-gray-600">
+                        {formattedDate}
                       </p>
                     </div>
                     <div className="@container flex flex-1 items-center max-lg:py-6 lg:pb-2"></div>
@@ -101,7 +110,14 @@ const SingleEvent = () => {
                             alt="Event Location Map"
                             className="map-image"
                           />
-                          <p className="pt-6">Leppavaara, Espoo</p>
+                          <p className="mt-2 text-sm text-gray-600 max-lg:text-center">
+                            {locationName}{" "}
+                            {/* Safely displaying location name */}
+                          </p>
+                          <p className="mt-2 text-sm text-gray-600 max-lg:text-center">
+                            Coordinates: {locationLat}, {locationLng}{" "}
+                            {/* Safely displaying coordinates */}
+                          </p>
                         </div>
                       </div>
                     </div>
