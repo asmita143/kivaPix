@@ -6,8 +6,6 @@ import React, { useState } from "react";
 import SideBar from "../section/SideBar";
 import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../firebase";
 import useEvent from "../hooks/useEvent";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -16,7 +14,6 @@ const EventForm = () => {
   const { addEvent } = useEvent();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [formData, setFormData] = useState({
-    id: "",
     name: "",
     date: "",
     description: "",
@@ -48,7 +45,22 @@ const EventForm = () => {
     });
     alert("Event added successfully!");
   };
-  // Reset form after submission
+  const handleLocationSelect = (selectedLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        name: selectedLocation.name,
+        coordinates: {
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+        },
+      },
+    }));
+  };
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
@@ -128,13 +140,7 @@ const EventForm = () => {
                           libraries={["places"]}
                         >
                           <AutoCompleteInput
-                            onLocationSelect={function (
-                              location:
-                                | google.maps.LatLng
-                                | google.maps.LatLngLiteral
-                            ): void {
-                              throw new Error("Function not implemented.");
-                            }}
+                            onLocationSelect={handleLocationSelect}
                           />
                         </LoadScript>
                       </div>
