@@ -2,9 +2,11 @@ import { useState, useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 
 interface AutoCompleteInputProps {
-  onLocationSelect: (
-    location: google.maps.LatLng | google.maps.LatLngLiteral
-  ) => void;
+  onLocationSelect: (location: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => void;
 }
 
 const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
@@ -16,10 +18,14 @@ const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
       if (place?.geometry?.location) {
-        const selectedLocation = place.geometry.location;
-        setLocation(place.formatted_address || ""); // Optionally display formatted address
-        // Pass the selected location back to the parent via onLocationSelect
-        onLocationSelect(selectedLocation);
+        const selectedLocation = {
+          name: place.formatted_address || "",
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+
+        setLocation(selectedLocation.name); // Display the formatted address
+        onLocationSelect(selectedLocation); // Send structured data
       }
     }
   };

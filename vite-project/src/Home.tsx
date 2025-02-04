@@ -38,7 +38,7 @@ const Home: React.FC = () => {
                       {/* ✅ Clickable Section: Image + Description */}
                       <div
                         className="cursor-pointer"
-                        onClick={() => handleEventClick(event.id)}
+                        onClick={() => event.id && handleEventClick(event.id)}
                       >
                         <img
                           alt={event.name}
@@ -55,7 +55,8 @@ const Home: React.FC = () => {
                             : "No date available"}
                         </p>
                         <p className="mt-1 text-sm text-black-100">
-                          Location:{"Leppavaara, Espoo"}
+                          Location:{" "}
+                          {event.location?.name || "No location available"}
                         </p>
                       </div>
 
