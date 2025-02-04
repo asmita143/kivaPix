@@ -1,7 +1,13 @@
 import { useState, useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 
-const AutoCompleteInput = () => {
+interface AutoCompleteInputProps {
+  onLocationSelect: (
+    location: google.maps.LatLng | google.maps.LatLngLiteral
+  ) => void;
+}
+
+const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
   const [location, setLocation] = useState("");
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
@@ -9,8 +15,11 @@ const AutoCompleteInput = () => {
   const handlePlaceSelect = () => {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace();
-      if (place?.formatted_address) {
-        setLocation(place.formatted_address);
+      if (place?.geometry?.location) {
+        const selectedLocation = place.geometry.location;
+        setLocation(place.formatted_address || ""); // Optionally display formatted address
+        // Pass the selected location back to the parent via onLocationSelect
+        onLocationSelect(selectedLocation);
       }
     }
   };
@@ -22,7 +31,7 @@ const AutoCompleteInput = () => {
     >
       <input
         type="text"
-        className="border p-2 w-full rounded-md"
+        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
         placeholder="Enter location..."
         value={location}
         onChange={(e) => setLocation(e.target.value)}

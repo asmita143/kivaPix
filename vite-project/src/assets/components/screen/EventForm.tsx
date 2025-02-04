@@ -2,32 +2,64 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
-import { useState, useRef } from "react";
+import React, { useState } from "react";
 import SideBar from "../section/SideBar";
-import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
+import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../../firebase";
+import useEvent from "../hooks/useEvent";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventForm = () => {
+  const { addEvent } = useEvent();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const [location, setLocation] = useState("");
-  const autocompleteRef = useRef(null);
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    date: "",
+    description: "",
+    location: { name: "", coordinates: { lat: 0, lng: 0 } },
+    lat: "",
+    lng: "",
+    hostFirstName: "",
+    hostLastName: "",
+    hostPhone: "",
+    hostEmail: "",
+    hostCountry: "",
+    hostStreetAddress: "",
+    hostPostalCode: "",
+    hostCity: "",
+    participants: 1,
+    coverPhoto: null,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await addEvent({
+      ...formData,
+      date: formData.date ? new Date(formData.date) : null,
+    });
+    alert("Event added successfully!");
+  };
+  // Reset form after submission
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      {/* Header */}
       <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
       <div className="flex flex-grow bg-gray-100">
-        {/* Hamburger Menu Button */}
         <HamburgerMenu
           setSidebarVisible={setSidebarVisible}
           isSidebarVisible={isSidebarVisible}
         />
-
-        {/* Sidebar */}
         <div
           className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-md transform transition-transform duration-300 ${
             isSidebarVisible ? "translate-x-0" : "-translate-x-full"
@@ -35,34 +67,34 @@ const EventForm = () => {
         >
           <SideBar />
         </div>
-
         <main
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300 ${
             isSidebarVisible ? "lg:ml-64" : "ml-0"
           }`}
         >
           <div className="flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)]">
-            <form className="flex flex-col space-y-6">
+            <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
               <div className="space-y-12">
                 <div className="pb-2">
                   <h2 className="text-base/7 font-semibold text-gray-900">
                     Create a new event
                   </h2>
-
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     {/* Event Name */}
                     <div className="sm:col-span-4">
                       <label
-                        htmlFor="eventName"
+                        htmlFor="name"
                         className="block text-sm font-medium text-gray-900"
                       >
                         Name of Event
                       </label>
                       <div className="mt-2">
                         <input
-                          id="eventName"
-                          name="eventName"
+                          id="name"
+                          name="name"
                           type="text"
+                          value={formData.name}
+                          onChange={handleChange}
                           placeholder="Event name"
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
                         />
@@ -72,16 +104,18 @@ const EventForm = () => {
                     {/* Event Date */}
                     <div className="sm:col-span-4">
                       <label
-                        htmlFor="eventDate"
+                        htmlFor="date"
                         className="block text-sm font-medium text-gray-900"
                       >
                         Date of Event
                       </label>
                       <div className="mt-2">
                         <input
-                          id="eventDate"
-                          name="eventDate"
+                          id="date"
+                          name="date"
                           type="date"
+                          value={formData.date}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
                         />
                       </div>
@@ -89,20 +123,21 @@ const EventForm = () => {
 
                     {/* Event Location (Google Maps Autocomplete) */}
                     <div className="sm:col-span-4">
-                      <label
-                        htmlFor="eventLocation"
-                        className="block text-sm font-medium text-gray-900"
-                      >
-                        Location
-                      </label>
+                      <label htmlFor="location">Location</label>
                       <div className="mt-2">
                         <LoadScript
                           googleMapsApiKey={apiKey}
                           libraries={["places"]}
                         >
-                          <div className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600">
-                            <AutoCompleteInput />
-                          </div>
+                          <AutoCompleteInput
+                            onLocationSelect={function (
+                              location:
+                                | google.maps.LatLng
+                                | google.maps.LatLngLiteral
+                            ): void {
+                              throw new Error("Function not implemented.");
+                            }}
+                          />
                         </LoadScript>
                       </div>
                     </div>
@@ -110,16 +145,18 @@ const EventForm = () => {
                     {/* About the Event */}
                     <div className="col-span-full">
                       <label
-                        htmlFor="about"
+                        htmlFor="description"
                         className="block text-sm font-medium text-gray-900"
                       >
                         About
                       </label>
                       <div className="mt-2">
                         <textarea
-                          id="about"
-                          name="about"
+                          id="description"
+                          name="description"
                           rows={3}
+                          value={formData.description}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
                           placeholder="Write a few sentences about the event."
                         />
@@ -129,27 +166,25 @@ const EventForm = () => {
                     {/* Cover Photo Upload */}
                     <div className="col-span-full">
                       <label
-                        htmlFor="cover-photo"
+                        htmlFor="coverPhoto"
                         className="block text-sm font-medium text-gray-900"
                       >
                         Cover photo
                       </label>
                       <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                         <div className="text-center">
-                          <PhotoIcon
-                            aria-hidden="true"
-                            className="mx-auto h-12 text-gray-300"
-                          />
+                          <PhotoIcon className="mx-auto h-12 text-gray-300" />
                           <div className="mt-4 flex text-sm text-gray-600">
                             <label
-                              htmlFor="file-upload"
+                              htmlFor="coverPhoto"
                               className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500"
                             >
                               <span>Upload a file</span>
                               <input
-                                id="file-upload"
-                                name="file-upload"
+                                id="coverPhoto"
+                                name="coverPhoto"
                                 type="file"
+                                onChange={handleChange}
                                 className="sr-only"
                               />
                             </label>
@@ -163,6 +198,8 @@ const EventForm = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Host Information */}
                 <div className="border-b border-gray-900/10 pb-12">
                   <h2 className="text-base/7 font-semibold text-gray-900">
                     Hosted by
@@ -170,158 +207,148 @@ const EventForm = () => {
                   <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <div className="sm:col-span-3">
                       <label
-                        htmlFor="first-name"
+                        htmlFor="hostFirstName"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         First name
                       </label>
                       <div className="mt-2">
                         <input
-                          id="first-name"
-                          name="first-name"
+                          id="hostFirstName"
+                          name="hostFirstName"
                           type="text"
-                          autoComplete="given-name"
+                          value={formData.hostFirstName}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-3">
                       <label
-                        htmlFor="last-name"
+                        htmlFor="hostLastName"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         Last name
                       </label>
                       <div className="mt-2">
                         <input
-                          id="last-name"
-                          name="last-name"
+                          id="hostLastName"
+                          name="hostLastName"
                           type="text"
-                          autoComplete="family-name"
+                          value={formData.hostLastName}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-4">
                       <label
-                        htmlFor="email"
+                        htmlFor="hostEmail"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         Email address
                       </label>
                       <div className="mt-2">
                         <input
-                          id="email"
-                          name="email"
+                          id="hostEmail"
+                          name="hostEmail"
                           type="email"
-                          autoComplete="email"
+                          value={formData.hostEmail}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-4">
                       <label
-                        htmlFor="email"
+                        htmlFor="hostPhone"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         Phone number
                       </label>
                       <div className="mt-2">
                         <input
-                          id="phone"
-                          name="phone"
+                          id="hostPhone"
+                          name="hostPhone"
                           type="tel"
-                          autoComplete="tel"
+                          value={formData.hostPhone}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
+                    /{" "}
                     <div className="sm:col-span-3">
                       <label
-                        htmlFor="country"
+                        htmlFor="hostCountry"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         Country
                       </label>
                       <div className="mt-2 grid grid-cols-1">
                         <select
-                          id="country"
-                          name="country"
-                          autoComplete="country-name"
+                          id="hostCountry"
+                          name="hostCountry"
+                          value={formData.hostCountry}
+                          //onChange={handleChange}
                           className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         >
                           <option>Finland</option>
+                          {/* Add more countries as needed */}
                         </select>
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                        />
+                        <ChevronDownIcon className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" />
                       </div>
                     </div>
                     <div className="col-span-full">
                       <label
-                        htmlFor="street-address"
+                        htmlFor="hostStreetAddress"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         Street address
                       </label>
                       <div className="mt-2">
                         <input
-                          id="street-address"
-                          name="street-address"
+                          id="hostStreetAddress"
+                          name="hostStreetAddress"
                           type="text"
-                          autoComplete="street-address"
+                          value={formData.hostStreetAddress}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-2 sm:col-start-1">
                       <label
-                        htmlFor="city"
+                        htmlFor="hostCity"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         City
                       </label>
                       <div className="mt-2">
                         <input
-                          id="city"
-                          name="city"
+                          id="hostCity"
+                          name="hostCity"
                           type="text"
-                          autoComplete="address-level2"
+                          value={formData.hostCity}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-2">
                       <label
-                        htmlFor="region"
-                        className="block text-sm/6 font-medium text-gray-900"
-                      >
-                        State / Province
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          id="region"
-                          name="region"
-                          type="text"
-                          autoComplete="address-level1"
-                          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        />
-                      </div>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor="postal-code"
+                        htmlFor="hostPostalCode"
                         className="block text-sm/6 font-medium text-gray-900"
                       >
                         ZIP / Postal code
                       </label>
                       <div className="mt-2">
                         <input
-                          id="postal-code"
-                          name="postal-code"
+                          id="hostPostalCode"
+                          name="hostPostalCode"
                           type="text"
-                          autoComplete="postal-code"
+                          value={formData.hostPostalCode}
+                          onChange={handleChange}
                           className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         />
                       </div>
@@ -340,8 +367,9 @@ const EventForm = () => {
                   <button
                     type="submit"
                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-indigo-600"
+                    disabled={isLoading}
                   >
-                    Save
+                    {isLoading ? "Saving..." : "Save"}
                   </button>
                 </div>
               </div>
