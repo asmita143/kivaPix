@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button, CircularProgress } from "@mui/material";
 import { Delete, Edit, Print, Upload as UploadIcon } from "@mui/icons-material";
@@ -13,20 +13,22 @@ import ClearIcon from '@mui/icons-material/Clear';
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { images, loading, uploadImage, uploading } = useImage(id || "");
+  const { images, loading, uploadImage, uploading, deleteImage, fetchImages, imageNames } = useImage(id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   //const [uploading, setUploading] = useState(false);
   const [editingImage, setEditingImage] = useState<string | null>();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [singleImage, setSingleImage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
 
+  useEffect(() => {
+    fetchImages(); 
+  }, []);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
-    //setUploading(true);
     const uploadedUrls: string[] = [];
 
     for (const file of Array.from(files)) {
@@ -34,46 +36,46 @@ const PhotoGallery = () => {
     }
 
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
-    //setUploading(false);
   };
 
-  const handleImageClick = (url: string) => {
-    setSelectedImage(url);
+  const handleImageClick = (url: string, imageIndex:number) => {
+    const imageName = imageNames[imageIndex];
+    setSingleImage(url);
   };
 
   const closeModal = () => {
-    setSelectedImage(null);
+    setSingleImage(null);
   };
 
-  // Function to open the editor modal for a specific image
   const handleEdit = (url: string) => {
     setEditingImage(url);
     console.log(editingImage, url)
   };
   
-  // Function to close the editor modal
   const closeEditor = () => {
       setEditingImage(null);
   };
 
-  const handleCheckboxClick = (url: string) => {
-    setSelectedImages((prevSelectedImages) => {
-      // If the image is already selected, remove it
-      if (prevSelectedImages.includes(url)) {
-        return prevSelectedImages.filter((imageUrl) => imageUrl !== url);
-      }
-      // If the image is not selected, add it
-      return [...prevSelectedImages, url];
-    });
+  const handleCheckboxClick = (imageIndex: number) => {
+    const imageName = imageNames[imageIndex];
+    setSelectedImages((prevSelected) =>
+    prevSelected.includes(imageName)
+      ? prevSelected.filter((name) => name !== imageName) 
+      : [...prevSelected, imageName] 
+    );
+  };
+
+  const handleDeleteSelectedImages = async () => {
+    const deletePromises = selectedImages.map(img => deleteImage(img));
+    await Promise.all(deletePromises);
   };
 
   const handleExportedImage = async (editedImage: any) => {
     setSaving(true)
-    console.log("Edited Image Data:", editedImage); // Check the object structure
+    console.log("Edited Image Data:", editedImage); 
     console.log("Type of Edited Image:", typeof editedImage);
   
     if (!editingImage) return;
-    //setUploading(true);
   
     try {
       // Extract Base64 string (adjust based on object structure)
@@ -112,7 +114,6 @@ const PhotoGallery = () => {
     } catch (error) {
       console.error("Error uploading edited image:", error);
     } finally {
-      //setUploading(false);
       setSaving(false)
       setEditingImage(null);
     }
@@ -148,12 +149,11 @@ const PhotoGallery = () => {
         >
           {/* Top Bar */}
           {selectedImages.length > 0 ? (
-            <div className="flex items-center gap-4 mt-3 bg-blue-600 p-1 sm:p-2 md:p-3 rounded-lg">
+            <div className="flex items-center top-0 gap-4 bg-blue-600 p-1 sm:p-2 md:p-3 rounded-lg">
               <ClearIcon 
                 style={{ color:"white"}}   
                 onClick={() => {
                   setSelectedImages([]); 
-                  setSelectedImage(null);
                 }}
               />
               <h3 className="text-base text-white">{selectedImages.length} selected</h3>
@@ -162,7 +162,10 @@ const PhotoGallery = () => {
                 <p className="pr-1 hidden sm:block">Print</p>
               </div>
 
-              <div className="flex items-center justify-between gap-2 bg-white p-1.5 rounded-md cursor-pointer hover:bg-red-200">
+              <div 
+                className="flex items-center justify-between gap-2 bg-white p-1.5 rounded-md cursor-pointer hover:bg-red-200"
+                onClick={handleDeleteSelectedImages}
+              >
                 <Delete style={{ color:"red"}}  />
                 <p className="pr-1 text-sm text-red-500 hidden sm:block">DELETE</p>
               </div>
@@ -195,7 +198,6 @@ const PhotoGallery = () => {
           )
         }
 
-
           {/* Image Grid */}
           <div className="w-full flex-grow mt-4 max-h-screen overflow-y-auto">
             {loading ? (
@@ -222,12 +224,12 @@ const PhotoGallery = () => {
                     src={url}
                     alt={`Image ${index}`}
                     className="aspect-square w-full rounded-lg object-cover group-hover:opacity-95"
-                    onClick={() => handleImageClick(url)}
+                    onClick={() => handleImageClick(url, index)}
                   />
                   <input
                     type="checkbox"
                     className="absolute top-1 left-1 w-5 h-5 bg-white border border-gray-400 rounded-lg cursor-pointer"
-                    onChange={() => handleCheckboxClick(url)} 
+                    onChange={() => handleCheckboxClick(index)} 
                   />
                 </div>
                 ))}
@@ -237,7 +239,7 @@ const PhotoGallery = () => {
         </main>
       </div>
         <Modal
-          open={Boolean(selectedImage)}
+          open={Boolean(singleImage)}
           onClose={closeModal}
           style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
         >
@@ -254,22 +256,22 @@ const PhotoGallery = () => {
               gap: 2,
             }}
           >
-            {selectedImage && (
+            {singleImage && (
               <div>
                 <img
-                  src={selectedImage}
+                  src={singleImage}
                   alt="Selected"
                   className="w-full max-h-[70vh] object-contain pb-2"
                 />
                   <div className="bottom-0 w-full h-10 bg-white flex items-center justify-between rounded-b-lg">
                     <Edit
-                      onClick={() => handleEdit(selectedImage)}
-                      className="text-white p-2 bg-gray-800/60 rounded-full bg-green-500 cursor-pointer"
+                      onClick={() => handleEdit(singleImage)}
+                      className="text-white p-2 bg-gray-800/60 hover:shadow-lg rounded-full bg-green-500 cursor-pointer"
                       style={{ width: "40px", height: "40px" }}
                     />
                     <Delete
-                      onClick={() => console.log("Delete clicked")}
                       className="text-white p-2 bg-gray-800/60 rounded-full bg-red-500 cursor-pointer"
+                      onClick={() => console.log("Delete icon clicked")}
                       style={{ width: "40px", height: "40px" }}
                     />
                   </div>

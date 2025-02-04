@@ -1,59 +1,72 @@
-import { getDownloadURL, listAll, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../../../firebase';
+import { deleteObject, getDownloadURL, listAll, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
+import { db, storage } from '../../../firebase';
 import { useCallback, useEffect, useState } from 'react';
 
 const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
+    const [imageNames, setImageNames] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
 
-      useEffect(() => {
-        const fetchImagesFromStorage = async () => {
-          setLoading(true);
-          try {
-            const imagesRef = ref(storage, `${eventId}`); 
-            const imageList = await listAll(imagesRef);
+      const uploadImage = async (file:any) => {
+        if (!file) return;
+        setUploading(true);
+        try {
+          const fileRef = ref(storage, `${eventId}/${file.name}`);
+          await uploadBytes(fileRef, file);
+          console.log("Uploaded:", file.name);
     
-            // Get download URLs for all items in the folder
-            const urls = await Promise.all(
-              imageList.items.map((itemRef) => getDownloadURL(itemRef))
-            );
-            
-            setImages(urls); 
-            
-          } catch (error) {
-            console.error("Error fetching images from Firebase Storage:", error);
-          } finally {
-            setLoading(false); 
-          }
-        };
-    
-        fetchImagesFromStorage();
-      }, []);
+          // Fetch images again to update state
+          await fetchImages();
 
-      const uploadImage = useCallback(
-        async (file: File) => {
-          setUploading(true);
-          try {
-            const fileRef = ref(storage, `${eventId}/${file.name}`);
-            const uploadTask = uploadBytesResumable(fileRef, file);
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        } finally {
+          setUploading(false);
+        }
+      };
+
+      const fetchImages = async () => {
+        setLoading(true);
+        try {
+          const folderRef = ref(storage, `${eventId}`);
+          const imageList = await listAll(folderRef);
     
-            // You can remove the snapshot progress tracking
-            await uploadTask;  // Wait for the upload to complete
+          // Fetch Names
+          const names = imageList.items.map((itemRef) => itemRef.name);
+          setImageNames(names);
     
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            setImages((prevImages) => [...prevImages, downloadURL]); // Add the new URL to the state
-          } catch (error) {
-            console.error("Error uploading image:", error);
-          } finally {
-            setUploading(false);
-          }
-        },
-        [eventId]
-      );
+          // Fetch URLs
+          const urls = await Promise.all(imageList.items.map((itemRef) => getDownloadURL(itemRef)));
+          setImages(urls);
+    
+        } catch (error) {
+          console.error("Error fetching images:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const deleteImage = async (imageName:string) => {
+        setLoading(true);
+        try {
+          console.log(imageName)
+          const filePath = `${eventId}/${imageName}`;
+          const imageRef = ref(storage, filePath);
+          await deleteObject(imageRef);
+          console.log("Deleted:", imageName);
+    
+          // Fetch images again to update state
+          await fetchImages();
+        } catch (error) {
+          console.error("Error deleting image:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
       
-      return { images, loading, uploading, uploadImage };
+      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages };
 }
 
 export default useImage;
