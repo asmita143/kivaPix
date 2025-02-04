@@ -21,8 +21,6 @@ const EventForm = () => {
     date: "",
     description: "",
     location: { name: "", coordinates: { lat: 0, lng: 0 } },
-    lat: "",
-    lng: "",
     hostFirstName: "",
     hostLastName: "",
     hostPhone: "",
