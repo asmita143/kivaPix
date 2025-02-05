@@ -2,12 +2,11 @@ import { useState } from "react";
 import SideBar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import HeaderSection from "../section/HeaderSection";
-import { Print, Upload as UploadIcon } from "@mui/icons-material";
+import { Upload as UploadIcon } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import useImage from "../hooks/useImage";
-import AllImages from "../section/ImagesSection";
-import CollectionsIcon from '@mui/icons-material/Collections';
+import AllImages from "../section/AllImagesSection";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -23,7 +22,7 @@ const PhotoGallery = () => {
     const uploadedUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      await uploadImage(file);
+      await uploadImage(file, "");
     }
 
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
@@ -53,7 +52,7 @@ const PhotoGallery = () => {
         <main
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300`}
         >
-          <div className="flex p-1 sm:p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg">
+          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg bg-[#FAF9F6]">
             <h1 className="font-bolds text-base sm:text-lg md:text-xl lg:text-2xl text-black">Photo Gallery</h1>
 
             {/* Upload Button */}

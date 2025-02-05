@@ -1,4 +1,4 @@
-import { deleteObject, getDownloadURL, listAll, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
+import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../../../firebase';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -12,11 +12,11 @@ const useImage = (eventId: string) => {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
 
-      const uploadImage = async (file:any) => {
+      const uploadImage = async (file:any, path:any) => {
         if (!file) return;
         setUploading(true);
         try {
-          const fileRef = ref(storage, `${eventId}/${file.name}`);
+          const fileRef = ref(storage, `${path}/${eventId}/${file.name}`);
           await uploadBytes(fileRef, file);
           console.log("Uploaded:", file.name);
     
