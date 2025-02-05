@@ -5,8 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
+    const [printImages, setPrintImages] = useState<string[]>([]);
+    const [printImagesName, setPrintImagesName] = useState<string[]>([]);
     const [imageNames, setImageNames] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
 
       const uploadImage = async (file:any) => {
@@ -48,8 +51,28 @@ const useImage = (eventId: string) => {
         }
       };
 
-      const deleteImage = async (imageName:string) => {
+      const fetchPrintImages = async () => {
         setLoading(true);
+        try {
+          const folderRef = ref(storage, `printImage/${eventId}`);
+          const imageList = await listAll(folderRef);
+    
+          const names = imageList.items.map((itemRef) => itemRef.name);
+          setPrintImagesName(names);
+
+          // Fetch URLs
+          const urls = await Promise.all(imageList.items.map((itemRef) => getDownloadURL(itemRef)));
+          setPrintImages(urls);
+    
+        } catch (error) {
+          console.error("Error fetching images:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const deleteImage = async (imageName:string) => {
+        setDeleteLoading(true);
         try {
           console.log(imageName)
           const filePath = `${eventId}/${imageName}`;
@@ -62,11 +85,11 @@ const useImage = (eventId: string) => {
         } catch (error) {
           console.error("Error deleting image:", error);
         } finally {
-          setLoading(false);
+          setDeleteLoading(false);
         }
       };
       
-      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages };
+      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages, fetchPrintImages, printImages, printImagesName, deleteLoading };
 }
 
 export default useImage;
