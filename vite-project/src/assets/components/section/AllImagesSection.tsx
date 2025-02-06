@@ -1,8 +1,8 @@
-import { Box, CircularProgress, Modal } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import useImage from "../hooks/useImage";
 import { useParams } from "react-router-dom";
-import { Delete, DeleteOutlined, Edit, Print } from "@mui/icons-material";
+import { DeleteOutlined, Print } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
 import ImageToPrint from "./PrintImage";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
@@ -80,7 +80,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
     };
 
     const handleDeleteSelectedImages = async () => {
-        const deletePromises = selectedImages.map(img => deleteImage(img));
+        const deletePromises = selectedImages.map(img => deleteImage(img, ""));
         await Promise.all(deletePromises);
         setSelectedImages([])
     };
@@ -95,16 +95,16 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
                   <li 
                   onClick={() => setActiveTab("all")}
                   className={`transition-colors me-2 border-b-2 ${
-                      activeTab === "all" ? "border-blue-600" : "border-b-transparent"
+                    activeTab === "all" ? "border-blue-600" : "border-b-transparent"
                   }`}
                   >
                   <a 
-                      href="#" 
-                      className="inline-flex gap-1 items-center justify-center p-4 rounded-t-lg dark:text-blue-500 dark:border-blue-500 group"
-                      aria-current="page"
+                    href="#" 
+                    className="inline-flex gap-1 items-center justify-center p-4 rounded-t-lg dark:text-blue-500 dark:border-blue-500 group"
+                    aria-current="page"
                   >
-                      <CollectionsIcon />
-                      <p className="pr-1 hidden sm:block">All Images</p>
+                    <CollectionsIcon />
+                    <p className="pr-1 hidden sm:block">All Images</p>
                   </a>
                   </li>
                   <li 
@@ -207,7 +207,14 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
             </div>) : (
                 <ImageToPrint />
             )}
-            <SingleImage singleImageAll={singleImage} singleImageAllName={singleImageName} singleImagePrintName={null} singleImagePrint={null} onClose={() => setSingleImage(null)}  />
+            <SingleImage 
+                singleImageAll={singleImage} 
+                singleImageAllName={singleImageName} 
+                singleImagePrintName={null} 
+                singleImagePrint={null} 
+                onClose={() => setSingleImage(null)}  
+                reloadImages={fetchImages}
+            />
             
             <LoadingIndicator uploading={uploading} copyImage={copyImage} deleteLoading={deleteLoading} saving={false} />
         </main>

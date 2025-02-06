@@ -1,6 +1,6 @@
 import { deleteObject, getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
-import { db, storage } from '../../../firebase';
-import { useCallback, useEffect, useState } from 'react';
+import { storage } from '../../../firebase';
+import { useState } from 'react';
 
 const useImage = (eventId: string) => {
 
@@ -19,7 +19,7 @@ const useImage = (eventId: string) => {
           const fileRef = ref(storage, `${path}/${eventId}/${file.name}`);
           await uploadBytes(fileRef, file);
           console.log("Uploaded:", file.name);
-    
+
           // Fetch images again to update state
           await fetchImages();
 
@@ -71,16 +71,15 @@ const useImage = (eventId: string) => {
         }
       };
 
-      const deleteImage = async (imageName:string) => {
+      const deleteImage = async (imageName:string, path:string) => {
         setDeleteLoading(true);
         try {
           console.log(imageName)
-          const filePath = `${eventId}/${imageName}`;
+          const filePath = `${path}/${eventId}/${imageName}`;
           const imageRef = ref(storage, filePath);
           await deleteObject(imageRef);
           console.log("Deleted:", imageName);
     
-          // Fetch images again to update state
           await fetchImages();
         } catch (error) {
           console.error("Error deleting image:", error);

@@ -6,7 +6,7 @@ import SingleImage from "./SingleImage";
 
 const ImageToPrint = () => {
     const { id } = useParams<{ id: string }>();
-    const { printImages, loading, fetchPrintImages, printImagesName} = useImage(id || "");
+    const { printImages, loading, fetchPrintImages, printImagesName, deleteLoading} = useImage(id || "");
     const [singleImagePrint, setSingleImagePrint] = useState<string | null>(null);
     const [singleImagePrintName, setSingleImagePrintName] = useState<string | null>(null);
 
@@ -56,7 +56,14 @@ const ImageToPrint = () => {
                 </div>
                 )}
             </div>
-            <SingleImage singleImageAll={null} singleImagePrint={singleImagePrint} singleImageAllName={null} singleImagePrintName={singleImagePrintName} onClose={() => setSingleImagePrint(null)}  />
+            <SingleImage 
+                singleImageAll={null} 
+                singleImagePrint={singleImagePrint} 
+                singleImageAllName={null} 
+                singleImagePrintName={singleImagePrintName} 
+                onClose={() => setSingleImagePrint(null)}  
+                reloadImages={fetchPrintImages}
+            />
         </main>
 
     )
