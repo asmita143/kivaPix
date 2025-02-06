@@ -10,7 +10,6 @@ import AllImages from "../section/AllImagesSection";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const { id } = useParams<{ id: string }>();
   const { uploadImage, uploading } = useImage(id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);

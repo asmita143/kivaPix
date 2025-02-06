@@ -1,8 +1,5 @@
 // src/components/RegisterPage.tsx
 import React, { useState } from "react";
-import { auth } from "../../../firebase"; // Firebase auth
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
 

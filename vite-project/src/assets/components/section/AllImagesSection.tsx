@@ -26,8 +26,16 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
 
     useEffect(() => {
         fetchImages(); 
+    }, [uploadedImages]);
+
+    useEffect(() => {
         fetchPrintImages();
-    }, [uploadedImages, activeTab]);
+    }, [copyImage]);
+
+    useEffect(() => {
+        fetchImages(); 
+        fetchPrintImages();
+    }, [activeTab]);
 
     console.log(printImagesName)
 
@@ -214,6 +222,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
                 singleImagePrint={null} 
                 onClose={() => setSingleImage(null)}  
                 reloadImages={fetchImages}
+                onDelete={() =>setSelectedImages([])}
             />
             
             <LoadingIndicator uploading={uploading} copyImage={copyImage} deleteLoading={deleteLoading} saving={false} />

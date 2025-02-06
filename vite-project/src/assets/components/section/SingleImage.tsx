@@ -13,9 +13,10 @@ interface SingleImageProps{
     singleImagePrintName:string | null;
     onClose: () => void;
     reloadImages: () => void;
+    onDelete: () => void;
 }
 
-const SingleImage = ({singleImageAll, onClose, singleImagePrint, singleImageAllName, singleImagePrintName, reloadImages }: SingleImageProps) => {
+const SingleImage = ({singleImageAll, onClose, singleImagePrint, singleImageAllName, singleImagePrintName, reloadImages, onDelete }: SingleImageProps) => {
     const { id } = useParams<{ id: string }>();
     const [editingImage, setEditingImage] = useState<string | null>();
     const [saving, setSaving] = useState(false);
@@ -35,6 +36,7 @@ const SingleImage = ({singleImageAll, onClose, singleImagePrint, singleImageAllN
       await deleteImage(imageTodelete, path)
       onClose();
       reloadImages();
+      onDelete()
     };
 
     const handleExportedImage = async (editedImage: any) => {
@@ -82,16 +84,18 @@ const SingleImage = ({singleImageAll, onClose, singleImagePrint, singleImageAllN
           
         if(singleImageAll){
           await uploadImage(file, allImagesPath)
+          
         }else {
           await uploadImage(file, printImagesPath)
         }
-          
       
         } catch (error) {
           console.error("Error uploading edited image:", error);
         } finally {
           setSaving(false)
           setEditingImage(null);
+          onClose();
+          reloadImages()
         }
     };
 
