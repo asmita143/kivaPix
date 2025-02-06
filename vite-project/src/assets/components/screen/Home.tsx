@@ -21,7 +21,7 @@ const Home: React.FC = () => {
       {/* Sidebar and Main Content */}
       <div className="layout flex">
         {/* Sidebar */}
-        <aside className="w-64">
+        <aside className="w-64 shadow-md">
           <SideBar showButton={false} />
         </aside>
 

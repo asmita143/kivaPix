@@ -37,14 +37,14 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   };
 
   return (
-    <div className="w-64 bg-white shadow-md px-4 h-screen pt-10 b-black-100">
+    <div className="w-64 bg-[#FAF9F6] px-4 h-screen pt-10 b-black-100">
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-900">Menu</h1>
         <ul className="mt-4 space-y-2">
           {sidebarItems.map((item, index) => (
             <li key={index}>
               <div
-                className={`px-4 py-3 flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 ${
+                className={`px-4 py-4 hover:shadow-md flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 ${
                   item.isDropdown ? "relative" : ""
                 }`}
                 onClick={() => {
@@ -65,7 +65,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                 
                 {item.isDropdown && (
                   <span
-                    className={`transform transition-transform duration-200 ${
+                    className={`transform transition-transform duration-200${
                       openDropdown === index ? "rotate-180" : "rotate-0"
                     }`}
                   >
@@ -78,7 +78,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                   {item.dropdownItems?.map((dropdownItem, dropdownIndex) => (
                     <li
                       key={dropdownIndex}
-                      className="px-4 py-2 flex items-center gap-5 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200"
+                      className="px-4 py-2 flex items-center gap-5 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200 "
                       onClick={() => navigate(dropdownItem.path)}
                     >
                       {dropdownItem.icon && <dropdownItem.icon className="" />}

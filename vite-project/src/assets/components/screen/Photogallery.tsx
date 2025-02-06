@@ -42,7 +42,7 @@ const PhotoGallery = () => {
 
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-md transform transition-transform duration-300 ${
+          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
             isSidebarVisible ? "translate-x-0" : "-translate-x-full"
           } lg:translate-x-0 lg:static`}
         >
@@ -51,7 +51,7 @@ const PhotoGallery = () => {
         <main
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300`}
         >
-          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-lg bg-[#FAF9F6]">
+          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-sm">
             <h1 className="font-bolds text-base sm:text-lg md:text-xl lg:text-2xl text-black">Photo Gallery</h1>
 
             {/* Upload Button */}
