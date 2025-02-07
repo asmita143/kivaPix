@@ -4,14 +4,23 @@ import useEvent from "../hooks/useEvent";
 import StarRating from "../utils/starRating";
 import SideBar from "../section/SideBar";
 import HeaderSection from "../section/HeaderSection";
+import useImage from "../hooks/useImage";
+import { useEffect } from "react";
+import LoadingIndicator from "../section/LoadingIndicator";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const {fetchCoverPhotos, coverPhotos, loading } = useImage("")
   const { events1 } = useEvent(); // Fetch events from Firebase
 
   const handleEventClick = (id: string) => {
     navigate(`/event/${id}`);
   };
+
+  useEffect(() => {
+      fetchCoverPhotos()
+  }, []);
+  console.log(coverPhotos.type)
 
   return (
     <div className="app-container">
@@ -35,14 +44,13 @@ const Home: React.FC = () => {
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
                   {events1.map((event) => (
                     <div key={event.id} className="group">
-                      {/* ✅ Clickable Section: Image + Description */}
                       <div
                         className="cursor-pointer"
                         onClick={() => event.id && handleEventClick(event.id)}
                       >
                         <img
                           alt={event.name}
-                          src="https://picsum.photos/200/300"
+                          src={coverPhotos[String(event.id)]|| "https://picsum.photos/200/300"}
                           className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                         />
                         <h3 className="mt-4 text-md text-gray-700 font-bold">
@@ -69,6 +77,7 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   ))}
+                  
                 </div>
               </div>
             </div>

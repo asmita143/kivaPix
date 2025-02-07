@@ -225,7 +225,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
                 onDelete={() =>setSelectedImages([])}
             />
             
-            <LoadingIndicator uploading={uploading} copyImage={copyImage} deleteLoading={deleteLoading} saving={false} />
+            <LoadingIndicator uploading={uploading} copyImage={copyImage} deleteLoading={deleteLoading} saving={false} event={false} />
         </main>
     )
 }

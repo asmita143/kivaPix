@@ -6,6 +6,7 @@ const useImage = (eventId: string) => {
 
     const [images, setImages] = useState<string[]>([]);
     const [printImages, setPrintImages] = useState<string[]>([]);
+    const [coverPhotos, setCoverPhotos] = useState<{ [eventId: string]: string }>({});
     const [printImagesName, setPrintImagesName] = useState<string[]>([]);
     const [imageNames, setImageNames] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
@@ -71,6 +72,30 @@ const useImage = (eventId: string) => {
         }
       };
 
+      const fetchCoverPhotos = async () => {
+        setLoading(true);
+        try {
+          const folderRef = ref(storage, 'coverPhotos');
+          const listResult = await listAll(folderRef);
+          const mapping: { [eventId: string]: string } = {};
+          
+          for (const subFolderRef of listResult.prefixes) {
+            const subFolderList = await listAll(subFolderRef);
+            if (subFolderList.items.length > 0) {
+              const fileRef = subFolderList.items[0];
+              const url = await getDownloadURL(fileRef);
+              mapping[subFolderRef.name] = url;
+            }
+          }
+          console.log("Cover Photos Mapping:", mapping);
+          setCoverPhotos(mapping);
+        } catch (error) {
+          console.error("Error fetching cover photos:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
       const deleteImage = async (imageName:string, path:string) => {
         setDeleteLoading(true);
         try {
@@ -88,7 +113,7 @@ const useImage = (eventId: string) => {
         }
       };
       
-      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages, fetchPrintImages, printImages, printImagesName, deleteLoading };
+      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages, fetchPrintImages, fetchCoverPhotos, coverPhotos, printImages, printImagesName, deleteLoading };
 }
 
 export default useImage;

@@ -192,7 +192,7 @@ const SingleImage = ({singleImageAll, onClose, singleImagePrint, singleImageAllN
                     )}
                 </Box>
             </Modal>
-            <LoadingIndicator uploading={false} copyImage={false} deleteLoading={deleteLoading} saving={saving} />
+            <LoadingIndicator uploading={false} copyImage={false} deleteLoading={deleteLoading} saving={saving} event={false} />
         </div>
     )
 }

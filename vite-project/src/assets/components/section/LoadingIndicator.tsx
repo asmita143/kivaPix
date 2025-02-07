@@ -1,17 +1,19 @@
-import { CircularProgress, Modal } from "@mui/material"
+import { Button, CircularProgress, Modal } from "@mui/material"
+import { useEffect, useState } from "react";
 
 interface IndicatorProps {
     uploading:boolean;
     copyImage:boolean;
     deleteLoading:boolean;
     saving:boolean;
+    event:boolean;
 }
 
-const LoadingIndicator = ({uploading, copyImage, deleteLoading, saving} : IndicatorProps) => {
+const LoadingIndicator = ({uploading, copyImage, deleteLoading, saving, event} : IndicatorProps) => {
     return (
         <div>
             <Modal
-                open={uploading || copyImage || deleteLoading || saving}
+                open={uploading || copyImage || deleteLoading || saving || event}
                 style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
             >
                 <div className="flex flex-col justify-center items-center w-64 h-64 lg:w-1/2 lg:h-1/2 md:w-96 md:h-96 bg-gray-200 rounded-lg">
@@ -20,7 +22,16 @@ const LoadingIndicator = ({uploading, copyImage, deleteLoading, saving} : Indica
                     </div>
                     <div>
                     <p className="p-5 text-gray-700 text-xl font-medium">
-                        {saving ? "Saving Image": (copyImage ? "Sending image to printer" : (deleteLoading ? "Deleting Image" : "Uploading Image..."))}
+                    {saving 
+                        ? "Saving Image" 
+                        : copyImage 
+                            ? "Sending image to printer" 
+                            : deleteLoading 
+                            ? "Deleting Image" 
+                            : event 
+                                ? "Adding Event" 
+                                : "Uploading Image..."
+                    }
                     </p>
                     </div>
                 </div>

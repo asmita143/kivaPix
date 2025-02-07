@@ -7,11 +7,16 @@ import SideBar from "../section/SideBar";
 import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete";
 import useEvent from "../hooks/useEvent";
+import useImage from "../hooks/useImage";
+import LoadingIndicator from "../section/LoadingIndicator";
+import { Modal } from "@mui/material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventForm = () => {
-  const { addEvent } = useEvent();
+  const { addEvent, eventUpoading } = useEvent();
+  const { uploadImage, uploading } = useImage("");
+  const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -29,7 +34,6 @@ const EventForm = () => {
     participants: 1,
     coverPhoto: null,
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,13 +41,20 @@ const EventForm = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addEvent({
+
+    const eventData = {
       ...formData,
       date: formData.date ? new Date(formData.date) : null,
-    });
-    alert("Event added successfully!");
+    };
+    const eventId = await addEvent(eventData)
+
+    if (coverPhotoFile && eventId){
+      const path = `coverPhotos/${eventId}`;
+      await uploadImage(coverPhotoFile, path)
+    }
   };
   const handleLocationSelect = (selectedLocation: {
     name: string;
@@ -61,6 +72,13 @@ const EventForm = () => {
       },
     }));
   };
+
+  const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setCoverPhotoFile(e.target.files[0]);
+    }
+  };
+  
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
@@ -188,7 +206,7 @@ const EventForm = () => {
                                 id="coverPhoto"
                                 name="coverPhoto"
                                 type="file"
-                                onChange={handleChange}
+                                onChange={handleCoverPhotoChange}
                                 className="sr-only"
                               />
                             </label>
@@ -371,14 +389,15 @@ const EventForm = () => {
                   <button
                     type="submit"
                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-indigo-600"
-                    disabled={isLoading}
+                    
                   >
-                    {isLoading ? "Saving..." : "Save"}
+                    Save
                   </button>
                 </div>
               </div>
             </form>
           </div>
+          <LoadingIndicator uploading={false} copyImage={false} deleteLoading={false} saving={false} event={eventUpoading || uploading} />
         </main>
       </div>
     </div>

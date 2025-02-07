@@ -30,6 +30,7 @@ interface Event {
 
 const useEvent = () => {
   const [events1, setEvents] = useState<Event[]>([]);
+  const [eventUpoading, setEventUploading] = useState(false);
   const eventRef = collection(db, "Event");
 
   useEffect(() => {
@@ -60,19 +61,26 @@ const useEvent = () => {
 
     fetchEvents();
   }, []);
+
   const addEvent = async (newEvent: Event) => {
+    setEventUploading(true)
     try {
-      await addDoc(eventRef, {
+      const docRef = await addDoc(eventRef, {
         ...newEvent,
         date: newEvent.date ? Timestamp.fromDate(newEvent.date) : null,
       });
       setEvents((prevEvents) => [...prevEvents, newEvent]);
+
+      return docRef.id;
+
     } catch (error) {
       console.error("Error adding event:", error);
+    } finally {
+      setEventUploading(false)
     }
   };
 
-  return { events1, addEvent };
+  return { events1, addEvent, eventUpoading };
 };
 
 export default useEvent;
