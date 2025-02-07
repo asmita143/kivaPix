@@ -66,7 +66,8 @@ const useUser = () => {
     email: string,
     password: string,
     name: string,
-    about: string
+    about: string,
+    phone: string
   ) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -82,6 +83,7 @@ const useUser = () => {
         name: name,
         about: about,
         email: email,
+        phone: phone,
         createdAt: new Date(),
       });
     } catch (error) {

@@ -40,7 +40,6 @@ const Profile = () => {
                 <h1 className="text-2xl font-bold text-black dark:text-gray-200 mb-2">
                   {userData?.name || "User"}
                 </h1>
-                <p className="text-gray-700 dark:text-gray-400">{user.email}</p>
                 <button className="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors duration-300">
                   Edit Profile
                 </button>
@@ -70,6 +69,8 @@ const Profile = () => {
                 </h2>
                 <ul className="space-y-2 text-gray-800 dark:text-gray-400">
                   <li className="flex items-center">📧 {user.email}</li>
+                  <li className="flex items-center">📱{userData.phone}</li>
+
                   {/* Add other contact info here */}
                 </ul>
               </div>
