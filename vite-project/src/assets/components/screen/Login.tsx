@@ -1,7 +1,7 @@
 // src/components/LoginPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUser from "./assets/components/hooks/useUser";
+import useUser from "../hooks/useUser";
 
 const Login = () => {
   const [email, setEmail] = useState("");

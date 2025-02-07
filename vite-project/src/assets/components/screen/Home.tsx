@@ -1,9 +1,9 @@
-import "./App.css";
+import "../../../App.css";
 import { useNavigate } from "react-router-dom";
-import useEvent from "./assets/components/hooks/useEvent";
-import StarRating from "./assets/components/utils/starRating";
-import SideBar from "./assets/components/section/SideBar";
-import HeaderSection from "./assets/components/section/HeaderSection";
+import useEvent from "../hooks/useEvent";
+import StarRating from "../utils/starRating";
+import SideBar from "../section/SideBar";
+import HeaderSection from "../section/HeaderSection";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Home: React.FC = () => {
       {/* Sidebar and Main Content */}
       <div className="layout flex">
         {/* Sidebar */}
-        <aside className="w-64">
+        <aside className="w-64 shadow-md">
           <SideBar showButton={false} />
         </aside>
 

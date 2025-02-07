@@ -1,7 +1,7 @@
 // src/components/RegisterPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUser from "./assets/components/hooks/useUser";
+import useUser from "../hooks/useUser";
 
 const Register = () => {
   const [email, setEmail] = useState("");

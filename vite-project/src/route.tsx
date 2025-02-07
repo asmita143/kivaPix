@@ -1,10 +1,10 @@
 // src/route.tsx
 import { Route, Routes } from "react-router-dom";
-import Login from "./Login";
-import Home from "./Home";
-import Register from "./Register";
+import Login from "./assets/components/screen/Login";
+import Home from "./assets/components/screen/Home";
+import Register from "./assets/components/screen/Register";
 import SingleEvent from "./assets/components/screen/SingleEvent";
-import PhotoGallery from "./Photogallery";
+import PhotoGallery from "./assets/components/screen/Photogallery";
 import EventForm from "./assets/components/screen/EventForm";
 import Profile from "./assets/components/screen/Profile";
 
