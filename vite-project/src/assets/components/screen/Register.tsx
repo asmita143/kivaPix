@@ -8,6 +8,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
+  const [phone, setPhone] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // Add loading state
@@ -28,7 +29,7 @@ const Register = () => {
 
     setLoading(true); // Set loading to true when registration starts
     try {
-      await register(email, password, name, about); // Call register from the custom hook
+      await register(email, password, name, about, phone); // Call register from the custom hook
       if (user) {
         navigate("/home"); // Navigate to home if registration is successful
       }
@@ -82,6 +83,19 @@ const Register = () => {
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
                 placeholder="Tell us about you in 3 sentences"
+                required
+                className="w-full p-3 border border-gray-300 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">
+                Phone number
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone number"
                 required
                 className="w-full p-3 border border-gray-300 rounded-md"
               />
