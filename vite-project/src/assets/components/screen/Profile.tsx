@@ -69,7 +69,7 @@ const Profile = () => {
                 </h2>
                 <ul className="space-y-2 text-gray-800 dark:text-gray-400">
                   <li className="flex items-center">📧 {user.email}</li>
-                  <li className="flex items-center">📱{userData.phone}</li>
+                  <li className="flex items-center">📱 {userData.phone}</li>
 
                   {/* Add other contact info here */}
                 </ul>
