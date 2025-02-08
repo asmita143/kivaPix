@@ -29,14 +29,14 @@ const HeaderRight = () => {
 };
 
 const HeaderProfile = () => {
-  const { user, logout } = useUser(); // Get user data
+  const { user, userData, logout } = useUser(); // Get user data
   const profileImage = user?.photoURL || "https://i.pravatar.cc/300"; // Fallback image
   const navigate = useNavigate();
 
   return (
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-2 focus:outline-none">
-        <span className="font-medium">Asmita</span>
+        <span className="font-medium">{userData?.name}</span>
         <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
           <img
             src={profileImage}

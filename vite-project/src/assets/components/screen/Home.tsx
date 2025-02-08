@@ -6,15 +6,15 @@ import SideBar from "../section/SideBar";
 import HeaderSection from "../section/HeaderSection";
 import useImage from "../hooks/useImage";
 import { useEffect } from "react";
-import LoadingIndicator from "../section/LoadingIndicator";
+import imageNotAvailable from "../../images/NotAvailable.jpg"
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const {fetchCoverPhotos, coverPhotos, loading } = useImage("")
+  const {fetchCoverPhotos, coverPhotos } = useImage("")
   const { events1 } = useEvent(); // Fetch events from Firebase
 
-  const handleEventClick = (id: string) => {
-    navigate(`/event/${id}`);
+  const handleEventClick = (id: string, coverPhotoUrl: string) => {
+    navigate(`/event/${id}`, { state: { coverPhotoUrl } });
   };
 
   useEffect(() => {
@@ -46,11 +46,14 @@ const Home: React.FC = () => {
                     <div key={event.id} className="group">
                       <div
                         className="cursor-pointer"
-                        onClick={() => event.id && handleEventClick(event.id)}
+                        onClick={() => 
+                          event.id && 
+                          handleEventClick(event.id, coverPhotos[String(event.id)] || imageNotAvailable)
+                        }
                       >
                         <img
                           alt={event.name}
-                          src={coverPhotos[String(event.id)]|| "https://picsum.photos/200/300"}
+                          src={coverPhotos[String(event.id)]|| imageNotAvailable}
                           className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                         />
                         <h3 className="mt-4 text-md text-gray-700 font-bold">

@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useEvent from "../hooks/useEvent"; // Import your custom hook
 import mapImage from "../../images/map.jpg";
 import "../../../App.css";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
+import imageNotAvailable from "../../images/NotAvailable.jpg"
 
 const SingleEvent = () => {
   // Get event ID from URL params
@@ -21,9 +22,11 @@ const SingleEvent = () => {
   }
   // Destructure location with fallback to prevent undefined errors
   const { location } = event;
+  const locationForImage = useLocation();
   const locationName = location?.name || "Location not available";
   const locationLat = location?.coordinates?.lat || "Latitude not available";
   const locationLng = location?.coordinates?.lng || "Longitude not available";
+  const coverPhotoUrl = locationForImage.state?.coverPhotoUrl || imageNotAvailable;
 
   const formattedDate =
     event.date instanceof Date
@@ -48,7 +51,7 @@ const SingleEvent = () => {
                       <div className="">
                         <img
                           className="size-full object-cover object-top"
-                          src="https://picsum.photos/200/300"
+                          src={coverPhotoUrl}
                           alt={event.name}
                         />
                       </div>
