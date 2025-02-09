@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const StarRating = () => {
-  const [isSelected, setIsSelected] = useState(false);
+interface StarRatingProps {
+  isInterested: boolean;
+  onClick: (newState: boolean) => void;
+}
+
+const StarRating: React.FC<StarRatingProps> = ({ isInterested, onClick }) => {
+  const [isSelected, setIsSelected] = useState(isInterested);
+
+  useEffect(() => {
+    setIsSelected(isInterested);
+  }, [isInterested]);
 
   const handleClick = () => {
-    setIsSelected(!isSelected); // Toggle the star color
+    const newState = !isSelected;
+    setIsSelected(newState);   
+    onClick(newState);      
   };
 
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-8 h-8 cursor-pointer ${
+      className={`w-8 h-8 cursor-pointer hover:shadow-lg rounded-lg ${
         isSelected ? "text-yellow-500" : "text-gray-300"
       }`}
       fill="currentColor"

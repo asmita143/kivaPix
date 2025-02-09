@@ -7,11 +7,13 @@ import HeaderSection from "../section/HeaderSection";
 import useImage from "../hooks/useImage";
 import { useEffect } from "react";
 import imageNotAvailable from "../../images/NotAvailable.jpg"
+import useUser from "../hooks/useUser";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { user, userData } = useUser();
   const {fetchCoverPhotos, coverPhotos } = useImage("")
-  const { events1 } = useEvent(); // Fetch events from Firebase
+  const { events, updateInterestedEventsForUser } = useEvent(); // Fetch events from Firebase
 
   const handleEventClick = (id: string, coverPhotoUrl: string) => {
     navigate(`/event/${id}`, { state: { coverPhotoUrl } });
@@ -20,7 +22,14 @@ const Home: React.FC = () => {
   useEffect(() => {
       fetchCoverPhotos()
   }, []);
-  console.log(coverPhotos.type)
+  
+  const handleStarClick = async (event: any, isSelected: boolean) => {
+    if (!user) {
+      console.error("User is not logged in.");
+      return;
+    }
+    await updateInterestedEventsForUser(user.uid, event.id, isSelected);
+  };
 
   return (
     <div className="app-container">
@@ -39,10 +48,10 @@ const Home: React.FC = () => {
           <div className="sub-main-content overflow-y-auto max-h-screen">
             <div className="bg-white">
               <h1 className="p-5 font-bold">All Events</h1>
-              <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+              <div className="mx-auto px-4 py-16 sm:px-6 sm:py-16 lg:px-8">
                 <h2 className="sr-only">events</h2>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8">
-                  {events1.map((event) => (
+                  {events.map((event) => (
                     <div key={event.id} className="group">
                       <div
                         className="cursor-pointer"
@@ -76,7 +85,10 @@ const Home: React.FC = () => {
                         <button className="px-10 py-2 bg-gray-200 text-black rounded-lg hover:bg-green-700 w-4/5">
                           Accept
                         </button>
-                        <StarRating />
+                        <StarRating
+                          isInterested={userData?.interestedEvents?.includes(String(event.id)) || false}
+                          onClick={(newState: boolean) => handleStarClick(event, newState)}
+                        />
                       </div>
                     </div>
                   ))}

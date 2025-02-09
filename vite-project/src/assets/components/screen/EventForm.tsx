@@ -9,7 +9,6 @@ import AutoCompleteInput from "../utils/AutoComplete";
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
 import LoadingIndicator from "../section/LoadingIndicator";
-import { Modal } from "@mui/material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -31,6 +30,7 @@ const EventForm = () => {
     hostStreetAddress: "",
     hostPostalCode: "",
     hostCity: "",
+    interested:false,
     participants: 1,
     coverPhoto: null,
   });
@@ -55,7 +55,28 @@ const EventForm = () => {
       const path = `coverPhotos/${eventId}`;
       await uploadImage(coverPhotoFile, path)
     }
+    // Reset the form fields
+    setFormData({
+      name: "",
+      date: "",
+      description: "",
+      location: { name: "", coordinates: { lat: 0, lng: 0 } },
+      hostFirstName: "",
+      hostLastName: "",
+      hostPhone: "",
+      hostEmail: "",
+      hostCountry: "",
+      hostStreetAddress: "",
+      hostPostalCode: "",
+      hostCity: "",
+      interested:false,
+      participants: 1,
+      coverPhoto: null,
+    });
+
+    setCoverPhotoFile(null);
   };
+
   const handleLocationSelect = (selectedLocation: {
     name: string;
     lat: number;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db, collection, getDocs } from "../../../firebase";
-import { addDoc, Timestamp } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 
 // Define a type for the location
 interface EventLocation {
@@ -25,11 +25,12 @@ interface Event {
   hostStreetAddress: string;
   hostPostalCode: string;
   hostCity: string;
+  interested:boolean,
   participants: number;
 }
 
 const useEvent = () => {
-  const [events1, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [eventUpoading, setEventUploading] = useState(false);
   const eventRef = collection(db, "Event");
 
@@ -79,8 +80,29 @@ const useEvent = () => {
       setEventUploading(false)
     }
   };
+  
+  const updateInterestedEventsForUser = async (
+    userId: string,
+    eventId: string,
+    add: boolean
+  ) => {
+    try {
+      const userRef = doc(db, "users", userId);
+      if (add) {
+        await updateDoc(userRef, {
+          interestedEvents: arrayUnion(eventId),
+        });
+      }  else {
+        await updateDoc(userRef, {
+          interestedEvents: arrayRemove(eventId),
+        });
+      }
+    } catch (error) {
+      console.error("Error updating interestedEvent field:", error);
+    }
+  };
 
-  return { events1, addEvent, eventUpoading };
+  return { events, addEvent, eventUpoading, updateInterestedEventsForUser  };
 };
 
 export default useEvent;

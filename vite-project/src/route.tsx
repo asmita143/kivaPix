@@ -7,6 +7,7 @@ import SingleEvent from "./assets/components/screen/SingleEvent";
 import PhotoGallery from "./assets/components/screen/Photogallery";
 import EventForm from "./assets/components/screen/EventForm";
 import Profile from "./assets/components/screen/Profile";
+import InterestedEvents from "./assets/components/screen/InterestedEventScreen";
 
 const RouteConfig = () => {
   return (
@@ -19,6 +20,7 @@ const RouteConfig = () => {
       <Route path="/event/:id" element={<SingleEvent />} />
       <Route path="/eventform" element={<EventForm />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/events/interested" element={<InterestedEvents />} />
     </Routes>
   );
 };

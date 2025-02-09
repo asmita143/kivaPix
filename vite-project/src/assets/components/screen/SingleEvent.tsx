@@ -11,10 +11,10 @@ const SingleEvent = () => {
   const { id } = useParams<{ id?: string }>();
 
   // Fetch events using the useEvent hook
-  const { events1 = [] } = useEvent();
+  const { events = [] } = useEvent();
 
   // Find the event by ID
-  const event = events1.find((e) => e.id === id); // Use id as string directly if it's string in Firestore
+  const event = events.find((e) => e.id === id); // Use id as string directly if it's string in Firestore
 
   // If event is not found, return a not found message
   if (!event) {

@@ -41,7 +41,6 @@ body {
 .main-content {
   flex: 1;
   background: #f9fafb;
-  padding: 2rem;
   overflow: auto;
 }
 

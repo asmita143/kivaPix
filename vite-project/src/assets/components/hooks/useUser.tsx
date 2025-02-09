@@ -101,7 +101,7 @@ const useUser = () => {
     }
   };
 
-  return { user, userData, loading, error, login, register, logout }; // Return the user state, login, register, and logout functions
+  return { user, userId: user ? user.uid : null, userData, loading, error, login, register, logout }; // Return the user state, login, register, and logout functions
 };
 
 export default useUser;
