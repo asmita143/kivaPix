@@ -1,33 +1,59 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import HomeIcon from '@mui/icons-material/Home';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import SettingsIcon from '@mui/icons-material/Settings';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import EventIcon from '@mui/icons-material/Event';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import EventRepeatIcon from '@mui/icons-material/EventRepeat';
-import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import EventIcon from "@mui/icons-material/Event";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import EventRepeatIcon from "@mui/icons-material/EventRepeat";
+import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 
 const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/home";
 
   const sidebarItems = [
-    { label: "Home", isDropdown: false, path: "/home", icon:HomeIcon },
+    { label: "Home", isDropdown: false, path: "/home", icon: HomeIcon },
     {
       label: "Events",
       isDropdown: true,
       dropdownItems: [
-        { label: "Accepted", path: "/events/accepted", icon:EventAvailableIcon },
-        { label: "Interested", path: "/events/interested", icon:StarBorderPurple500Icon },
-        { label: "Past Events", path: "/events/past", icon:EventRepeatIcon},
+        {
+          label: "Accepted",
+          path: "/events/accepted",
+          icon: EventAvailableIcon,
+        },
+        {
+          label: "Interested",
+          path: "/events/interested",
+          icon: StarBorderPurple500Icon,
+        },
+        { label: "Past Events", path: "/events/past", icon: EventRepeatIcon },
       ],
-      icon:EventIcon
+      icon: EventIcon,
     },
-    { label: "Notifications", isDropdown: false, path: "/notifications", icon:NotificationsActiveIcon},
-    { label: "Settings", isDropdown: false, path: "/settings", icon:SettingsIcon},
-    { label: "Profile", isDropdown: false, path: "/profile", icon:PersonOutlineIcon },
+    {
+      label: "Notifications",
+      isDropdown: false,
+      path: "/notifications",
+      icon: NotificationsActiveIcon,
+    },
+    {
+      label: "Settings",
+      isDropdown: false,
+      path: "/settings",
+      icon: SettingsIcon,
+    },
+    {
+      label: "Profile",
+      isDropdown: false,
+      path: "/profile",
+      icon: PersonOutlineIcon,
+    },
   ];
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
@@ -60,9 +86,9 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                   item.isDropdown ? `${item.label} dropdown` : item.label
                 }
               >
-                  {item.icon && <item.icon className="" />}
-                  <span>{item.label}</span>
-                
+                {item.icon && <item.icon className="" />}
+                <span>{item.label}</span>
+
                 {item.isDropdown && (
                   <span
                     className={`transform transition-transform duration-200${
@@ -100,6 +126,17 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
             onClick={() => navigate(`/Photogallery/${id}`)}
           >
             View Gallery
+          </button>
+        </div>
+      )}
+      {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
+      {isHomePage && (
+        <div className="p-4 mt-6">
+          <button
+            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            onClick={() => navigate("/eventForm")} // Navigate to event creation page
+          >
+            + Create Event
           </button>
         </div>
       )}
