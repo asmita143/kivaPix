@@ -65,7 +65,7 @@ const Home: React.FC = () => {
                           src={coverPhotos[String(event.id)]|| imageNotAvailable}
                           className="aspect-square w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-7/8"
                         />
-                        <h3 className="mt-4 text-md text-gray-700 font-bold">
+                        <h3 className="mt-4 text-md text-gray-700 font-bold truncate">
                           {event.name}
                         </h3>
                         <p className="mt-1 text-sm text-gray-600 font-bold">
@@ -74,7 +74,7 @@ const Home: React.FC = () => {
                             ? new Date(event.date).toLocaleDateString()
                             : "No date available"}
                         </p>
-                        <p className="mt-1 text-sm text-black-100">
+                        <p className="mt-1 text-sm text-black-100 truncate">
                           Location:{" "}
                           {event.location?.name || "No location available"}
                         </p>

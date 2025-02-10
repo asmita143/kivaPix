@@ -207,7 +207,6 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
                         Printed
                         </span>
                     )}
-                    
                     </div>
                     ))}
                 </div>
