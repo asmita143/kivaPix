@@ -25,7 +25,6 @@ interface Event {
   hostStreetAddress: string;
   hostPostalCode: string;
   hostCity: string;
-  interested:boolean,
   participants: number;
 }
 

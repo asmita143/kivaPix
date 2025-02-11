@@ -3,13 +3,13 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import React, { useEffect, useState } from "react";
-import SideBar from "../section/SideBar";
 import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete";
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
 import FieldItemTitle from "../utils/FieldItem";
 import LoadingIndicator from "../section/LoadingIndicator";
+import Sidebar from "../section/SideBar";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -38,7 +38,6 @@ const EventForm = () => {
     hostStreetAddress: "",
     hostPostalCode: "",
     hostCity: "",
-    interested: false,
     participants: 1,
     coverPhoto: null,
   });
@@ -74,7 +73,6 @@ const EventForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate form inputs before submitting
     const isValid = validateForm();
     if (!isValid) return;
 
@@ -102,7 +100,6 @@ const EventForm = () => {
       hostStreetAddress: "",
       hostPostalCode: "",
       hostCity: "",
-      interested: false,
       participants: 1,
       coverPhoto: null,
     });
@@ -168,7 +165,6 @@ const EventForm = () => {
       hostStreetAddress: "",
       hostPostalCode: "",
       hostCity: "",
-      interested: false,
       participants: 1,
       coverPhoto: null,
     });
@@ -185,31 +181,35 @@ const EventForm = () => {
   };
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      <HeaderSection />
-      <div className="flex flex-grow bg-gray-100 ">
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-md transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <SideBar />
-        </div>
-        <div className="bg-gradient-to-r from-gray-300 to-gray-500 h-auto w-full flex items-center justify-center p-4 ">
-          <div className="max-w-4xl min-h-screen mx-auto bg-white p-12 rounded-lg shadow-lg overflow-y-auto ">
-            <main
-              className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300 ${
-                isSidebarVisible ? "lg:ml-64" : "ml-0"
-              }`}
-            >
-              <div className="flex-grow mb-24 p-3 h-auto overflow-y-auto">
-                <form
+    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
+    {/* Top Header Section */}
+    <HeaderSection />
+
+    {/* Sidebar & Main Layout */}
+    <div className="flex flex-grow bg-gray-100 min-h-0">
+      {/* Hamburger Menu Button */}
+      <HamburgerMenu
+        setSidebarVisible={setSidebarVisible}
+        isSidebarVisible={isSidebarVisible}
+      />
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
+          isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 lg:static`}
+      >
+        <Sidebar />
+      </div>
+
+      {/* Main Content */}
+      <main className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
+        {/* Bottom Part: Scrollable Grid View */}
+        <div className="overflow-y-auto min-h-0 bg-white rounded-lg shadow-lg p-4 w-1/2">
+            <div className="flex gap-6 p-">
+            <form
                   onSubmit={handleSubmit}
-                  className="flex flex-col space-y-6"
+                  className="flex flex-col space-y-6 w-full items-center"
                 >
                   <div className="space-y-12">
                     <div className="pb-2">
@@ -223,25 +223,27 @@ const EventForm = () => {
                             htmlFor="name"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Name of Event
+                            Event Name
                           </label>
-                          <FieldItemTitle
-                            value={eventTitle}
-                            onChange={handleTitleChange}
-                            name="title"
-                            placeholder="Enter event title"
-                            isTextArea={false}
-                            row={0}
-                          />
+                          <div className="mt-2">
+                            <FieldItemTitle
+                                value={eventTitle}
+                                onChange={handleTitleChange}
+                                name="title"
+                                placeholder="Enter event title"
+                                isTextArea={false}
+                                row={0}
+                            />
+                          </div>
                         </div>
 
                         {/* Event Date */}
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-4 ">
                           <label
                             htmlFor="date"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Date of Event
+                            Date 
                           </label>
                           <div className="mt-2">
                             <FieldItemTitle
@@ -256,7 +258,7 @@ const EventForm = () => {
                         </div>
 
                         {/* Event Location (Google Maps Autocomplete) */}
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-full">
                           <label htmlFor="location">Location</label>
                           <div className="mt-2">
                             <LoadScript
@@ -328,12 +330,12 @@ const EventForm = () => {
                     </div>
 
                     {/* Host Information */}
-                    <div className="border-b border-gray-900/10 pb-12">
+                    <div className="border-b border-gray-900/10 pb-9">
                       <h2 className="text-base/7 font-semibold text-gray-900">
                         Hosted by
                       </h2>
                       <div className="mt-10 grid">
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostFirstName"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -351,7 +353,7 @@ const EventForm = () => {
                             />
                           </div>
                         </div>
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostLastName"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -369,7 +371,7 @@ const EventForm = () => {
                             />
                           </div>
                         </div>
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostEmail"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -387,7 +389,7 @@ const EventForm = () => {
                             />
                           </div>
                         </div>
-                        <div className="sm:col-span-4">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostPhone"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -405,14 +407,14 @@ const EventForm = () => {
                             />
                           </div>
                         </div>{" "}
-                        <div className="sm:col-span-3">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostCountry"
                             className="block text-sm/6 font-medium text-gray-900"
                           >
                             Country
                           </label>
-                          <div className="mt-2 grid grid-cols-1">
+                          <div className="mt-2 grid grid-cols-1 mb-4">
                             <select
                               id="hostCountry"
                               name="hostCountry"
@@ -426,7 +428,7 @@ const EventForm = () => {
                             <ChevronDownIcon className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" />
                           </div>
                         </div>
-                        <div className="col-span-full">
+                        <div className="col-span-4 mb-4">
                           <label
                             htmlFor="hostStreetAddress"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -444,12 +446,12 @@ const EventForm = () => {
                             />
                           </div>
                         </div>
-                        <div className="sm:col-span-2 sm:col-start-1">
+                        <div className="sm:col-span-4 mb-4">
                           <label
                             htmlFor="hostCity"
                             className="block text-sm/6 font-medium text-gray-900"
                           >
-                            City
+                            City / Town
                           </label>
                           <div className="mt-2">
                             <FieldItemTitle
@@ -462,7 +464,7 @@ const EventForm = () => {
                             />
                           </div>
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-4">
                           <label
                             htmlFor="hostPostalCode"
                             className="block text-sm/6 font-medium text-gray-900"
@@ -503,23 +505,21 @@ const EventForm = () => {
                       >
                         Save
                       </button>
-                      ;
                     </div>
                   </div>
                 </form>
-              </div>
-              <LoadingIndicator
+            </div>
+            <LoadingIndicator
                 uploading={false}
                 copyImage={false}
                 deleteLoading={false}
                 saving={false}
                 event={eventUpoading || uploading}
-              />
-            </main>
-          </div>
+            />
         </div>
-      </div>
+      </main>
     </div>
+  </div>
   );
 };
 

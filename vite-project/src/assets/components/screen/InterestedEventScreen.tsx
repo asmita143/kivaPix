@@ -91,7 +91,7 @@ const InterestedEvents: React.FC = () => {
                         {event.location?.name || "No location available"}
                       </p>
                       </div>
-                      <div className="absolute top-0 left-0 w-16 h-16 bg-gray-700 rounded-tl-lg rounded-br-lg flex flex-col items-center justify-center">
+                      <div className="absolute top-0 left-0 w-16 h-16 bg-gray-600 rounded-tl-lg rounded-br-lg flex flex-col items-center justify-center">
                         {event.date ? (
                           <>
                             <p className="text-white text-xl font-bold">
