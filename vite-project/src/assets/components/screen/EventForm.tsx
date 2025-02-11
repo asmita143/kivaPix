@@ -1,5 +1,4 @@
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import React, { useEffect, useState } from "react";
@@ -63,14 +62,15 @@ const EventForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  const handleTitleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setEventTitle(e.target.value);
+
+    // Update form data for each field dynamically
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Dynamically update the field based on the 'name' attribute
+    }));
   };
 
+  //Handle submit of form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isValid = validateForm();
@@ -107,6 +107,7 @@ const EventForm = () => {
     setCoverPhotoFile(null);
   };
 
+  //Handles location of event
   const handleLocationSelect = (selectedLocation: {
     name: string;
     lat: number;
@@ -124,11 +125,14 @@ const EventForm = () => {
     }));
   };
 
+  //Handles Cover Photo
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setCoverPhotoFile(e.target.files[0]);
     }
   };
+
+  //Form validation
   const validateForm = () => {
     let valid = true;
     const errors = { email: "", phone: "" };
@@ -151,6 +155,7 @@ const EventForm = () => {
     return valid;
   };
 
+  //Resets the form
   const resetForm = () => {
     setFormData({
       name: "",
@@ -176,6 +181,7 @@ const EventForm = () => {
     });
   };
 
+  //Handle cancel
   const handleCancel = () => {
     resetForm();
   };
@@ -228,11 +234,12 @@ const EventForm = () => {
                           <div className="mt-2">
                             <FieldItemTitle
                                 value={eventTitle}
-                                onChange={handleTitleChange}
+                                onChange={handleChange}
                                 name="title"
                                 placeholder="Enter event title"
                                 isTextArea={false}
                                 row={0}
+                                children={undefined}
                             />
                           </div>
                         </div>
@@ -253,6 +260,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -288,6 +296,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={true}
                               row={3}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -350,6 +359,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -368,6 +378,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -386,6 +397,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -404,6 +416,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>{" "}
@@ -415,19 +428,15 @@ const EventForm = () => {
                             Country
                           </label>
                           <div className="mt-2 grid grid-cols-1 mb-4">
-                            <select
-                              id="hostCountry"
+                            <FieldItemTitle
                               name="hostCountry"
                               value={formData.hostCountry}
-                              //onChange={handleTitleChange}
-                              className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-gray-200 py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                              onChange={handleChange}
                             >
-                              <option>Finland</option>
-                              {/* Add more countries as needed */}
-                            </select>
-                            <ChevronDownIcon className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" />
+                              Select Country
+                            </FieldItemTitle>
                           </div>
-                        </div>
+                      </div>
                         <div className="col-span-4 mb-4">
                           <label
                             htmlFor="hostStreetAddress"
@@ -443,6 +452,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -461,6 +471,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>
@@ -479,6 +490,7 @@ const EventForm = () => {
                               onChange={handleChange}
                               isTextArea={false}
                               row={0}
+                              children={undefined}
                             />
                           </div>
                         </div>

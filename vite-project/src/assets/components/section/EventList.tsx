@@ -13,7 +13,7 @@ interface EventListProps {
 const EventList: React.FC <EventListProps> = ({allEvents}) => {
     const {coverPhotos, fetchCoverPhotos} = useImage("");
     const navigate = useNavigate();
-    const { events, updateInterestedEventsForUser, acceptEvent } = useEvent();
+    const { updateInterestedEventsForUser, acceptEvent } = useEvent();
     const { user, userData } = useUser();
     const location = useLocation();
     const isHomePage = location.pathname === "/home";
