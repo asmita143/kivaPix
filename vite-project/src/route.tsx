@@ -8,6 +8,7 @@ import PhotoGallery from "./assets/components/screen/Photogallery";
 import EventForm from "./assets/components/screen/EventForm";
 import Profile from "./assets/components/screen/Profile";
 import InterestedEvents from "./assets/components/screen/InterestedEventScreen";
+import AcceptedEvents from "./assets/components/screen/AcceptedScreen";
 
 const RouteConfig = () => {
   return (
@@ -21,6 +22,7 @@ const RouteConfig = () => {
       <Route path="/eventform" element={<EventForm />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/events/interested" element={<InterestedEvents />} />
+      <Route path="/events/accepted" element={<AcceptedEvents />} />
     </Routes>
   );
 };

@@ -21,8 +21,8 @@ const StarRating: React.FC<StarRatingProps> = ({ isInterested, onClick }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-8 h-8 cursor-pointer hover:shadow-lg rounded-lg ${
-        isSelected ? "text-yellow-500" : "text-gray-300"
+      className={`w-12 h-12 cursor-pointer hover:shadow-lg rounded-lg ${
+        isSelected ? "text-yellow-500" : "text-gray-400"
       }`}
       fill="currentColor"
       viewBox="0 0 20 20"

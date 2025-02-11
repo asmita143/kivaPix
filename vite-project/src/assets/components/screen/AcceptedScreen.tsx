@@ -6,19 +6,18 @@ import { useState } from "react";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import EventList from "../section/EventList";
 
-const InterestedEvents: React.FC = () => {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const { events } = useEvent(); 
-  const { userData, loading: userLoading } = useUser();  
-
+const AcceptedEvents: React.FC = () => {
+    const [isSidebarVisible, setSidebarVisible] = useState(false);
+    const { events } = useEvent(); 
+    const { userData, loading: userLoading } = useUser();  
   
-  if (userLoading) return <p>Loading user data...</p>;
-  
-  const interestedEventIds: string[] = userData?.interestedEvents || [];
-  
-  const interestedEvents = events.filter((event) =>
-      interestedEventIds.includes(String(event.id))
-  );
+    if (userLoading) return <p>Loading user data...</p>;
+    
+    const acceptedEventIds: string[] = userData?.acceptedEvent || [];
+    
+    const acceptedEvents = events.filter((event) =>
+        acceptedEventIds.includes(String(event.id))
+    );
 
     return (
       <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
@@ -47,16 +46,17 @@ const InterestedEvents: React.FC = () => {
           {/* Top Part: Sticky Header */}
           <div className="sticky top-0 flex-none bg-white shadow-sm rounded-lg p-2 md:p-3">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              Interested Events
+              Accepted Events
             </h1>
           </div>
+          
           {/* Bottom Part: Scrollable Grid View */}
-          <EventList allEvents={interestedEvents} />
+          <EventList allEvents={acceptedEvents} />
         </main>
       </div>
     </div>
     );
   };
   
-  export default InterestedEvents;
+  export default AcceptedEvents;
   

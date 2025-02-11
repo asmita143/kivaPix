@@ -10,7 +10,8 @@ interface EventLocation {
     lng: number; // Longitude
   };
 }
-interface Event {
+
+export interface Event {
   imageSrc?: string;
   id?: string;
   name: string;

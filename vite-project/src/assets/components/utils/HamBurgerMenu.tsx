@@ -14,7 +14,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
     <div>
       {/* Hamburger Menu Button */}
       <button
-        className="absolute top-4 left-4 z-30 p-2 bg-gray-800 text-white rounded-md lg:hidden"
+        className="absolute top-2 left-4 z-30 p-2 bg-white text-black rounded-md lg:hidden"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
       >
         {isSidebarVisible ? (

@@ -14,7 +14,7 @@ const Header = () => {
 
 const HeaderLeft = () => {
   return (
-    <div className="font-bold flex-none w-1/4 text-xl px-20 lg:px-10 cursor-pointer hover:text-green-500 transition duration-200">
+    <div className="font-bold flex-none w-1/4 text-xl px-16 lg:px-10 cursor-pointer hover:text-green-500 transition duration-200">
       KIVAPIX
     </div>
   );
@@ -22,7 +22,7 @@ const HeaderLeft = () => {
 
 const HeaderRight = () => {
   return (
-    <div className="flex-1 flex items-center justify-end gap-2 px-10">
+    <div className="flex-1 flex items-center justify-end gap-2">
       <HeaderProfile />
     </div>
   );
