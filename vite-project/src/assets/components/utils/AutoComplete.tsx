@@ -2,15 +2,25 @@ import { useState, useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 
 interface AutoCompleteInputProps {
-  onLocationSelect: (location: {
+  location: {
+    name: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+  onLocationSelect: (selectedLocation: {
     name: string;
     lat: number;
     lng: number;
   }) => void;
 }
 
-const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
-  const [location, setLocation] = useState("");
+const AutoCompleteInput = ({
+  location,
+  onLocationSelect,
+}: AutoCompleteInputProps) => {
+  const [locationName, setLocationName] = useState(location.name);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   // Handles place selection
@@ -24,7 +34,7 @@ const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
           lng: place.geometry.location.lng(),
         };
 
-        setLocation(selectedLocation.name); // Display the formatted address
+        setLocationName(selectedLocation.name); // Display the formatted address
         onLocationSelect(selectedLocation); // Send structured data
       }
     }
@@ -37,10 +47,10 @@ const AutoCompleteInput = ({ onLocationSelect }: AutoCompleteInputProps) => {
     >
       <input
         type="text"
-        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
+        className="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 focus:outline-indigo-600"
         placeholder="Enter location..."
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
+        value={locationName}
+        onChange={(e) => setLocationName(e.target.value)}
       />
     </Autocomplete>
   );

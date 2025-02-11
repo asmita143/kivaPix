@@ -1,12 +1,15 @@
 // src/pages/Profile.tsx
+import { useState } from "react";
 import useUser from "../hooks/useUser"; // Import the useUser hook
 import HeaderSection from "../section/HeaderSection";
 import SideBar from "../section/SideBar";
 import { useNavigate } from "react-router-dom";
+import HamburgerMenu from "../utils/HamBurgerMenu";
 
 const Profile = () => {
   const { user, userData, loading, error, logout } = useUser(); // To store additional user data
   const navigate = useNavigate();
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   if (loading) {
     return <p>Loading user data...</p>;
@@ -25,11 +28,19 @@ const Profile = () => {
     <div className="app-container">
       <HeaderSection />
       <div className="layout flex">
-        <aside className="w-64">
-          <SideBar showButton={false} />
-        </aside>
+        <HamburgerMenu
+          setSidebarVisible={setSidebarVisible}
+          isSidebarVisible={isSidebarVisible}
+        />
+        <div
+          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-md transform transition-transform duration-300 ${
+            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0 lg:static`}
+        >
+          <SideBar />
+        </div>
         <div className="bg-gradient-to-r from-gray-300 to-gray-500 min-h-screen w-full flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in">
+          <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in ">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 text-center mb-8 md:mb-0">
                 <img
@@ -76,13 +87,15 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 flex justify-center lg:justify-end">
               <button
                 onClick={async () => {
-                  await logout();
-                  navigate("/login");
+                  if (window.confirm("Are you sure you want to logout?")) {
+                    await logout();
+                    navigate("/login");
+                  }
                 }}
-                className="w-full py-3 bg-red-500 text-white font-bold rounded-3xl text-xl"
+                className="flex-3 py-3 mb-5 bg-red-500 text-white font-bold rounded-3xl text-l"
               >
                 Logout
               </button>
