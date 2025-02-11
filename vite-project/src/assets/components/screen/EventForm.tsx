@@ -70,10 +70,9 @@ const EventForm = () => {
       ...prev,
       [name]: value, // Dynamically update the field based on the 'name' attribute
     }));
-
-    console.log(`Updated ${name}:`, value); // Logs each change
   };
 
+  //Handle submit of form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const isValid = validateForm();
@@ -110,6 +109,7 @@ const EventForm = () => {
     setCoverPhotoFile(null);
   };
 
+  //Handles location of event
   const handleLocationSelect = (selectedLocation: {
     name: string;
     lat: number;
@@ -127,11 +127,14 @@ const EventForm = () => {
     }));
   };
 
+  //Handles Cover Photo
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setCoverPhotoFile(e.target.files[0]);
     }
   };
+
+  //Form validation
   const validateForm = () => {
     let valid = true;
     const errors = { email: "", phone: "" };
@@ -154,6 +157,7 @@ const EventForm = () => {
     return valid;
   };
 
+  //Resets the form
   const resetForm = () => {
     setFormData({
       name: "",
@@ -179,6 +183,7 @@ const EventForm = () => {
     });
   };
 
+  //Handle cancel
   const handleCancel = () => {
     resetForm();
   };

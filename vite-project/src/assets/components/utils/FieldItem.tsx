@@ -8,7 +8,8 @@ type FieldItemTitleProps = {
   placeholder?: string;
   isTextArea?: boolean;
   row?: number;
-  type?: string; // Add this line to include 'type'
+  type?: string;
+  children: React.ReactNode;
 };
 
 const FieldItemTitle: React.FC<FieldItemTitleProps> = ({
