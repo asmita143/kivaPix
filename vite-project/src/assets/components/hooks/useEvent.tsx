@@ -101,7 +101,21 @@ const useEvent = () => {
     }
   };
 
-  return { events, addEvent, eventUpoading, updateInterestedEventsForUser  };
+  const acceptEvent = async (
+    userId: string,
+    eventId: string,
+  ) => {
+    try {
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        acceptedEvent: arrayUnion(eventId),
+      });
+    } catch (error) {
+      console.error("Error updating interestedEvent field:", error);
+    }
+  };
+
+  return { events, addEvent, eventUpoading, updateInterestedEventsForUser, acceptEvent  };
 };
 
 export default useEvent;

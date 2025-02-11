@@ -13,14 +13,14 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const { user, userData } = useUser();
   const {fetchCoverPhotos, coverPhotos } = useImage("")
-  const { events, updateInterestedEventsForUser } = useEvent(); // Fetch events from Firebase
+  const { events, updateInterestedEventsForUser, acceptEvent } = useEvent(); // Fetch events from Firebase
 
   const handleEventClick = (id: string, coverPhotoUrl: string) => {
     navigate(`/event/${id}`, { state: { coverPhotoUrl } });
   };
 
   useEffect(() => {
-      fetchCoverPhotos()
+    fetchCoverPhotos()
   }, []);
   
   const handleStarClick = async (event: any, isSelected: boolean) => {
@@ -29,6 +29,13 @@ const Home: React.FC = () => {
       return;
     }
     await updateInterestedEventsForUser(user.uid, event.id, isSelected);
+  };
+
+  const handleacceptClick = async (eventId:string) => {
+    if(!user){
+      return
+    }
+    await acceptEvent(user.uid, eventId)
   };
 
   return (
@@ -82,7 +89,10 @@ const Home: React.FC = () => {
 
                       {/* ❌ Non-Clickable Section: Buttons */}
                       <div className="mt-4 flex space-x-4">
-                        <button className="px-10 py-2 bg-gray-200 text-black rounded-lg hover:bg-green-700 w-4/5">
+                        <button 
+                          className="px-10 py-2 bg-gray-200 text-black rounded-lg hover:bg-green-700 w-4/5"
+                          onClick={() => handleacceptClick(event.id)}
+                        >
                           Accept
                         </button>
                         <StarRating
