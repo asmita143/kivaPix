@@ -32,7 +32,7 @@ const InterestedEvents: React.FC = () => {
   };
 
     return (
-      <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
+      <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
       {/* Top Header Section */}
       <HeaderSection />
 

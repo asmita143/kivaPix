@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   return (
-    <div className="h-[100px] w-full flex items-center justify-center p-[0.1rem] bg-neutral-50 border-b border-black">
+    <div className="w-full flex items-center justify-center p-[0.1rem] bg-neutral-50 border-b border-black">
       <HeaderLeft />
       <HeaderRight />
     </div>
@@ -14,7 +14,7 @@ const Header = () => {
 
 const HeaderLeft = () => {
   return (
-    <div className="font-bold flex-none w-1/4 text-xl px-10 cursor-pointer hover:text-green-500 transition duration-200">
+    <div className="font-bold flex-none w-1/4 text-xl px-20 lg:px-10 cursor-pointer hover:text-green-500 transition duration-200">
       KIVAPIX
     </div>
   );
@@ -36,7 +36,7 @@ const HeaderProfile = () => {
   return (
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-2 focus:outline-none">
-        <span className="font-medium">{userData?.name}</span>
+        <span className="font-medium hidden sm:block">{userData?.name}</span>
         <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
           <img
             src={profileImage}
@@ -48,7 +48,7 @@ const HeaderProfile = () => {
       </MenuButton>
 
       {/* Dropdown Menu */}
-      <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2 ring-1 ring-gray-300 focus:outline-none">
+      <MenuItems className="absolute right-0 z-10 mt-2 w-48 bg-white shadow-lg rounded-md p-2 ring-1 ring-gray-300 focus:outline-none">
         <MenuItem
           as="a"
           href="/profile"
