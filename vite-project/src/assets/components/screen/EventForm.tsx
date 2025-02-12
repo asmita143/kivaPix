@@ -9,7 +9,7 @@ import useImage from "../hooks/useImage";
 import FieldItemTitle from "../utils/FieldItem";
 import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
-import { Delete, DeleteOutlined } from "@mui/icons-material";
+import { DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 

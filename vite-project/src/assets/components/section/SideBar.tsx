@@ -68,14 +68,14 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   );
 
   return (
-    <div className="w-64 bg-[#FAF9F6] px-4 h-screen pt-8 b-black-100">
+    <div className="w-64 bg-[#FAF9F6] px-4 h-screen pt-6 b-black-100">
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-900">Menu</h1>
         <ul className="mt-4 space-y-2">
           {sidebarItems.map((item, index) => (
             <li key={index}>
               <div
-                className={`px-4 py-4 hover:shadow-md flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
+                className={`px-4 py-3 hover:shadow-md flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
                   ${item.isDropdown ? "relative" : ""}
                   ${location.pathname === item.path ? "bg-gray-300 rounded-md hover:bg-gray-300" : ""}
                   `}

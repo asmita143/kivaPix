@@ -33,9 +33,9 @@ const Home: React.FC = () => {
       </div>
 
         {/* Main Content */}
-        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300">
+        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4">
           {/* Top Part: Sticky Header */}
-          <div className="sticky top-0 flex-none bg-white shadow-sm rounded-lg p-2 md:p-3">
+          <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
               All Events
             </h1>
