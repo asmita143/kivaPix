@@ -1,5 +1,5 @@
 import useImage from "../hooks/useImage";
-import imageNotAvailable from "../../images/NotAvailable.jpg"
+import imageNotAvailable from "../../images/NotAvailable.png"
 import { useLocation, useNavigate } from "react-router-dom";
 import useEvent, { Event } from "../hooks/useEvent"; 
 import StarRating from "../utils/starRating";
@@ -52,7 +52,8 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8 gap-6 p-4">
             {allEvents.map((event) => (
-              <div key={event.id} className="relative group bg-gray-200 rounded-lg hover:drop-shadow-lg">
+              <div key={event.id} className="relative border-2 border-gray-500 border-opacity-25 rounded-lg hover:shadow-lg 
+                                              transition-all duration-300 ease-in-out hover:scale-105">
                 <img
                   src={coverPhotos[String(event.id)] || imageNotAvailable}
                   alt={event.name}

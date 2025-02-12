@@ -4,7 +4,7 @@ import mapImage from "../../images/map.jpg";
 import "../../../App.css";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
-import imageNotAvailable from "../../images/NotAvailable.jpg"
+import imageNotAvailable from "../../images/NotAvailable.png"
 
 const SingleEvent = () => {
   // Get event ID from URL params
