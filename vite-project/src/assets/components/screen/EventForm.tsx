@@ -9,6 +9,7 @@ import useImage from "../hooks/useImage";
 import FieldItemTitle from "../utils/FieldItem";
 import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
+import { Delete, DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -16,6 +17,7 @@ const EventForm = () => {
   const { addEvent, eventUpoading } = useEvent();
   const { uploadImage, uploading } = useImage("");
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -128,7 +130,14 @@ const EventForm = () => {
   //Handles Cover Photo
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setCoverPhotoFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setCoverPhotoFile(file);
+      
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+  
+      // Cleanup previous object URL
+      return () => URL.revokeObjectURL(imageUrl);
     }
   };
 
@@ -311,27 +320,45 @@ const EventForm = () => {
                           </label>
                           <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                             <div className="text-center">
-                              <PhotoIcon className="mx-auto h-12 text-gray-300" />
-                              <div className="mt-4 flex text-sm text-gray-600">
-                                <label
-                                  htmlFor="coverPhoto"
-                                  className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500"
-                                >
-                                  <span>Upload a file</span>
-
-                                  <input
-                                    id="coverPhoto"
-                                    name="coverPhoto"
-                                    type="file"
-                                    onChange={handleCoverPhotoChange}
-                                    className="sr-only"
+                              {imagePreview ? (
+                                <>
+                                <img
+                                  src={imagePreview}
+                                  alt="Uploaded Preview"
+                                  className="mx-auto h-32 w-32 object-cover rounded-lg"
+                                />
+                                <DeleteOutlined 
+                                  style={{ color:"red", cursor:"pointer"}} 
+                                  onClick={() => (
+                                    setImagePreview(null)
+                                  )}
                                   />
-                                </label>
-                                <p className="pl-1">or drag and drop</p>
-                              </div>
-                              <p className="text-xs text-gray-600">
-                                PNG, JPG, GIF up to 10MB
-                              </p>
+                                </>
+                              ):(
+                                <>
+                                <PhotoIcon className="mx-auto h-12 text-gray-300" />
+                                <div className="mt-4 flex text-sm text-gray-600">
+                                  <label
+                                    htmlFor="coverPhoto"
+                                    className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500"
+                                  >
+                                    <span>Upload a file</span>
+
+                                    <input
+                                      id="coverPhoto"
+                                      name="coverPhoto"
+                                      type="file"
+                                      onChange={handleCoverPhotoChange}
+                                      className="sr-only"
+                                    />
+                                  </label>
+                                  <p className="pl-1">or drag and drop</p>
+                                </div>
+                                <p className="text-xs text-gray-600">
+                                  PNG, JPG, GIF up to 10MB
+                                </p>
+                              </>
+                              )}
                             </div>
                           </div>
                         </div>

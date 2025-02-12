@@ -90,10 +90,12 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
                       </div>
                     )}
                 </div>
-                <div className="mt-auto flex bg-gray-200 text-black rounded-lg w-full p-2">
+                <div className="mt-auto flex items-center justify-between bg-gray-200 text-black rounded-lg w-full p-2">
                     {!isAcceptedPage && 
                     <button 
-                        className="flex-2 bg-gray-300 w-full"
+                        className={`self-center bg-gray-300 ${
+                          isHomePage ? "w-5/6" : "w-full"
+                        }`}
                         onClick={() => handleacceptClick(event.id)}
                     >
                     Accept
