@@ -3,6 +3,7 @@ import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete"; // Ensure this component is implemented
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { FormData } from "../utils/Types";
+import { DeleteOutline, DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -13,6 +14,8 @@ interface EventDetailsProps {
   ) => void;
   handleLocationSelect: (AutoCompleteInput: any) => void;
   handleCoverPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  imagePreview: string | null;
+  clearImagePreview: () => void;
 }
 
 const EventDetails = ({
@@ -20,6 +23,8 @@ const EventDetails = ({
   handleChange,
   handleCoverPhotoChange,
   handleLocationSelect,
+  imagePreview,
+  clearImagePreview,
 }: EventDetailsProps) => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
@@ -83,6 +88,20 @@ const EventDetails = ({
         </label>
         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
           <div className="text-center">
+          {imagePreview ? (
+          <>
+            <img
+              src={imagePreview}
+              alt="Uploaded Preview"
+              className="mx-auto h-32 w-32 object-cover rounded-lg"
+            />
+            <DeleteOutlined 
+               style={{ color:"red", cursor:"pointer"}} 
+               onClick={clearImagePreview}
+            />
+          </>
+          ):(
+            <>
             <PhotoIcon className="mx-auto h-12 text-gray-300" />
             <div className="mt-4 flex text-sm text-gray-600">
               <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
@@ -97,6 +116,8 @@ const EventDetails = ({
               <p className="pl-1">or drag and drop</p>
             </div>
             <p className="text-xs text-gray-600">PNG, JPG, GIF up to 10MB</p>
+            </>
+          )}
           </div>
         </div>
       </div>

@@ -233,6 +233,8 @@ const EventForm = () => {
                       handleChange={handleChange}
                       handleCoverPhotoChange={handleCoverPhotoChange}
                       handleLocationSelect={handleLocationSelect}
+                      imagePreview={imagePreview}
+                      clearImagePreview={() => setImagePreview(null)}
                     />
                   </div>
 
