@@ -11,6 +11,7 @@ import InterestedEvents from "./assets/components/screen/InterestedEventScreen";
 import AcceptedEvents from "./assets/components/screen/AcceptedScreen";
 import Notification from "./assets/components/screen/NotificationScreen";
 import Setting from "./assets/components/screen/Settings";
+import AllProfiles from "./assets/components/screen/AllProfiles";
 
 const RouteConfig = () => {
   return (
@@ -27,6 +28,7 @@ const RouteConfig = () => {
       <Route path="/events/accepted" element={<AcceptedEvents />} />
       <Route path="/notifications" element={<Notification />} />
       <Route path="/settings" element={<Setting />} />
+      <Route path="/allProfiles" element={<AllProfiles />} />
     </Routes>
   );
 };
