@@ -1,14 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import "../../../App.css";
-import HeaderSection from "../section/HeaderSection";
-import Sidebar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
+import HeaderSection from "../section/HeaderSection";
+import HamburgerMenu from "../utils/HamBurgerMenu";
+import Sidebar from "../section/SideBar";
 
-const Setting: React.FC = () => {
+const AllProfiles = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const navigate = useNavigate();
-
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
       {/* Top Header Section */}
@@ -42,12 +38,6 @@ const Setting: React.FC = () => {
                   <h2 className="text-xl font-semibold text-black dark:text-gray-200 mb-4">
                     Settings
                   </h2>
-                  <button
-                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-                    onClick={() => navigate("/allProfiles")}
-                  >
-                    All Profiles
-                  </button>
                   <div className="flex flex-wrap gap-2 mb-6">
                     {["Privacy", "Admin"].map((Role) => (
                       <span
@@ -67,5 +57,4 @@ const Setting: React.FC = () => {
     </div>
   );
 };
-
-export default Setting;
+export default AllProfiles;
