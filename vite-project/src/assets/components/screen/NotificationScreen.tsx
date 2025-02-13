@@ -1,13 +1,10 @@
 import "../../../App.css";
-import useEvent from "../hooks/useEvent";
 import HeaderSection from "../section/HeaderSection";
-import EventList from "../section/EventList";
 import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
 
-const Home: React.FC = () => {
-  const { events } = useEvent(); // Fetch events from Firebase
+const Notification: React.FC = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   return (
@@ -33,19 +30,21 @@ const Home: React.FC = () => {
       </div>
 
         {/* Main Content */}
-        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4">
+        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300">
           {/* Top Part: Sticky Header */}
-          <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3">
+          <div className="sticky top-0 flex-none bg-white shadow-sm rounded-lg p-2 md:p-3">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              All Events
+              Notification
             </h1>
           </div>
           {/* Bottom Part: Scrollable Grid View */}
-          <EventList allEvents={events} />
+          <div className="h-screen flex items-center justify-center">
+            <p className="">No New Notification</p>
+          </div>
         </main>
       </div>
     </div>
   );
 };
 
-export default Home;
+export default Notification;

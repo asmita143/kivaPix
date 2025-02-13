@@ -9,6 +9,8 @@ import EventForm from "./assets/components/screen/EventForm";
 import Profile from "./assets/components/screen/Profile";
 import InterestedEvents from "./assets/components/screen/InterestedEventScreen";
 import AcceptedEvents from "./assets/components/screen/AcceptedScreen";
+import Notification from "./assets/components/screen/NotificationScreen";
+import Setting from "./assets/components/screen/Settings";
 
 const RouteConfig = () => {
   return (
@@ -23,6 +25,8 @@ const RouteConfig = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/events/interested" element={<InterestedEvents />} />
       <Route path="/events/accepted" element={<AcceptedEvents />} />
+      <Route path="/notifications" element={<Notification />} />
+      <Route path="/settings" element={<Setting />} />
     </Routes>
   );
 };

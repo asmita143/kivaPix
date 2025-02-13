@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarIcon from '@mui/icons-material/Star';
 
 interface StarRatingProps {
   isInterested: boolean;
@@ -19,21 +21,22 @@ const StarRating: React.FC<StarRatingProps> = ({ isInterested, onClick }) => {
   };
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={`w-12 h-12 cursor-pointer hover:shadow-lg rounded-lg ${
-        isSelected ? "text-yellow-500" : "text-gray-400"
-      }`}
-      fill="currentColor"
-      viewBox="0 0 20 20"
-      onClick={handleClick}
-    >
-      <path
-        fillRule="evenodd"
-        d="M10 15l-3.5 2 1-4.5L3 8.5l4.5-.5L10 3l2.5 4.5 4.5.5-3.5 4.5 1 4.5L10 15z"
-        clipRule="evenodd"
-      />
-    </svg>
+    <div className="">
+      {isSelected ? (
+        <StarIcon
+          style={{ width: "32px", height: "32px", color:"#f59e0b" }}
+          className="w-12 h-12 cursor-pointer hover:shadow-lg rounded-lg"
+          onClick={handleClick}
+        />
+      ):(
+        <StarBorderIcon
+        style={{ width: "32px", height: "32px" }}
+          className="w-8 h-8  cursor-pointer hover:shadow-lg rounded-lg"
+          onClick={handleClick}
+        />
+      )}
+  </div>
+
   );
 };
 export default StarRating;

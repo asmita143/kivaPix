@@ -1,10 +1,11 @@
 import useImage from "../hooks/useImage";
-import imageNotAvailable from "../../images/NotAvailable.jpg"
+import imageNotAvailable from "../../images/NotAvailable.png"
 import { useLocation, useNavigate } from "react-router-dom";
 import useEvent, { Event } from "../hooks/useEvent"; 
 import StarRating from "../utils/starRating";
 import useUser from "../hooks/useUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import AcceptEvent from "./AcceptEvent";
 
 interface EventListProps {
     allEvents : Event[];
@@ -14,10 +15,41 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
     const {coverPhotos, fetchCoverPhotos} = useImage("");
     const navigate = useNavigate();
     const { updateInterestedEventsForUser, acceptEvent } = useEvent();
+    const [selectedEventId, setSelectedEventId] = useState<string | null>();
+    const [selectedEventLocation, setSelectedEventLocation] = useState<string | null>(null);
+    const [selectedEventDate, setSelectedEventDate] = useState<string | null>(null);
     const { user, userData } = useUser();
     const location = useLocation();
     const isHomePage = location.pathname === "/home";
     const isAcceptedPage = location.pathname === "/events/accepted" 
+
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const handleAccept = async () => {
+      if(!user || !selectedEventId){
+        return
+      }
+      await acceptEvent(user.uid, selectedEventId)
+
+      setModalOpen(false); 
+    };
+  
+    const handleCancel = () => {
+      console.log("Cancelled!");
+      setModalOpen(false); 
+    };
+
+    const handleAcceptClick = (event: Event) => {
+      console.log(event.date)
+      setSelectedEventId(event.id);
+      setSelectedEventLocation(event.location?.name || "No location available");
+      const eventDate = event.date;
+      if(eventDate){
+        setSelectedEventDate(new Date(eventDate).toLocaleDateString())
+      }
+      
+      setModalOpen(true); // Open the modal
+    };
 
     useEffect(() => {
         fetchCoverPhotos()
@@ -34,15 +66,7 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
         }
         await updateInterestedEventsForUser(user.uid, event.id, isSelected);
     };
-
-    const handleacceptClick = async (eventId:any) => {
-        if(!user){
-          return
-        }
-        await acceptEvent(user.uid, eventId)
-    };
     
-
     return  (
         <div className="flex-1 overflow-y-auto min-h-0 ">
         {allEvents.length === 0 ? (
@@ -50,13 +74,14 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
             No events yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8 gap-6 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8 gap-6">
             {allEvents.map((event) => (
-              <div key={event.id} className="relative group bg-gray-200 rounded-lg hover:drop-shadow-lg">
+              <div key={event.id} className="relative border-2 border-gray-500 border-opacity-25 rounded-lg hover:shadow-xl 
+                                              transition-all duration-300 ease-in-out hover:scale-105">
                 <img
                   src={coverPhotos[String(event.id)] || imageNotAvailable}
                   alt={event.name}
-                  className="aspect-[4/3] w-full rounded-lg object-cover group-hover:opacity-95 cursor-pointer border border-gray-300"
+                  className="aspect-[4/3] w-full rounded-t-lg object-cover group-hover:opacity-95 cursor-pointer"
                   onClick={() =>
                     event.id &&
                     handleEventClick(
@@ -90,11 +115,13 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
                       </div>
                     )}
                 </div>
-                <div className="mt-auto flex bg-gray-200 text-black rounded-lg w-full p-2">
+                <div className="mt-auto flex items-center justify-between text-black rounded-lg w-full p-2">
                     {!isAcceptedPage && 
                     <button 
-                        className="flex-2 bg-gray-300 w-full"
-                        onClick={() => handleacceptClick(event.id)}
+                        className={`self-center bg-gray-300 ${
+                          isHomePage ? "w-5/6" : "w-full"
+                        }`}
+                        onClick={() => handleAcceptClick(event)}
                     >
                     Accept
                     </button>
@@ -110,6 +137,13 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
             ))}
           </div>
         )}
+        <AcceptEvent
+          isOpen={isModalOpen}
+          onClose={handleCancel}
+          onConfirm={handleAccept}
+          location={selectedEventLocation || "Unknown location"}
+          date={selectedEventDate || "Unknown date"}
+        />
       </div>
     )
 };

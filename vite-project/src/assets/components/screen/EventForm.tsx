@@ -9,6 +9,7 @@ import useImage from "../hooks/useImage";
 import FieldItemTitle from "../utils/FieldItem";
 import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
+import { DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -16,6 +17,7 @@ const EventForm = () => {
   const { addEvent, eventUpoading } = useEvent();
   const { uploadImage, uploading } = useImage("");
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -128,7 +130,14 @@ const EventForm = () => {
   //Handles Cover Photo
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setCoverPhotoFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setCoverPhotoFile(file);
+
+      const imageUrl = URL.createObjectURL(file);
+      setImagePreview(imageUrl);
+
+      // Cleanup previous object URL
+      return () => URL.revokeObjectURL(imageUrl);
     }
   };
 
