@@ -12,6 +12,7 @@ import AcceptedEvents from "./assets/components/screen/AcceptedScreen";
 import Notification from "./assets/components/screen/NotificationScreen";
 import Setting from "./assets/components/screen/Settings";
 import AllProfiles from "./assets/components/screen/AllProfiles";
+import EventDescriptionScreen from "./assets/components/screen/EventDescriptionScreen";
 
 const RouteConfig = () => {
   return (
@@ -21,7 +22,7 @@ const RouteConfig = () => {
       <Route path="/Register" element={<Register />} />
       <Route path="/PhotoGallery/:id" element={<PhotoGallery />} />
       <Route path="/" element={<Login />} /> {/* Default route */}
-      <Route path="/event/:id" element={<SingleEvent />} />
+      <Route path="/event/:id" element={<EventDescriptionScreen />} />
       <Route path="/eventform" element={<EventForm />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/events/interested" element={<InterestedEvents />} />

@@ -3,7 +3,7 @@ import { LoadScript } from "@react-google-maps/api";
 import AutoCompleteInput from "../utils/AutoComplete"; // Ensure this component is implemented
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { FormData } from "../utils/Types";
-import { DeleteOutline, DeleteOutlined } from "@mui/icons-material";
+import { DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 

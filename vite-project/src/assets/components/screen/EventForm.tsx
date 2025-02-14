@@ -16,7 +16,6 @@ const EventForm = () => {
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const [eventTitle, setEventTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [formErrors, setFormErrors] = useState({
     email: "",

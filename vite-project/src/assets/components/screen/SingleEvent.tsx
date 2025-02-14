@@ -47,7 +47,7 @@ const SingleEvent = () => {
                 <div className="relative lg:row-span-2">
                   <div className="absolute inset-px rounded-lg bg-white lg:rounded-l-[2rem]"></div>
                   <div className="relative flex h-full flex-col overflow-hidden rounded-[calc(var(--radius-lg)+1px)] lg:rounded-l-[calc(2rem+1px)]">
-                    <div className="@container relative min-h-[30rem] w-full grow max-lg:mx-auto max-lg:max-w-sm">
+                    <div className="@container relative  w-full grow max-lg:mx-auto max-lg:max-w-sm">
                       <div className="">
                         <img
                           className="size-full object-cover object-top"
