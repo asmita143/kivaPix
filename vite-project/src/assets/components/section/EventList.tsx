@@ -7,13 +7,14 @@ import useUser from "../hooks/useUser";
 import { useEffect, useState } from "react";
 import AcceptEvent from "./AcceptEvent";
 import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
 
 interface EventListProps {
     allEvents : Event[];
 }
 
 const EventList: React.FC <EventListProps> = ({allEvents}) => {
-    const {coverPhotos, fetchCoverPhotos} = useImage("");
+    const {coverPhotos, fetchCoverPhotos, loading} = useImage("");
     const navigate = useNavigate();
     const { updateInterestedEventsForUser, acceptEvent } = useEvent();
     const [selectedEventId, setSelectedEventId] = useState<string | null>();
@@ -70,7 +71,11 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
     
     return  (
       <div className="flex-1 overflow-y-auto min-h-0 p-6">
-      {allEvents.length === 0 ? (
+        {loading ? ( // Show loading indicator if loading is true
+        <div className="flex items-center justify-center h-[70vh]">
+          <CircularProgress color="primary" />
+          <p className="ml-4 text-gray-700 text-xl font-medium">Loading events...</p>
+        </div> ) : allEvents.length === 0 ? (
         <p className="text-center text-gray-600">No events yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

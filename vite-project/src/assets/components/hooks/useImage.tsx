@@ -7,6 +7,7 @@ const useImage = (eventId: string) => {
     const [images, setImages] = useState<string[]>([]);
     const [printImages, setPrintImages] = useState<string[]>([]);
     const [coverPhotos, setCoverPhotos] = useState<{ [eventId: string]: string }>({});
+    const [coverPhotosCache, setCoverPhotosCache] = useState<{ [eventId: string]: string }>({});
     const [printImagesName, setPrintImagesName] = useState<string[]>([]);
     const [imageNames, setImageNames] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
@@ -73,22 +74,38 @@ const useImage = (eventId: string) => {
       };
 
       const fetchCoverPhotos = async () => {
+        if (Object.keys(coverPhotosCache).length > 0) {
+          setCoverPhotos(coverPhotosCache);
+          return;
+        }
         setLoading(true);
         try {
           const folderRef = ref(storage, 'coverPhotos');
           const listResult = await listAll(folderRef);
-          const mapping: { [eventId: string]: string } = {};
-          
-          for (const subFolderRef of listResult.prefixes) {
+      
+          const subFolderPromises = listResult.prefixes.map(async (subFolderRef) => {
             const subFolderList = await listAll(subFolderRef);
             if (subFolderList.items.length > 0) {
               const fileRef = subFolderList.items[0];
               const url = await getDownloadURL(fileRef);
-              mapping[subFolderRef.name] = url;
+              return { [subFolderRef.name]: url }; 
             }
-          }
+            return null; 
+          });
+      
+          const subFolderResults = await Promise.all(subFolderPromises);
+      
+          const mapping = subFolderResults
+          .filter((result) => result !== null) 
+          .reduce((acc, result) => {
+            console.log("Merging result:", result);
+            Object.assign(acc, result!); 
+            return acc;
+          }, {} as { [eventId: string]: string });
+      
           console.log("Cover Photos Mapping:", mapping);
           setCoverPhotos(mapping);
+          setCoverPhotosCache(mapping);
         } catch (error) {
           console.error("Error fetching cover photos:", error);
         } finally {
@@ -113,7 +130,7 @@ const useImage = (eventId: string) => {
         }
       };
       
-      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages, fetchPrintImages, fetchCoverPhotos, coverPhotos, printImages, printImagesName, deleteLoading };
+      return { images,imageNames, loading, uploading, uploadImage, deleteImage, fetchImages, fetchPrintImages, fetchCoverPhotos, coverPhotos, coverPhotosCache, printImages, printImagesName, deleteLoading };
 }
 
 export default useImage;
