@@ -62,7 +62,7 @@ const useImage = (eventId: string) => {
           const names = imageList.items.map((itemRef) => itemRef.name);
           setPrintImagesName(names);
 
-          // Fetch URLs
+
           const urls = await Promise.all(imageList.items.map((itemRef) => getDownloadURL(itemRef)));
           setPrintImages(urls);
     
@@ -98,12 +98,9 @@ const useImage = (eventId: string) => {
           const mapping = subFolderResults
           .filter((result) => result !== null) 
           .reduce((acc, result) => {
-            console.log("Merging result:", result);
             Object.assign(acc, result!); 
             return acc;
           }, {} as { [eventId: string]: string });
-      
-          console.log("Cover Photos Mapping:", mapping);
           setCoverPhotos(mapping);
           setCoverPhotosCache(mapping);
         } catch (error) {

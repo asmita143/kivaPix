@@ -25,6 +25,7 @@ const useUser = () => {
     // Cleanup the subscription on unmount
     return () => unsubscribe();
   }, []);
+  
   useEffect(() => {
     const getUserData = async () => {
       if (user) {

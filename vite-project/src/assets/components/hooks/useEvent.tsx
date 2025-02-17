@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { db, collection, getDocs } from "../../../firebase";
-import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import { db, collection } from "../../../firebase";
+import { addDoc, arrayRemove, arrayUnion, doc, getDocs, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
 
-// Define a type for the location
 interface EventLocation {
   name: string; // The name of the location (e.g., "Leppavaara, Espoo")
   coordinates: {
@@ -30,47 +29,36 @@ export interface Event {
 }
 
 const useEvent = () => {
+  const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [eventUpoading, setEventUploading] = useState(false);
   const eventRef = collection(db, "Event");
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        // Fetch all documents from the collection
-        const eventList = await getDocs(eventRef);
-
-        // Map Firestore documents to an array of Event objects
-        const eventsData = eventList.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            ...data,
-            id: doc.id,
-            date: data.date?.toDate ? data.date.toDate() : null,
-            location: data.location || {
-              name: "",
-              coordinates: { lat: 0, lng: 0 },
-            },
-          } as Event;
-        });
-
-        setEvents(eventsData);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-
-    fetchEvents();
+    const q = query(eventRef);
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const eventData = {
+          ...data,
+          id: doc.id,
+          date: data.date?.toDate ? data.date.toDate() : null,
+          location: data.location || { name: "", coordinates: { lat: 0, lng: 0 } },
+        } as Event;
+        setEvents((prev) => [...prev, eventData]);
+      });
+    });
+    return unsubscribe;
   }, []);
 
-  const addEvent = async (newEvent: Event) => {
+  const addEvent = async (event: Event) => {
     setEventUploading(true)
     try {
       const docRef = await addDoc(eventRef, {
-        ...newEvent,
-        date: newEvent.date ? Timestamp.fromDate(newEvent.date) : null,
+        ...event,
+        date: event.date ? Timestamp.fromDate(event.date) : null,
       });
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setEvents((prevEvents) => [...prevEvents, event]);
 
       return docRef.id;
 
@@ -102,6 +90,41 @@ const useEvent = () => {
     }
   };
 
+  const addNotification = async (eventId: string) => {
+    try {
+      const usersCollection = collection(db, "users");
+      const usersSnapshot = await getDocs(usersCollection);
+
+      const updatePromises = usersSnapshot.docs.map(async (userDoc) => {
+        const userRef = doc(db, "users", userDoc.id); 
+        await updateDoc(userRef, {
+          notifications: arrayUnion(eventId), 
+        });
+      });
+  
+      await Promise.all(updatePromises);
+
+      console.log("Notifications added for all users!");
+    } catch (error) {
+      console.error("Error updating notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearNotifications = async (userId:string) => {
+    setLoading(true)
+    try {
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        notifications: [],
+      });
+      console.log("All notifications cleared!");
+    } catch (error) {
+      console.error("Error clearing notifications:", error);
+    }
+  };
+
   const acceptEvent = async (
     userId: string,
     eventId: string,
@@ -116,7 +139,7 @@ const useEvent = () => {
     }
   };
 
-  return { events, addEvent, eventUpoading, updateInterestedEventsForUser, acceptEvent  };
+  return { events, addEvent, eventUpoading, updateInterestedEventsForUser, acceptEvent, addNotification, clearNotifications, loading };
 };
 
 export default useEvent;

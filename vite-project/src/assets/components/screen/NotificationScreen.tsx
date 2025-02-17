@@ -1,14 +1,40 @@
+import { useNavigate } from "react-router-dom";
 import "../../../App.css";
+import useEvent from "../hooks/useEvent";
+import useUser from "../hooks/useUser";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from "react";
+import useImage from "../hooks/useImage";
+import imageNotAvailable from "../../images/NotAvailable.png"
 
 const Notification: React.FC = () => {
+  const navigate = useNavigate();
+  const {coverPhotos} = useImage("");
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const { events, clearNotifications, loading } = useEvent();
+  const { userData, userId } = useUser();  
+
+  const notifiicationId: string[] = userData?.notifications || [];
+
+  const showNotifications = events.filter((event) =>
+    notifiicationId.includes(String(event.id))
+  );
+
+  const handleEventClick = (id: string, coverPhotoUrl: string) => {
+    navigate(`/event/${id}`, { state: { coverPhotoUrl } });
+  };
+  console.log(userId)
+  const clearAllNotifications = async () => {
+    if(userId) {
+      await clearNotifications(userId);
+    }
+  }
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
+    <div className="app-container bg-gray-100 h-screen flex flex-colitems">
     {/* Top Header Section */}
     <HeaderSection />
 
@@ -30,17 +56,66 @@ const Notification: React.FC = () => {
       </div>
 
         {/* Main Content */}
-        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300">
+        <main className="p-3 flex justify-center w-full min-h-0 transition-all duration-300">
           {/* Top Part: Sticky Header */}
-          <div className="sticky top-0 flex-none bg-white shadow-sm rounded-lg p-2 md:p-3">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              Notification
-            </h1>
+          <div className="flex-col w-1/2">
+            <div className="sticky top-0 bg-white rounded-lg p-2 md:p-3 ">
+              <div className="flex justify-between border-b-2 border-orange-200">
+                <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black  pb-2">
+                  Notification
+                </h1>
+                  {showNotifications.length > 0 && (
+                    <button
+                      className="text-sm text-blue-600 hover:text-blue-800 font-semibold"
+                      onClick={clearAllNotifications}
+                    >
+                      Clear All
+                    </button>
+                  )}
+              </div>
+              
+              {showNotifications.length === 0 ? (
+              <div className="bg-[#FAF9F6] text-black p-4 mt-5 flex justify-center">
+                <div className="flex self-center">
+                  <p className="self-center">No new Notifications</p>
+                </div>
+              </div>
+              ) : (
+              <div className="">
+                {showNotifications.map((e) => (
+                  <div className="flex items-center gap-4 p-4 mt-2 bg-blue-50 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    {/* Notification Icon */}
+                    <div className="p-3 bg-blue-100 rounded-full">
+                      <NotificationsActiveIcon className="text-blue-600" />
+                    </div>
+
+                    {/* Notification Text */}
+                    <div 
+                      className="flex-1 cursor-pointer"
+                      onClick={() =>
+                        e.id &&
+                        handleEventClick(
+                          e.id,
+                          coverPhotos[String(e.id)] || imageNotAvailable
+                        )
+                      }
+                      >
+                      <p className="text-gray-700 font-bold">
+                        🎉 New Event Alert! 🎉  
+                        Don't miss out on an exciting opportunity. {" "}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-600 ">
+                        Event: {e.name} is taking place at {e.location.name}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              )}
+            </div>
+
           </div>
-          {/* Bottom Part: Scrollable Grid View */}
-          <div className="h-screen flex items-center justify-center">
-            <p className="">No New Notification</p>
-          </div>
+
         </main>
       </div>
     </div>

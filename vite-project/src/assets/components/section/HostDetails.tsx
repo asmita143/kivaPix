@@ -3,7 +3,7 @@ import { FormData } from "../utils/Types";
 
 interface HostDetailsProps {
   formData: FormData;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Corrected the event type here
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const HostDetails: React.FC<HostDetailsProps> = ({

@@ -11,7 +11,7 @@ import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 
 const EventForm = () => {
-  const { addEvent, eventUpoading } = useEvent();
+  const { addEvent, addNotification, eventUpoading } = useEvent();
   const { uploadImage, uploading } = useImage("");
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -83,6 +83,10 @@ const EventForm = () => {
     if (coverPhotoFile && eventId) {
       const path = `coverPhotos/${eventId}`;
       await uploadImage(coverPhotoFile, path);
+    }
+
+    if(eventId){
+      await addNotification(eventId)
     }
     // Reset the form fields
     setFormData({
