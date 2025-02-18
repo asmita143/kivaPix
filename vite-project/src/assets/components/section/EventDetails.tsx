@@ -6,6 +6,9 @@ import { FormData } from "../utils/Types";
 import { DeleteOutlined } from "@mui/icons-material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
+  "places",
+];
 
 interface EventDetailsProps {
   formData: FormData;
@@ -60,7 +63,7 @@ const EventDetails = ({
         <label className="block text-sm font-medium text-gray-900">
           Location
         </label>
-        <LoadScript googleMapsApiKey={apiKey} libraries={["places"]}>
+        <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
           <AutoCompleteInput
             location={formData.location}
             onLocationSelect={handleLocationSelect}
@@ -88,36 +91,38 @@ const EventDetails = ({
         </label>
         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
           <div className="text-center">
-          {imagePreview ? (
-          <>
-            <img
-              src={imagePreview}
-              alt="Uploaded Preview"
-              className="mx-auto h-32 w-32 object-cover rounded-lg"
-            />
-            <DeleteOutlined 
-               style={{ color:"red", cursor:"pointer"}} 
-               onClick={clearImagePreview}
-            />
-          </>
-          ):(
-            <>
-            <PhotoIcon className="mx-auto h-12 text-gray-300" />
-            <div className="mt-4 flex text-sm text-gray-600">
-              <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
-                <span>Upload a file</span>
-                <input
-                  type="file"
-                  name="coverPhoto"
-                  onChange={handleCoverPhotoChange}
-                  className="sr-only"
+            {imagePreview ? (
+              <>
+                <img
+                  src={imagePreview}
+                  alt="Uploaded Preview"
+                  className="mx-auto h-32 w-32 object-cover rounded-lg"
                 />
-              </label>
-              <p className="pl-1">or drag and drop</p>
-            </div>
-            <p className="text-xs text-gray-600">PNG, JPG, GIF up to 10MB</p>
-            </>
-          )}
+                <DeleteOutlined
+                  style={{ color: "red", cursor: "pointer" }}
+                  onClick={clearImagePreview}
+                />
+              </>
+            ) : (
+              <>
+                <PhotoIcon className="mx-auto h-12 text-gray-300" />
+                <div className="mt-4 flex text-sm text-gray-600">
+                  <label className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
+                    <span>Upload a file</span>
+                    <input
+                      type="file"
+                      name="coverPhoto"
+                      onChange={handleCoverPhotoChange}
+                      className="sr-only"
+                    />
+                  </label>
+                  <p className="pl-1">or drag and drop</p>
+                </div>
+                <p className="text-xs text-gray-600">
+                  PNG, JPG, GIF up to 10MB
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -51,7 +51,10 @@ const Profile = () => {
                 <h1 className="text-2xl font-bold text-black dark:text-gray-200 mb-2">
                   {userData?.name || "User"}
                 </h1>
-                <button className="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors duration-300">
+                <button
+                  className="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors duration-300"
+                  onClick={() => navigate("../settings")}
+                >
                   Edit Profile
                 </button>
               </div>

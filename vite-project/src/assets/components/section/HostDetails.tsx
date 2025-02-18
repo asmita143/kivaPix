@@ -52,6 +52,7 @@ const HostDetails: React.FC<HostDetailsProps> = ({
             name="hostEmail"
             value={formData.hostEmail}
             onChange={handleChange}
+            placeholder="abc@abc.abc"
             className="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
@@ -60,13 +61,14 @@ const HostDetails: React.FC<HostDetailsProps> = ({
       <div className="sm:col-span-4 mb-4">
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-900">
-            Phone:
+            Phone
           </label>
           <input
             type="text"
             name="hostPhone"
             value={formData.hostPhone}
             onChange={handleChange}
+            placeholder="0123456789"
             className="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
           />
         </div>
@@ -90,7 +92,7 @@ const HostDetails: React.FC<HostDetailsProps> = ({
       <div className="sm:col-span-4 mb-4">
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-900">
-            Street Address:
+            Street Address
           </label>
           <input
             type="text"
@@ -105,7 +107,7 @@ const HostDetails: React.FC<HostDetailsProps> = ({
       <div className="sm:col-span-4 mb-4">
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-900">
-            City:
+            City
           </label>
           <input
             type="text"
