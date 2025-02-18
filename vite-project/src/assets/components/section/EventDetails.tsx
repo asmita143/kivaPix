@@ -13,7 +13,9 @@ const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
 interface EventDetailsProps {
   formData: FormData;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => void;
   handleLocationSelect: (AutoCompleteInput: any) => void;
   handleCoverPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -56,6 +58,45 @@ const EventDetails = ({
           onChange={handleChange}
           className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
         />
+      </div>
+      {/* Event Date */}
+      <div className="sm:col-span-4">
+        <label className="block text-sm font-medium text-gray-900">Time</label>
+        <input
+          type="time"
+          name="time"
+          value={formData.time}
+          onChange={handleChange}
+          className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+        />
+      </div>
+      <div className="sm:col-span-4">
+        <label className="block text-sm font-medium text-gray-900">
+          Number of participants
+        </label>
+        <input
+          type="number"
+          name="participants"
+          value={formData.participants}
+          onChange={handleChange}
+          className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+        />
+      </div>
+      <div className="sm:col-span-4">
+        <label className="block text-sm font-medium text-gray-900">
+          Contract type
+        </label>
+        <select
+          name="contractType"
+          value={formData.contractType}
+          onChange={handleChange} // Ensure handleChange supports <select>
+          className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+        >
+          <option value="">Select contract type</option>
+          <option value="Economy">Economy</option>
+          <option value="Premium">Premium</option>
+          <option value="Entertainment">Entertainment</option>
+        </select>
       </div>
 
       {/* Event Location */}

@@ -25,6 +25,8 @@ const EventForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
+    time: "",
+    contractType: "",
     description: "",
     location: { name: "", coordinates: { lat: 0, lng: 0 } },
     hostFirstName: "",
@@ -42,6 +44,8 @@ const EventForm = () => {
     const isFormFilled =
       formData.name.trim() !== "" &&
       formData.date.trim() !== "" &&
+      formData.time.trim() !== "" &&
+      formData.contractType.trim() !== "" &&
       formData.description.trim() !== "" &&
       formData.location.name.trim() !== "" &&
       formData.hostFirstName.trim() !== "" &&
@@ -57,7 +61,9 @@ const EventForm = () => {
   }, [formData, coverPhotoFile]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
 
@@ -77,6 +83,7 @@ const EventForm = () => {
     const eventData = {
       ...formData,
       date: formData.date ? new Date(formData.date) : null,
+      time: formData.time ? new Date(formData.time) : null,
     };
     const eventId = await addEvent(eventData);
 
@@ -92,6 +99,7 @@ const EventForm = () => {
     setFormData({
       name: "",
       date: "",
+      contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },
       hostFirstName: "",
@@ -104,6 +112,7 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
+      time: "",
     });
 
     setCoverPhotoFile(null);
@@ -169,6 +178,8 @@ const EventForm = () => {
     setFormData({
       name: "",
       date: "",
+      time: "",
+      contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },
       hostFirstName: "",

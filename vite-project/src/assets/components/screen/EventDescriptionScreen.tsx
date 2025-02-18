@@ -4,9 +4,16 @@ import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import imageNotAvailable from "../../images/NotAvailable.png"
+import imageNotAvailable from "../../images/NotAvailable.png";
 import useEvent from "../hooks/useEvent";
-import { FaCalendarDay, FaClock, FaEnvelope, FaPhone, FaUser, FaUsers } from "react-icons/fa";
+import {
+  FaCalendarDay,
+  FaClock,
+  FaEnvelope,
+  FaPhone,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
 import mapImage from "../../images/map.jpg";
 
 const EventDescriptionScreen = () => {
@@ -15,12 +22,17 @@ const EventDescriptionScreen = () => {
   const { id } = useParams<{ id?: string }>();
   const { events = [] } = useEvent();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const coverPhotoUrl = locationForImage.state?.coverPhotoUrl || imageNotAvailable;
+  const coverPhotoUrl =
+    locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
 
   const formattedDate =
     event?.date instanceof Date
       ? event.date.toLocaleDateString()
+      : "No date available";
+  const formattedTime =
+    event?.date instanceof Date
+      ? event.time?.toLocaleTimeString()
       : "No date available";
 
   return (
@@ -66,7 +78,9 @@ const EventDescriptionScreen = () => {
             {/* Event Metadata */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 bg-white p-6 rounded-lg shadow-lg">
               <div className="flex-1 space-y-4">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">Event Details</h2>
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                  Event Details
+                </h2>
                 <div className="flex items-center space-x-4">
                   <FaCalendarDay className="text-orange-500" />
                   <p className="text-lg">
@@ -76,13 +90,22 @@ const EventDescriptionScreen = () => {
                 <div className="flex items-center space-x-4">
                   <FaClock className="text-orange-500" />
                   <p className="text-lg">
-                    <span className="font-semibold">Time:</span> 15:30
+                    <span className="font-semibold">Time:</span> {formattedTime}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaUsers className="text-orange-500" />
                   <p className="text-lg">
-                    <span className="font-semibold">Participants:</span> 55
+                    <span className="font-semibold">Participants:</span>{" "}
+                    {event?.participants}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  {" "}
+                  <FaUsers className="text-orange-500" />
+                  <p className="text-lg">
+                    <span className="font-semibold">Contract type:</span>{" "}
+                    {event?.contractType}
                   </p>
                 </div>
               </div>
@@ -90,27 +113,29 @@ const EventDescriptionScreen = () => {
               <div className="hidden md:block w-px h-48 bg-gray-300 mx-10"></div>
 
               <div className="flex-1 space-y-4">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800">Host Details</h2>
-                  <div className="flex items-center space-x-4">
-                    <FaUser className="text-orange-500" />
-                    <p className="text-lg text-gray-700">HostName</p>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <FaPhone className="text-orange-500" />
-                    <p className="text-lg text-gray-700">+358-449541977</p>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <FaEnvelope className="text-orange-500" />
-                    <p className="text-lg text-gray-700">abcXYZ@gmail.com</p>
-                  </div>
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                  Host Details
+                </h2>
+                <div className="flex items-center space-x-4">
+                  <FaUser className="text-orange-500" />
+                  <p className="text-lg text-gray-700">HostName</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <FaPhone className="text-orange-500" />
+                  <p className="text-lg text-gray-700">+358-449541977</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <FaEnvelope className="text-orange-500" />
+                  <p className="text-lg text-gray-700">abcXYZ@gmail.com</p>
+                </div>
               </div>
 
               <div className="hidden md:block w-px h-4 bg-gray-300 mx-10"></div>
 
-              <button 
+              <button
                 className="bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:border-black border-2 transition duration-300 mt-4 md:mt-0"
                 onClick={() => navigate(`/Photogallery/${id}`)}
-                >
+              >
                 View Gallery
               </button>
               {/* Host Details Section */}

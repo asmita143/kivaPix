@@ -25,6 +25,7 @@ export interface Event {
   id?: string;
   name: string;
   date?: Date | null; // ISO string representation of the date
+  time?: Date | null;
   description: string;
   location: EventLocation;
   hostFirstName: string;
@@ -36,6 +37,7 @@ export interface Event {
   hostPostalCode: string;
   hostCity: string;
   participants: number;
+  contractType: string;
 }
 
 const useEvent = () => {

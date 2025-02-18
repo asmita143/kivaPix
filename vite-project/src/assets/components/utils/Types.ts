@@ -10,6 +10,9 @@ export interface Location {
 export interface FormData {
     name: string;
     date: string;
+    time:string;
+    participants:number;
+    contractType:string;
     description: string;
     location: Location;
     coverPhoto: File | null;
