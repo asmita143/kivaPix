@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import useImage from "../hooks/useImage";
 import { useParams } from "react-router-dom";
 import { DeleteOutlined, Print } from "@mui/icons-material";
-import ClearIcon from '@mui/icons-material/Clear';
 import ImageToPrint from "./PrintImage";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -107,7 +106,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
               }`}
             >
               <CollectionsIcon className="mr-2" />
-              All Images
+              <span className="hidden sm:inline">All Images</span>
             </button>
             <button
               onClick={() => setActiveTab("print")}
@@ -118,7 +117,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
               }`}
             >
               <Print className="mr-2" />
-              Printing Queue
+              <span className="hidden sm:inline">Printing Queue</span>
             </button>
           </div>
   

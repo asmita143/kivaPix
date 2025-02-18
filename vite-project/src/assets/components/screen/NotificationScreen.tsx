@@ -5,10 +5,11 @@ import useUser from "../hooks/useUser";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useImage from "../hooks/useImage";
 import imageNotAvailable from "../../images/NotAvailable.png"
+import { NotificationsActive } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
 const Notification: React.FC = () => {
   const navigate = useNavigate();
@@ -26,12 +27,18 @@ const Notification: React.FC = () => {
   const handleEventClick = (id: string, coverPhotoUrl: string) => {
     navigate(`/event/${id}`, { state: { coverPhotoUrl } });
   };
-  console.log(userId)
+
   const clearAllNotifications = async () => {
     if(userId) {
       await clearNotifications(userId);
+
+      window.location.reload();
     }
-  }
+  };
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <div className="app-container bg-gray-100 h-screen flex flex-colitems">
@@ -73,20 +80,26 @@ const Notification: React.FC = () => {
                     </button>
                   )}
               </div>
-              
-              {showNotifications.length === 0 ? (
-              <div className="bg-[#FAF9F6] text-black p-4 mt-5 flex justify-center">
-                <div className="flex self-center">
-                  <p className="self-center">No new Notifications</p>
-                </div>
+
+              {loading ? (
+              <div className="flex justify-center items-center h-40">
+                <CircularProgress />
               </div>
               ) : (
-              <div className="">
+              <>
+              {showNotifications.length === 0 ? (
+                <div className="bg-[#FAF9F6] text-black p-4 mt-5 flex justify-center">
+                  <div className="flex self-center">
+                    <p className="self-center">No new Notifications</p>
+                  </div>
+                </div>
+              ) : (
+              <div className="mt-2">
                 {showNotifications.map((e) => (
-                  <div className="flex items-center gap-4 p-4 mt-2 bg-blue-50 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <div className="flex items-center gap-4 p-4 bg-blue-50 hover:shadow-lg transition-shadow duration-300 border-b-2 border-black-200">
                     {/* Notification Icon */}
                     <div className="p-3 bg-blue-100 rounded-full">
-                      <NotificationsActiveIcon className="text-blue-600" />
+                      <NotificationsActive className="text-blue-600" />
                     </div>
 
                     {/* Notification Text */}
@@ -112,10 +125,10 @@ const Notification: React.FC = () => {
                 ))}
               </div>
               )}
+              </>
+              )}
             </div>
-
           </div>
-
         </main>
       </div>
     </div>

@@ -122,6 +122,8 @@ const useEvent = () => {
       console.log("All notifications cleared!");
     } catch (error) {
       console.error("Error clearing notifications:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

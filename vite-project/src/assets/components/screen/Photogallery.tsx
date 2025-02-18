@@ -51,7 +51,7 @@ const PhotoGallery = () => {
         <main
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300`}
         >
-          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 z-10 shadow-sm">
+          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 shadow-sm">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">Photo Gallery</h1>
 
             {/* Upload Button */}
@@ -62,8 +62,9 @@ const PhotoGallery = () => {
                 startIcon={<UploadIcon />}
                 component="span"
                 disabled={uploading}
+                className="px-2 sm:px-4"
               >
-                Upload Images
+                <span className="hidden sm:inline">Upload Images</span>
               </Button>
             </label>
             <input
