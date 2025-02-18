@@ -78,7 +78,7 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
         </div> ) : allEvents.length === 0 ? (
         <p className="text-center text-gray-600">No events yet.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
           {allEvents.map((event) => (
             <div
               key={event.id}
@@ -88,7 +88,7 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
               <img
                 src={coverPhotos[String(event.id)] || imageNotAvailable}
                 alt={event.name}
-                className="aspect-[4/3] w-full object-cover cursor-pointer"
+                className="aspect-[4/3] w-full h-[10rem]  object-cover cursor-pointer border-b-2 border-gray-100"
                 onClick={() =>
                   event.id &&
                   handleEventClick(
@@ -99,44 +99,44 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
               />
 
               {/* Event Date Badge */}
-              <div className="absolute top-2 left-2 bg-white rounded-lg p-2 text-center shadow-sm">
+              <div className="absolute top-2 left-2 bg-white backdrop-blur-sm rounded-lg p-2 text-center shadow-sm">
                 {event.date ? (
                   <>
-                    <p className="text-xl font-bold text-gray-800">
+                    <p className="text-sm sm:text-xl font-bold text-gray-800 leading-tight">
                       {new Date(event.date).getDate()}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm sm:text-xl text-gray-600 tracking-wide">
                       {new Date(event.date).toLocaleString("en-US", { month: "short" })}
                     </p>
                   </>
                 ) : (
                   <div className="flex-col justify-center"> 
-                    <p className="text-black">No </p>
-                    <p className="text-black">date</p>
+                    <p className="text-black text-sm sm:text-xl">No </p>
+                    <p className="text-black text-sm sm:text-xl">date</p>
                 </div>
                 )}
               </div>
 
               {/* Event Details */}
-              <div className="p-4">
-                <h3 className="text-xl font-bold text-gray-800 truncate">
+              <div className="p-3 sm:p-4">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 truncate">
                   {event.name}
                 </h3>
-                <p className="mt-2 text-sm text-gray-600 truncate">
+                <p className="mt-1 sm:mt-2 text-sm text-gray-600 truncate">
                   {event.description || "Join us for an unforgettable experience!"}
                 </p>
 
                 {/* Location and Date */}
-                <div className="mt-4 space-y-2">
+                <div className="mt-3 sm:mt-4 space-y-2">
                   <div className="flex items-center space-x-2">
                     <FaMapMarkerAlt className="text-gray-500" />
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">
                       {event.location?.name || "No location available"}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <FaCalendarAlt className="text-gray-500" />
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600">
                       {event.date
                         ? new Date(event.date).toLocaleDateString()
                         : "No date available"}
@@ -145,10 +145,10 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
                 </div>
 
                 {/* Accept Button and Star Rating */}
-                <div className="mt-4 flex items-center justify-between">
+                <div className="mt-3 sm:mt-4 flex items-center justify-between">
                   {!isAcceptedPage && (
                     <button
-                      className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:border-black border-2 transition duration-300"
+                      className="bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:border-black border-2 transition duration-300"
                       onClick={() => handleAcceptClick(event)}
                     >
                       Accept
