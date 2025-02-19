@@ -4,9 +4,16 @@ import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import imageNotAvailable from "../../images/NotAvailable.png"
+import imageNotAvailable from "../../images/NotAvailable.png";
 import useEvent from "../hooks/useEvent";
-import { FaCalendarDay, FaClock, FaEnvelope, FaPhone, FaUser, FaUsers } from "react-icons/fa";
+import {
+  FaCalendarDay,
+  FaClock,
+  FaEnvelope,
+  FaPhone,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
 import mapImage from "../../images/map.jpg";
 
 const EventDescriptionScreen = () => {
@@ -15,13 +22,19 @@ const EventDescriptionScreen = () => {
   const { id } = useParams<{ id?: string }>();
   const { events = [] } = useEvent();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const coverPhotoUrl = locationForImage.state?.coverPhotoUrl || imageNotAvailable;
+  const coverPhotoUrl =
+    locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
 
   const formattedDate =
     event?.date instanceof Date
       ? event.date.toLocaleDateString()
       : "No date available";
+
+  const formattedTime =
+    event?.date instanceof Date
+      ? event.date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+      : "No time available";
 
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
@@ -74,14 +87,23 @@ const EventDescriptionScreen = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaClock className="text-orange-500" />
-                  <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Time:</span> 15:30
+                  <p className="text-sm md:text-lg ">
+                    <span className="font-semibold ">Time:</span> {formattedTime}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaUsers className="text-orange-500" />
                   <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Participaannts:</span> 55
+                    <span className="font-semibold">Participants:</span> {event?.participants || "Not Available"}
+                    {event?.participants}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  {" "}
+                  <FaUsers className="text-orange-500" />
+                  <p className="text-sm md:text-lg">
+                    <span className="font-semibold">Contract type:</span> {event?.contractType || "Not Available"}
+                    {event?.contractType}
                   </p>
                 </div>
               </div>
@@ -111,7 +133,7 @@ const EventDescriptionScreen = () => {
               <button 
                 className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
                 onClick={() => navigate(`/Photogallery/${id}`)}
-                >
+              >
                 View Gallery
               </button>
               {/* Host Details Section */}

@@ -4,13 +4,42 @@ import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
+import SettingTabs from "../ui/SettingTabs"; // Import SettingTabs here
+import Box from "@mui/material/Box";
+import GeneralSettings from "../section/GeneralSettings";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const CustomTabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+};
 
 const Setting: React.FC = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [value, setValue] = useState(0);
   const navigate = useNavigate();
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
+    <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
       {/* Top Header Section */}
       <HeaderSection />
 
@@ -34,32 +63,45 @@ const Setting: React.FC = () => {
         {/* Main Content */}
         <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300">
           {/* Top Part: Sticky Header */}
-          <div className="bg-gradient-to-r from-gray-300 to-gray-500 min-h-screen w-full flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in ">
-              <div className="flex flex-col md:flex-row">
-                <div className="md:w-1/3 text-center mb-8 md:mb-0"></div>
-                <div className="md:w-2/3 md:pl-8">
-                  <h2 className="text-xl font-semibold text-black dark:text-gray-200 mb-4">
-                    Settings
-                  </h2>
-                  <button
-                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-                    onClick={() => navigate("/allProfiles")}
-                  >
-                    All Profiles
-                  </button>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {["Privacy", "Admin"].map((Role) => (
-                      <span
-                        key={Role}
-                        className="bg-gray-200 text-black px-3 py-1 rounded-full text-sm hover:bg-gray-700 hover:text-white transition-colors duration-300"
-                      >
-                        {Role}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          <div className="min-h-screen w-full flex-col items-center justify-center p-4">
+            {/* SettingTabs */}
+            <div className="w-full max-w-4xl">
+              <SettingTabs value={value} onChange={handleTabChange} />
+            </div>
+
+            {/* White Content Box for Tab Content */}
+            <div className="bg-white w-full rounded-xl shadow-xl p-6 mt-6">
+              {/* Tab Panels */}
+              <CustomTabPanel value={value} index={0}>
+                {/* General Settings Content */}
+                <h2 className="text-xl font-semibold text-black mb-4">
+                  General Settings
+                </h2>
+                <p className="mb-4">Update your profile details below:</p>
+
+                <GeneralSettings />
+              </CustomTabPanel>
+
+              <CustomTabPanel value={value} index={1}>
+                {/* Privacy Settings Content */}
+                <h2 className="text-xl font-semibold text-black mb-4">
+                  Privacy Settings
+                </h2>
+                <p>
+                  Control your privacy settings, such as account visibility,
+                  permissions, etc.
+                </p>
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={2}>
+                {/* Notification Settings Content */}
+                <h2 className="text-xl font-semibold text-black mb-4">
+                  Notification Settings
+                </h2>
+                <p>
+                  Choose your preferences for email, push notifications, and
+                  more.
+                </p>
+              </CustomTabPanel>
             </div>
           </div>
         </main>
