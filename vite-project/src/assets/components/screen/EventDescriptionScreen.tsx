@@ -15,6 +15,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import mapImage from "../../images/map.jpg";
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventDescriptionScreen = () => {
   const locationForImage = useLocation();
@@ -38,7 +39,8 @@ const EventDescriptionScreen = () => {
           minute: "2-digit",
         })
       : "No time available";
-
+  const lat = event?.location.coordinates.lat;
+  const lng = event?.location.coordinates.lng;
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
       {/* Top Header Section */}
@@ -180,12 +182,28 @@ const EventDescriptionScreen = () => {
                 <h2 className="text-base md:text-2xl font-bold mb-6 text-gray-800">
                   Location
                 </h2>
-                <img
-                  src={mapImage}
-                  alt="Event Location Map"
-                  className="map-image"
-                />
-                <p className="mt-3 md:mt-4 text-sm md:text-lgtext-gray-700">
+
+                {/* Map Container with Aspect Ratio */}
+                <div
+                  className="relative w-full"
+                  style={{ paddingBottom: "56.25%", height: 0 }}
+                >
+                  <iframe
+                    src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lng}`}
+                    width="100%"
+                    height="100%"
+                    style={{
+                      border: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                    loading="lazy"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+
+                <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
                   {event?.location?.name || "Downtown Arena, New York"}
                 </p>
               </div>
