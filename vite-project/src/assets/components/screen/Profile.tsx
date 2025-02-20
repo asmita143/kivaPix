@@ -82,10 +82,22 @@ const Profile = () => {
                   Contact Information
                 </h2>
                 <ul className="space-y-2 text-gray-800 dark:text-gray-400">
-                  <li className="flex items-center">📧 {user.email}</li>
-                  <li className="flex items-center">📱 {userData.phone}</li>
-
-                  {/* Add other contact info here */}
+                  <li className="flex items-center">
+                    <a
+                      href={`mailto:${user.email}`}
+                      className="flex items-center text-blue-600 hover:underline"
+                    >
+                      📧 {user.email}
+                    </a>
+                  </li>
+                  <li className="flex items-center">
+                    <a
+                      href={`tel:${userData.phone}`}
+                      className="flex items-center text-blue-600 hover:underline"
+                    >
+                      📱 {userData.phone}
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>

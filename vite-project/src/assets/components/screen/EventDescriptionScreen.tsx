@@ -16,6 +16,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import mapImage from "../../images/map.jpg";
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventDescriptionScreen = () => {
   const locationForImage = useLocation();
@@ -31,6 +32,9 @@ const EventDescriptionScreen = () => {
     event?.date instanceof Date
       ? event.date.toLocaleDateString()
       : "No date available";
+    
+  const lat = event?.location.coordinates.lat;
+  const lng = event?.location.coordinates.lng;
 
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
@@ -84,13 +88,14 @@ const EventDescriptionScreen = () => {
                 <div className="flex items-center space-x-4">
                   <FaClock className="text-orange-500" />
                   <p className="text-sm md:text-lg ">
-                    <span className="font-semibold ">Time:</span> {event?.startTime || "Not Available"} {event?.endTime}
+                    <span className="font-semibold ">Time:</span> {event?.startTime} - {event?.endTime}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaUsers className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Participants:</span> {event?.participants || "Not Available"}
+                    {event?.participants}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -98,6 +103,7 @@ const EventDescriptionScreen = () => {
                   <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Contract type:</span> {event?.contractType || "Not Available"}
+                    {event?.contractType}
                   </p>
                 </div>
               </div>
@@ -109,15 +115,25 @@ const EventDescriptionScreen = () => {
                 <h2 className="text-base md:text-2xl font-bold text-gray-800">Host Details</h2>
                   <div className="flex items-center space-x-4">
                     <FaUser className="text-orange-500" />
-                    <p className="text-sm md:text-lg text-gray-700">HostName</p>
+                    <p className="text-sm md:text-lg text-gray-700">{event?.hostFirstName} {event?.hostLastName}</p>
                   </div>
                   <div className="flex items-center space-x-4">
                     <FaPhone className="text-orange-500" />
-                    <p className="text-sm md:text-lg text-gray-700">+358-449541977</p>
+                    <a
+                    href={`tel:${event?.hostPhone}`}
+                    className="text-sm md:text-lg text-gray-700"
+                    >
+                      {event?.hostPhone || "Not Available"}
+                    </a>
                   </div>
                   <div className="flex items-center space-x-4">
                     <FaEnvelope className="text-orange-500" />
-                    <p className="text-sm md:text-lg text-gray-700">abcXYZ@gmail.com</p>
+                    <a
+                    href={`mailto:${event?.hostEmail}`}
+                    className="text-sm md:text-lg text-gray-700"
+                    >
+                      {event?.hostEmail || "Not Available"}
+                    </a>
                   </div>
               </div>
 
@@ -150,11 +166,24 @@ const EventDescriptionScreen = () => {
                 <h2 className="text-base md:text-2xl font-bold mb-6 text-gray-800">
                   Location
                 </h2>
-                <img
-                  src={mapImage}
-                  alt="Event Location Map"
-                  className="map-image"
-                />
+                <div 
+                  className="relative w-full"
+                  style={{ paddingBottom: "56.25%", height: 0 }}
+                >
+                <iframe
+                    src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lng}`}
+                    width="100%"
+                    height="100%"
+                    style={{
+                      border: 0,
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                    }}
+                    loading="lazy"
+                    allowFullScreen
+                  ></iframe>
+                </div>
                 <p className="mt-3 md:mt-4 text-sm md:text-lgtext-gray-700">
                   {event?.location?.name || "Downtown Arena, New York"}
                 </p>
