@@ -39,14 +39,15 @@ const SettingTabs: React.FC<SettingTabsProps> = ({ value, onChange }) => {
             aria-controls="tabpanel-0"
             disableRipple
           />
+
           <Tab
-            label="Privacy"
+            label="Notifications"
             id="tab-1"
-            aria-controls="tabpanel-1"
+            aria-controls="tabpanel-2"
             disableRipple
           />
           <Tab
-            label="Notifications"
+            label="Profile list"
             id="tab-2"
             aria-controls="tabpanel-2"
             disableRipple

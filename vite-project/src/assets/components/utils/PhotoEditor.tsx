@@ -24,7 +24,7 @@ export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
       tools: [
         Tool.FILTER,
         Tool.ADJUSTMENT,
-        Tool.FOCUS
+        Tool.TRANSFORM
       ],
       scaleImageToFit: true,
     
