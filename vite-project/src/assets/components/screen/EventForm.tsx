@@ -16,7 +16,7 @@ const EventForm = () => {
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
   const [formErrors, setFormErrors] = useState({
     email: "",
     phone: "",
@@ -25,7 +25,8 @@ const EventForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    time: "",
+    startTime:"",
+    endTime:"",
     contractType: "",
     description: "",
     location: { name: "", coordinates: { lat: 0, lng: 0 } },
@@ -44,7 +45,6 @@ const EventForm = () => {
     const isFormFilled =
       formData.name.trim() !== "" &&
       formData.date.trim() !== "" &&
-      formData.time.trim() !== "" &&
       formData.contractType.trim() !== "" &&
       formData.description.trim() !== "" &&
       formData.location.name.trim() !== "" &&
@@ -67,10 +67,9 @@ const EventForm = () => {
   ) => {
     const { name, value } = e.target;
 
-    // Update form data for each field dynamically
     setFormData((prev) => ({
       ...prev,
-      [name]: value, // Dynamically update the field based on the 'name' attribute
+      [name]: value, 
     }));
   };
 
@@ -83,7 +82,6 @@ const EventForm = () => {
     const eventData = {
       ...formData,
       date: formData.date ? new Date(formData.date) : null,
-      time: formData.time ? new Date(formData.time) : null,
     };
     const eventId = await addEvent(eventData);
 
@@ -95,10 +93,11 @@ const EventForm = () => {
     if (eventId) {
       await addNotification(eventId);
     }
-    // Reset the form fields
     setFormData({
       name: "",
       date: "",
+      startTime:"",
+      endTime:"",
       contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },
@@ -112,7 +111,6 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
-      time: "",
     });
 
     setCoverPhotoFile(null);
@@ -136,7 +134,6 @@ const EventForm = () => {
     }));
   };
 
-  //Handles Cover Photo
   const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -150,7 +147,6 @@ const EventForm = () => {
     }
   };
 
-  //Form validation
   const validateForm = () => {
     let valid = true;
     const errors = { email: "", phone: "" };
@@ -178,7 +174,8 @@ const EventForm = () => {
     setFormData({
       name: "",
       date: "",
-      time: "",
+      startTime:"",
+      endTime:"",
       contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },

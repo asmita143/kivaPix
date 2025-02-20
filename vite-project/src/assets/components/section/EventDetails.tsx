@@ -59,16 +59,32 @@ const EventDetails = ({
           className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
         />
       </div>
-      {/* Event Date */}
-      <div className="sm:col-span-4">
-        <label className="block text-sm font-medium text-gray-900">Time</label>
-        <input
-          type="time"
-          name="time"
-          value={formData.time}
-          onChange={handleChange}
-          className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
-        />
+      {/* Start Time and End Time */}
+      <div className="sm:col-span-4 grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-900">
+            Start Time
+          </label>
+          <input
+            type="time"
+            name="startTime"
+            value={formData.startTime}
+            onChange={handleChange}
+            className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900">
+            End Time
+          </label>
+          <input
+            type="time"
+            name="endTime"
+            value={formData.endTime}
+            onChange={handleChange}
+            className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+          />
+        </div>
       </div>
       <div className="sm:col-span-4">
         <label className="block text-sm font-medium text-gray-900">

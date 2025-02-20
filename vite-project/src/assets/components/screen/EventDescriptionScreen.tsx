@@ -10,6 +10,7 @@ import {
   FaCalendarDay,
   FaClock,
   FaEnvelope,
+  FaFileContract,
   FaPhone,
   FaUser,
   FaUsers,
@@ -32,15 +33,9 @@ const EventDescriptionScreen = () => {
       ? event.date.toLocaleDateString()
       : "No date available";
 
-  const formattedTime =
-    event?.date instanceof Date
-      ? event.date?.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "No time available";
   const lat = event?.location.coordinates.lat;
   const lng = event?.location.coordinates.lng;
+
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
       {/* Top Header Section */}
@@ -98,7 +93,7 @@ const EventDescriptionScreen = () => {
                   <FaClock className="text-orange-500" />
                   <p className="text-sm md:text-lg ">
                     <span className="font-semibold ">Time:</span>{" "}
-                    {formattedTime}
+                    {event?.startTime} - {event?.endTime}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -111,10 +106,11 @@ const EventDescriptionScreen = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   {" "}
-                  <FaUsers className="text-orange-500" />
+                  <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Contract type:</span>{" "}
                     {event?.contractType || "Not Available"}
+                    {event?.contractType}
                   </p>
                 </div>
               </div>
@@ -133,7 +129,7 @@ const EventDescriptionScreen = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <FaPhone className="text-orange-500" aria-label="Phone" />
+                  <FaPhone className="text-orange-500" />
                   <a
                     href={`tel:${event?.hostPhone}`}
                     className="text-sm md:text-lg text-gray-700"
@@ -142,7 +138,7 @@ const EventDescriptionScreen = () => {
                   </a>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <FaEnvelope className="text-orange-500" aria-label="Email" />
+                  <FaEnvelope className="text-orange-500" />
                   <a
                     href={`mailto:${event?.hostEmail}`}
                     className="text-sm md:text-lg text-gray-700"
@@ -181,8 +177,6 @@ const EventDescriptionScreen = () => {
                 <h2 className="text-base md:text-2xl font-bold mb-6 text-gray-800">
                   Location
                 </h2>
-
-                {/* Map Container with Aspect Ratio */}
                 <div
                   className="relative w-full"
                   style={{ paddingBottom: "56.25%", height: 0 }}
@@ -201,8 +195,7 @@ const EventDescriptionScreen = () => {
                     allowFullScreen
                   ></iframe>
                 </div>
-
-                <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
+                <p className="mt-3 md:mt-4 text-sm md:text-lgtext-gray-700">
                   {event?.location?.name || "Downtown Arena, New York"}
                 </p>
               </div>
