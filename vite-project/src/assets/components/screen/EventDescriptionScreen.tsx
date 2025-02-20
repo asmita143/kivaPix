@@ -10,6 +10,7 @@ import {
   FaCalendarDay,
   FaClock,
   FaEnvelope,
+  FaFileContract,
   FaPhone,
   FaUser,
   FaUsers,
@@ -30,11 +31,6 @@ const EventDescriptionScreen = () => {
     event?.date instanceof Date
       ? event.date.toLocaleDateString()
       : "No date available";
-
-  const formattedTime =
-    event?.date instanceof Date
-      ? event.date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-      : "No time available";
 
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
@@ -88,22 +84,20 @@ const EventDescriptionScreen = () => {
                 <div className="flex items-center space-x-4">
                   <FaClock className="text-orange-500" />
                   <p className="text-sm md:text-lg ">
-                    <span className="font-semibold ">Time:</span> {formattedTime}
+                    <span className="font-semibold ">Time:</span> {event?.startTime || "Not Available"} {event?.endTime}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaUsers className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Participants:</span> {event?.participants || "Not Available"}
-                    {event?.participants}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
                   {" "}
-                  <FaUsers className="text-orange-500" />
+                  <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Contract type:</span> {event?.contractType || "Not Available"}
-                    {event?.contractType}
                   </p>
                 </div>
               </div>
