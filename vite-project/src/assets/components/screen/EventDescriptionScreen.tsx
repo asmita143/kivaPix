@@ -115,7 +115,6 @@ const EventDescriptionScreen = () => {
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Contract type:</span>{" "}
                     {event?.contractType || "Not Available"}
-                    {event?.contractType}
                   </p>
                 </div>
               </div>

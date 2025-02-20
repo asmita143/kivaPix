@@ -1,4 +1,3 @@
-// src/hooks/useUser.ts
 import { useState, useEffect } from "react";
 import { auth, db } from "../../../firebase";
 import {
@@ -8,47 +7,79 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { User } from "firebase/auth"; // Firebase user type for type safety
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+
+interface UserData {
+  uid: string;
+  name: string;
+  about: string;
+  email: string;
+  phone: string;
+  profilePic?: string;
+}
 
 const useUser = () => {
-  const [user, setUser] = useState<User | null>(null); // Explicitly typed as User or null
-  const [userData, setUserData] = useState<any>(null); // To store user-specific data
-  const [loading, setLoading] = useState<boolean>(true); // Loading state for user data
-  const [error, setError] = useState<string | null>(null); // Error state for Firestore fetch
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [allUsers, setAllUsers] = useState<UserData[]>([]);
+  const [loadingUserData, setLoadingUserData] = useState<boolean>(true);
+  const [loadingAllUsers, setLoadingAllUsers] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Listen to auth state changes and update the user state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Automatically set the user when logged in or out
+      setUser(currentUser);
     });
-
-    // Cleanup the subscription on unmount
     return () => unsubscribe();
   }, []);
-  
+
   useEffect(() => {
     const getUserData = async () => {
       if (user) {
         try {
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
-
           if (docSnap.exists()) {
-            setUserData(docSnap.data());
+            setUserData(docSnap.data() as UserData);
           } else {
             setError("No user data found");
           }
         } catch (err) {
-          setError("Failed to fetch user data");
+          if (err instanceof Error) {
+            setError(`Failed to fetch user data: ${err.message}`);
+          } else {
+            setError("An unknown error occurred");
+          }
         } finally {
-          setLoading(false); // Set loading to false after fetch is done
+          setLoadingUserData(false);
         }
       }
     };
     getUserData();
   }, [user]);
 
-  // Login function
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersList: UserData[] = [];
+        querySnapshot.forEach((doc) => {
+          usersList.push({ uid: doc.id, ...doc.data() } as UserData);
+        });
+        setAllUsers(usersList);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(`Failed to fetch all users: ${err.message}`);
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setLoadingAllUsers(false);
+      }
+    };
+    getAllUsers();
+  }, []);
+
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -56,13 +87,12 @@ const useUser = () => {
         email,
         password
       );
-      setUser(userCredential.user); // Update user state after successful login
+      setUser(userCredential.user);
     } catch (error) {
       throw error;
     }
   };
 
-  // Register function
   const register = async (
     email: string,
     password: string,
@@ -76,15 +106,13 @@ const useUser = () => {
         email,
         password
       );
-      setUser(userCredential.user); // Set the newly registered user
-
-      // Store user data in Firestore
+      setUser(userCredential.user);
       const userRef = doc(db, "users", userCredential.user.uid);
       await setDoc(userRef, {
-        name: name,
-        about: about,
-        email: email,
-        phone: phone,
+        name,
+        about,
+        email,
+        phone,
         createdAt: new Date(),
       });
     } catch (error) {
@@ -92,17 +120,27 @@ const useUser = () => {
     }
   };
 
-  // Logout function
   const logout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Clear the user state on logout
+      setUser(null);
     } catch (error) {
       throw error;
     }
   };
 
-  return { user, userId: user ? user.uid : null, userData, loading, error, login, register, logout }; // Return the user state, login, register, and logout functions
+  return {
+    user,
+    userId: user ? user.uid : null,
+    userData,
+    allUsers,
+    loadingUserData,
+    loadingAllUsers,
+    error,
+    login,
+    register,
+    logout,
+  };
 };
 
 export default useUser;

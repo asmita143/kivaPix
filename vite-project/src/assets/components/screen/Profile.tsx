@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 
 const Profile = () => {
-  const { user, userData, loading, error, logout } = useUser(); // To store additional user data
+  const { user, userData, loadingUserData, error, logout } = useUser(); // To store additional user data
   const navigate = useNavigate();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
-  if (loading) {
+  if (loadingUserData) {
     return <p>Loading user data...</p>;
   }
 
@@ -90,14 +90,16 @@ const Profile = () => {
                       📧 {user.email}
                     </a>
                   </li>
-                  <li className="flex items-center">
-                    <a
-                      href={`tel:${userData.phone}`}
-                      className="flex items-center text-blue-600 hover:underline"
-                    >
-                      📱 {userData.phone}
-                    </a>
-                  </li>
+                  {userData?.phone && (
+                    <li className="flex items-center">
+                      <a
+                        href={`tel:${userData.phone}`}
+                        className="flex items-center text-blue-600 hover:underline"
+                      >
+                        📱 {userData.phone}
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
