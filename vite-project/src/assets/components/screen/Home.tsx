@@ -10,6 +10,24 @@ const Home: React.FC = () => {
   const { events } = useEvent(); // Fetch events from Firebase
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+
+  const futureEvents = events.filter((event) => {
+    if (!event?.date) return false; 
+
+    let eventDate;
+
+    if (event.date instanceof Date) {
+        eventDate = event.date;
+    }
+    else {
+        return false;
+    }
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate > today;
+});
+
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
     {/* Top Header Section */}
@@ -37,11 +55,11 @@ const Home: React.FC = () => {
           {/* Top Part: Sticky Header */}
           <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              All Events
+              Upcoming Events
             </h1>
           </div>
           {/* Bottom Part: Scrollable Grid View */}
-          <EventList allEvents={events} />
+          <EventList allEvents={futureEvents} />
         </main>
       </div>
     </div>
