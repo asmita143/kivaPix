@@ -54,7 +54,7 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
     };
 
     useEffect(() => {
-        fetchCoverPhotos()
+      fetchCoverPhotos()
     }, []);
 
     const handleEventClick = (id: string, coverPhotoUrl: string) => {
@@ -62,11 +62,11 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
     };
 
     const handleStarClick = async (event: any, isSelected: boolean) => {
-        if (!user) {
-          console.error("User is not logged in.");
-          return;
-        }
-        await updateInterestedEventsForUser(user.uid, event.id, isSelected);
+      if (!user) {
+        console.error("User is not logged in.");
+        return;
+      }
+      await updateInterestedEventsForUser(user.uid, event.id, isSelected);
     };
     
     return  (

@@ -112,8 +112,7 @@ const EventDescriptionScreen = () => {
                   {" "}
                   <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Contract type:</span>{" "}
-                    {event?.contractType || "Not Available"}
+                    <span className="font-semibold">Contract type:</span> {event?.contractType || "Not Available"}
                   </p>
                 </div>
               </div>

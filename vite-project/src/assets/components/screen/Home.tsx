@@ -84,7 +84,7 @@ const Home: React.FC = () => {
           {/* Top Part: Sticky Header */}
           <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3 bg-white z-10">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              All Events
+              Upcoming Events
             </h1>
           </div>
 

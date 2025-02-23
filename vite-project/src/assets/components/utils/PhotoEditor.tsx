@@ -1,5 +1,5 @@
 
-import { UIEvent, PhotoEditorSDKUI } from "photoeditorsdk";
+import { UIEvent, PhotoEditorSDKUI, Tool } from "photoeditorsdk";
 import React from "react";
 
 interface PhotoEditorSDKProps {
@@ -21,6 +21,11 @@ export class PhotoEditorSDK extends React.Component<PhotoEditorSDKProps> {
       license: '',
       layout: 'basic',
       enableZoom: true,
+      tools: [
+        Tool.FILTER,
+        Tool.ADJUSTMENT,
+        Tool.TRANSFORM
+      ],
       scaleImageToFit: true,
     
     });

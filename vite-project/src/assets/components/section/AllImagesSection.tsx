@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import useImage from "../hooks/useImage";
 import { useParams } from "react-router-dom";
-import { DeleteOutlined, Print } from "@mui/icons-material";
+import { ClearOutlined, DeleteOutlined, Print } from "@mui/icons-material";
 import ImageToPrint from "./PrintImage";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -80,6 +80,11 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
         );
     };
 
+    const handleUnchekImages = () => {
+      console.log("clicked")
+      setSelectedImages([])
+  };
+
     const handleImageClick = (url: string, imageIndex:number) => {
         const imageName = imageNames[imageIndex];
         setSingleImage(url);
@@ -95,8 +100,8 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
     return (
         <main className="flex flex-col w-full min-h-screen transition-all duration-300 bg-gray-100 p-4">
         {/* Top Bar */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex space-x-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+          <div className="flex space-x-4 p-1">
             <button
               onClick={() => setActiveTab("all")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -122,11 +127,15 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
           </div>
   
           {selectedImages.length > 0 && (
-            <div className="flex items-center space-x-4 bg-white p-3 rounded-lg shadow-md">
-              <p className="text-sm text-gray-700">{selectedImages.length} selected</p>
+            <div className="flex items-center space-x-4 bg-white p-1 rounded-lg shadow-md mt-4 sm:mt-0">
+              <ClearOutlined 
+                style={{ color: "black", cursor:"pointer", font:"revert"}}
+                onClick={handleUnchekImages}
+              />
+              <p className="text-xs sm:text-sm text-gray-700">{selectedImages.length} selected</p>
               <button
                 onClick={handleCopySelectedImagesToNewFolder}
-                className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+                className="flex items-center space-x-2 hover:bg-blue-400 text-black sm:px-4 sm:py-2 border-black rounded-lg transition duration-300 text-xs sm:text-sm "
               >
                 <Print />
                 <span>Print</span>
@@ -137,7 +146,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
                     handleDeleteSelectedImages();
                   }
                 }}
-                className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
+                className="flex items-center space-x-2 bg-red-600 text-white sm:px-4 sm:py-2 rounded-lg hover:bg-red-700 transition duration-300 text-xs sm:text-sm "
               >
                 <DeleteOutlined />
                 <span>Delete</span>
