@@ -8,7 +8,6 @@ export interface Location {
 
 
 export interface FormData {
-  id:string;
     name: string;
     date: string;
     startTime:string;

@@ -55,7 +55,7 @@ const Home: React.FC = () => {
         }
         return 0;
       });
-  }, [events, searchTerm, searchDate, searchLocation, sortOrder, sortBy]); // Dependencies
+  }, [events, searchTerm, searchDate, searchLocation, sortOrder, sortBy]); 
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">

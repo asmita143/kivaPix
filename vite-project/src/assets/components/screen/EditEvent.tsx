@@ -8,6 +8,7 @@ import HostDetails from "../section/HostDetails";
 import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
 import { useParams } from "react-router-dom";
+import useEvent from "../hooks/useEvent";
 
 interface EventLocation {
   name: string;
@@ -18,7 +19,6 @@ interface EventLocation {
 }
 
 interface Event {
-  id: string;
   name: string;
   date: string;
   startTime: string;
@@ -40,9 +40,7 @@ interface Event {
 
 const EditEvent = () => {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
   const [formData, setFormData] = useState<Event>({
-    id: "",
     name: "",
     date: "",
     startTime: "",
@@ -62,59 +60,57 @@ const EditEvent = () => {
     coverPhoto: null,
   });
 
+  const { events } = useEvent();
+  const event = events.find((e) => e.id === id);
   const [loading, setLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  console.log(event)
+
   useEffect(() => {
-    const fetchEventData = async () => {
-      if (!id) {
-        console.error("Event ID is undefined.");
-        setLoading(false);
-        return;
-      }
+    if (!id || typeof id !== "string") {
+      console.error("Event ID is undefined.");
+      setLoading(false);
+      return;
+    }
+  
+    const event = events.find((e) => e.id === id);
 
-      try {
-        const eventRef = doc(db, "events", id);
-        const eventSnap = await getDoc(eventRef);
-        if (eventSnap.exists()) {
-          const eventData = eventSnap.data();
-          console.log("eventdata", eventData);
-          setFormData({
-            id: eventSnap.id,
-            name: eventData.name,
-            date: eventData.date ? eventData.date.toDate().toISOString() : "",
-            startTime: eventData.startTime,
-            endTime: eventData.endTime,
-            description: eventData.description,
-            location: eventData.location || {
-              name: "",
-              coordinates: { lat: 0, lng: 0 },
-            },
-            hostFirstName: eventData.hostFirstName,
-            hostLastName: eventData.hostLastName,
-            hostPhone: eventData.hostPhone,
-            hostEmail: eventData.hostEmail,
-            hostCountry: eventData.hostCountry,
-            hostStreetAddress: eventData.hostStreetAddress,
-            hostPostalCode: eventData.hostPostalCode,
-            hostCity: eventData.hostCity,
-            participants: eventData.participants,
-            contractType: eventData.contractType,
-            coverPhoto: null, // Initialize coverPhoto as null
-          });
-        } else {
-          console.log("No such event!");
-        }
-      } catch (error) {
-        console.error("Error fetching event data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEventData();
-  }, [id]);
+    console.log(event?.location.name)
+  
+    if (event) {
+      setFormData({
+        name: event.name,
+        date: event.date ? event.date.toISOString() : "",
+        startTime: event.startTime,
+        endTime: event.endTime,
+        description: event.description,
+        location: {
+          name: event.location.name || "", 
+          coordinates: {
+            lat: event.location.coordinates.lat || 0, 
+            lng: event.location.coordinates.lng || 0,
+          },
+        },
+        hostFirstName: event.hostFirstName,
+        hostLastName: event.hostLastName,
+        hostPhone: event.hostPhone,
+        hostEmail: event.hostEmail,
+        hostCountry: event.hostCountry,
+        hostStreetAddress: event.hostStreetAddress,
+        hostPostalCode: event.hostPostalCode,
+        hostCity: event.hostCity,
+        participants: event.participants,
+        contractType: event.contractType || "",
+        coverPhoto: null, 
+      });
+    } else {
+      console.log("No such event!");
+    }
+  
+    setLoading(false);
+  }, [id, events]);
 
   useEffect(() => {
     const isFormFilled =
