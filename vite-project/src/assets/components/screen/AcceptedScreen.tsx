@@ -9,9 +9,9 @@ import EventList from "../section/EventList";
 const AcceptedEvents: React.FC = () => {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
     const { events } = useEvent(); 
-    const { userData, loading: userLoading } = useUser();  
+    const { userData, loadingUserData } = useUser();  
   
-    if (userLoading) return <p>Loading user data...</p>;
+    if (loadingUserData) return <p>Loading user data...</p>;
     
     const acceptedEventIds: string[] = userData?.acceptedEvent || [];
     

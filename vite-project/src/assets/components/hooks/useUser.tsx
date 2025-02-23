@@ -6,7 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { User } from "firebase/auth"; // Firebase user type for type safety
+import { User } from "firebase/auth"; 
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 
 interface UserData {
@@ -16,6 +16,9 @@ interface UserData {
   email: string;
   phone: string;
   profilePic?: string;
+  notifications: [] ;
+  acceptedEvent : [] ;
+  interestedEvents : []
 }
 
 const useUser = () => {
