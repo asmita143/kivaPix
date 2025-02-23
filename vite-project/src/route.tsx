@@ -12,6 +12,7 @@ import Notification from "./assets/components/screen/NotificationScreen";
 import Setting from "./assets/components/screen/Settings";
 import AllProfiles from "./assets/components/screen/AllProfiles";
 import EventDescriptionScreen from "./assets/components/screen/EventDescriptionScreen";
+import EditEvent from "./assets/components/screen/EditEvent";
 import PastEvents from "./assets/components/screen/PastEventsScreen";
 
 const RouteConfig = () => {
@@ -30,6 +31,7 @@ const RouteConfig = () => {
       <Route path="/notifications" element={<Notification />} />
       <Route path="/settings" element={<Setting />} />
       <Route path="/allProfiles" element={<AllProfiles />} />
+      <Route path="/editEvent/:eventId" element={<EditEvent />} />
       <Route path="/events/past" element={<PastEvents />} />
     </Routes>
   );

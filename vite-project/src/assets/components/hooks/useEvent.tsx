@@ -25,8 +25,8 @@ export interface Event {
   id?: string;
   name: string;
   date?: Date | null; // ISO string representation of the date
-  startTime: string,
-  endTime:string,
+  startTime: string;
+  endTime: string;
   description: string;
   location: EventLocation;
   hostFirstName: string;

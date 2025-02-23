@@ -25,8 +25,8 @@ const EventForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-    startTime:"",
-    endTime:"",
+    startTime: "",
+    endTime: "",
     contractType: "",
     description: "",
     location: { name: "", coordinates: { lat: 0, lng: 0 } },
@@ -69,7 +69,7 @@ const EventForm = () => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value, 
+      [name]: value,
     }));
   };
 
@@ -96,8 +96,8 @@ const EventForm = () => {
     setFormData({
       name: "",
       date: "",
-      startTime:"",
-      endTime:"",
+      startTime: "",
+      endTime: "",
       contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },
@@ -174,8 +174,8 @@ const EventForm = () => {
     setFormData({
       name: "",
       date: "",
-      startTime:"",
-      endTime:"",
+      startTime: "",
+      endTime: "",
       contractType: "",
       description: "",
       location: { name: "", coordinates: { lat: 0, lng: 0 } },

@@ -8,6 +8,7 @@ import SettingTabs from "../ui/SettingTabs";
 import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
 import useUser from "../hooks/useUser";
+import ResponsiveText from "../ui/Font";
 
 interface TabPanelProps {
   children: ReactNode;
@@ -39,15 +40,8 @@ const Setting = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const {
-    user,
-    userData,
-    allUsers,
-    loadingUserData,
-    loadingAllUsers,
-    error,
-    logout,
-  } = useUser();
+  const { userData, allUsers, loadingUserData, loadingAllUsers, error } =
+    useUser();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -112,10 +106,7 @@ const Setting = () => {
                 <h2 className="text-lg font-semibold text-black mb-2">
                   Notification Settings
                 </h2>
-                <p>
-                  Choose your preferences for email, push notifications, and
-                  more.
-                </p>
+                <ResponsiveText text="Choose your preferences for email, push notifications, and more." />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
                 <h2 className="text-lg font-semibold text-black mb-2">
@@ -152,9 +143,7 @@ const Setting = () => {
                           <h3 className="text-base font-semibold mb-1">
                             {user.name}
                           </h3>
-                          <p className="text-gray-600 mb-1 text-sm hide-on-mobile">
-                            {user.about}
-                          </p>
+                          <ResponsiveText text={user.about} />
                           <p className="text-gray-600 mb-1 text-sm">
                             <strong>Email:</strong>{" "}
                             <a
@@ -206,9 +195,7 @@ const Setting = () => {
                         {userData.phone}
                       </a>
                     </p>
-                    <p className="hide-on-mobile">
-                      <strong>About:</strong> {userData.about}
-                    </p>
+                    <ResponsiveText text={userData.about} />
                   </div>
                 ) : (
                   <p>No user data available.</p>

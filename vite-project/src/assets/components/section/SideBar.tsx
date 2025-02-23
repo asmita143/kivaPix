@@ -8,11 +8,57 @@ import EventIcon from "@mui/icons-material/Event";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
+import useEvent from "../hooks/useEvent";
 
 const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
+  const { events } = useEvent(); // Fetch events from Firebase
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchDate, setSearchDate] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (name === "name") {
+      setSearchTerm("");
+    } else if (name === "date") {
+      setSearchDate("");
+    } else if (name === "location") {
+      setSearchLocation("");
+    }
+  };
+
+  const filteredEvents = events
+    .filter((event) => {
+      // Add extra check to ensure event.location and event.location.name are valid
+      const locationMatch =
+        event.location && event.location.name
+          ? event.location.name
+              .toLowerCase()
+              .includes(searchLocation.toLowerCase())
+          : true; // If location is undefined, treat as a match
+
+      const dateMatch = searchDate
+        ? new Date(event.date ?? "").toDateString() ===
+          new Date(searchDate).toDateString()
+        : true;
+
+      return (
+        event.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        locationMatch &&
+        dateMatch
+      );
+    })
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
 
   const isHomePage = location.pathname === "/home";
 
@@ -64,7 +110,9 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
     dropdownItems.some((item) => location.pathname === item.path);
 
   const [openDropdown, setOpenDropdown] = useState<number | null>(
-    sidebarItems.findIndex((item) => item.isDropdown && isDropdownActive(item.dropdownItems || []))
+    sidebarItems.findIndex(
+      (item) => item.isDropdown && isDropdownActive(item.dropdownItems || [])
+    )
   );
 
   return (
@@ -77,7 +125,11 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
               <div
                 className={`px-4 py-3 hover:shadow-md flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
                   ${item.isDropdown ? "relative" : ""}
-                  ${location.pathname === item.path ? "bg-gray-300 rounded-md hover:bg-gray-300" : ""}
+                  ${
+                    location.pathname === item.path
+                      ? "bg-gray-300 rounded-md hover:bg-gray-300"
+                      : ""
+                  }
                   `}
                 onClick={() => {
                   if (!item.isDropdown && item.path) {
@@ -111,7 +163,11 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
                     <li
                       key={dropdownIndex}
                       className={`px-4 py-2 flex items-center gap-5 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200
-                        ${location.pathname === dropdownItem.path ? "bg-gray-300 rounded-md hover:bg-gray-300" : ""}
+                        ${
+                          location.pathname === dropdownItem.path
+                            ? "bg-gray-300 rounded-md hover:bg-gray-300"
+                            : ""
+                        }
                         `}
                       onClick={() => navigate(dropdownItem.path)}
                     >
@@ -128,7 +184,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
 
       {/* ✅ Button Appears Only When `showButton` is True */}
       {showButton && (
-        <div className="p-4 mt-6">
+        <div className="p-4 mt-6 flex-row">
           <button
             className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
             onClick={() => navigate(`/Photogallery/${id}`)}
@@ -139,7 +195,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
       )}
       {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
       {isHomePage && (
-        <div className="p-4 mt-6">
+        <div className="p-4 mt-6 flex-row">
           <button
             className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
             onClick={() => navigate("/eventForm")} // Navigate to event creation page

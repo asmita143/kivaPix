@@ -15,7 +15,7 @@ import {
   FaUser,
   FaUsers,
 } from "react-icons/fa";
-import mapImage from "../../images/map.jpg";
+
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const EventDescriptionScreen = () => {
@@ -33,8 +33,12 @@ const EventDescriptionScreen = () => {
       ? event.date.toLocaleDateString()
       : "No date available";
 
-  const lat = event?.location.coordinates.lat;
-  const lng = event?.location.coordinates.lng;
+  const lat = event?.location?.coordinates?.lat;
+  const lng = event?.location?.coordinates?.lng;
+
+  const handleEditClick = () => {
+    navigate(`../editEvent/${event?.id}`);
+  };
 
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
@@ -154,6 +158,12 @@ const EventDescriptionScreen = () => {
                 onClick={() => navigate(`/Photogallery/${id}`)}
               >
                 View Gallery
+              </button>
+              <button
+                className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
+                onClick={handleEditClick}
+              >
+                Edit event
               </button>
               {/* Host Details Section */}
             </div>

@@ -17,13 +17,13 @@ const InterestedEvents: React.FC = () => {
   console.log("User Data", userData)
   
   const interestedEventIds: string[] = userData?.interestedEvents || [];
-  
+
   const interestedEvents = events.filter((event) =>
-      interestedEventIds.includes(String(event.id))
+    interestedEventIds.includes(String(event.id))
   );
 
-    return (
-      <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
+  return (
+    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
       {/* Top Header Section */}
       <HeaderSection />
 
@@ -57,8 +57,7 @@ const InterestedEvents: React.FC = () => {
         </main>
       </div>
     </div>
-    );
-  };
-  
-  export default InterestedEvents;
-  
+  );
+};
+
+export default InterestedEvents;
