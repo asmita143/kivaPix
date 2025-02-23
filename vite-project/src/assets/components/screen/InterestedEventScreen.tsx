@@ -8,20 +8,19 @@ import EventList from "../section/EventList";
 
 const InterestedEvents: React.FC = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const { events } = useEvent(); 
-  const { userData, loading: userLoading } = useUser();  
+  const { events } = useEvent();
+  const { userData, loadingUserData } = useUser();
 
-  
-  if (userLoading) return <p>Loading user data...</p>;
-  
+  if (loadingUserData) return <p>Loading user data...</p>;
+
   const interestedEventIds: string[] = userData?.interestedEvents || [];
-  
+
   const interestedEvents = events.filter((event) =>
-      interestedEventIds.includes(String(event.id))
+    interestedEventIds.includes(String(event.id))
   );
 
-    return (
-      <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
+  return (
+    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
       {/* Top Header Section */}
       <HeaderSection />
 
@@ -55,8 +54,7 @@ const InterestedEvents: React.FC = () => {
         </main>
       </div>
     </div>
-    );
-  };
-  
-  export default InterestedEvents;
-  
+  );
+};
+
+export default InterestedEvents;

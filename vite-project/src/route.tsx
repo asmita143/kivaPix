@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./assets/components/screen/Login";
 import Home from "./assets/components/screen/Home";
 import Register from "./assets/components/screen/Register";
-import SingleEvent from "./assets/components/screen/SingleEvent";
 import PhotoGallery from "./assets/components/screen/Photogallery";
 import EventForm from "./assets/components/screen/EventForm";
 import Profile from "./assets/components/screen/Profile";
@@ -13,6 +12,7 @@ import Notification from "./assets/components/screen/NotificationScreen";
 import Setting from "./assets/components/screen/Settings";
 import AllProfiles from "./assets/components/screen/AllProfiles";
 import EventDescriptionScreen from "./assets/components/screen/EventDescriptionScreen";
+import EditEvent from "./assets/components/screen/EditEvent";
 
 const RouteConfig = () => {
   return (
@@ -30,6 +30,7 @@ const RouteConfig = () => {
       <Route path="/notifications" element={<Notification />} />
       <Route path="/settings" element={<Setting />} />
       <Route path="/allProfiles" element={<AllProfiles />} />
+      <Route path="/editEvent/:eventId" element={<EditEvent />} />
     </Routes>
   );
 };
