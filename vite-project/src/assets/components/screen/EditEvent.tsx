@@ -39,8 +39,8 @@ interface Event {
 }
 
 const EditEvent = () => {
-  const { eventId } = useParams<{ eventId: string }>();
-
+  const { id } = useParams<{ id: string }>();
+  console.log(id);
   const [formData, setFormData] = useState<Event>({
     id: "",
     name: "",
@@ -68,17 +68,18 @@ const EditEvent = () => {
 
   useEffect(() => {
     const fetchEventData = async () => {
-      if (!eventId) {
+      if (!id) {
         console.error("Event ID is undefined.");
         setLoading(false);
         return;
       }
 
       try {
-        const eventRef = doc(db, "events", eventId);
+        const eventRef = doc(db, "events", id);
         const eventSnap = await getDoc(eventRef);
         if (eventSnap.exists()) {
           const eventData = eventSnap.data();
+          console.log("eventdata", eventData);
           setFormData({
             id: eventSnap.id,
             name: eventData.name,
@@ -113,7 +114,7 @@ const EditEvent = () => {
     };
 
     fetchEventData();
-  }, [eventId]);
+  }, [id]);
 
   useEffect(() => {
     const isFormFilled =
@@ -148,12 +149,12 @@ const EditEvent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!eventId) {
+    if (!id) {
       console.error("Event ID is undefined.");
       return;
     }
 
-    const eventRef = doc(db, "events", eventId);
+    const eventRef = doc(db, "events", id);
     try {
       const updatedEventData = {
         ...formData,
@@ -161,7 +162,7 @@ const EditEvent = () => {
       };
       await updateDoc(eventRef, updatedEventData);
       if (formData.coverPhoto) {
-        const path = `coverPhotos/${eventId}`;
+        const path = `coverPhotos/${id}`;
         await uploadImage(formData.coverPhoto, path);
       }
     } catch (error) {

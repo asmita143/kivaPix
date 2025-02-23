@@ -31,7 +31,7 @@ const RouteConfig = () => {
       <Route path="/notifications" element={<Notification />} />
       <Route path="/settings" element={<Setting />} />
       <Route path="/allProfiles" element={<AllProfiles />} />
-      <Route path="/editEvent/:eventId" element={<EditEvent />} />
+      <Route path="/editEvent/:id" element={<EditEvent />} />
       <Route path="/events/past" element={<PastEvents />} />
     </Routes>
   );
