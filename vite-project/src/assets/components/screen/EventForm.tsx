@@ -259,6 +259,7 @@ const EventForm = () => {
                       <HostDetails
                         formData={formData}
                         handleChange={handleChange}
+                        formErrors={formErrors}
                       />
                     </div>
                   </div>

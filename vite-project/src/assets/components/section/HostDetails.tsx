@@ -4,11 +4,13 @@ import { FormData } from "../utils/Types";
 interface HostDetailsProps {
   formData: FormData;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  formErrors: { email: string; phone: string };
 }
 
 const HostDetails: React.FC<HostDetailsProps> = ({
   formData,
   handleChange,
+  formErrors = { email: "", phone: "" },
 }) => {
   return (
     <div className="host-details">
@@ -55,6 +57,9 @@ const HostDetails: React.FC<HostDetailsProps> = ({
             placeholder="abc@abc.abc"
             className="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
           />
+          {formErrors.email && (
+            <p className="text-red-500">{formErrors.email}</p>
+          )}
         </div>
       </div>
 
@@ -71,6 +76,9 @@ const HostDetails: React.FC<HostDetailsProps> = ({
             placeholder="0123456789"
             className="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
           />
+          {formErrors.phone && (
+            <p className="text-red-500">{formErrors.phone}</p>
+          )}
         </div>
       </div>
 

@@ -61,13 +61,38 @@ const EditEvent = () => {
   });
 
   const { events } = useEvent();
-  const {coverPhotos, fetchCoverPhotos} = useImage("");
+  const { coverPhotos, fetchCoverPhotos } = useImage("");
   const [loading, setLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    phone: "",
+  });
+  const validateForm = () => {
+    let valid = true;
+    const errors = { email: "", phone: "" };
+
+    // Email Validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.hostEmail)) {
+      errors.email = "Please enter a valid email address.";
+      valid = false;
+    }
+
+    // Phone Validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.hostPhone)) {
+      errors.phone = "Please enter a valid phone number.";
+      valid = false;
+    }
+
+    setFormErrors(errors);
+    return valid;
+  };
 
   useEffect(() => {
-    fetchCoverPhotos(); 
+    fetchCoverPhotos();
   }, []);
 
   useEffect(() => {
@@ -76,22 +101,23 @@ const EditEvent = () => {
       setLoading(false);
       return;
     }
-  
+
     const event = events.find((e) => e.id === id);
-  
+
     if (event && coverPhotos) {
       setFormData({
         name: event.name,
-        date: event.date instanceof Date
-          ? event.date.toISOString().split("T")[0]
-          : "",
+        date:
+          event.date instanceof Date
+            ? event.date.toISOString().split("T")[0]
+            : "",
         startTime: event.startTime,
         endTime: event.endTime,
         description: event.description,
         location: {
-          name: event.location.name || "", 
+          name: event.location.name || "",
           coordinates: {
-            lat: event.location.coordinates.lat || 0, 
+            lat: event.location.coordinates.lat || 0,
             lng: event.location.coordinates.lng || 0,
           },
         },
@@ -105,13 +131,13 @@ const EditEvent = () => {
         hostCity: event.hostCity,
         participants: event.participants,
         contractType: event.contractType || "",
-        coverPhoto: null, 
+        coverPhoto: null,
       });
-      setImagePreview(coverPhotos[String(event.id)]); 
+      setImagePreview(coverPhotos[String(event.id)]);
     } else {
       console.log("No such event!");
     }
-  
+
     setLoading(false);
   }, [id, events, coverPhotos]);
 
@@ -134,23 +160,22 @@ const EditEvent = () => {
     setIsDisabled(!isFormFilled);
   }, [formData]);
 
-const handleLocationSelect = (selectedLocation: {
-  name: string;
-  lat: number;
-  lng: number;
-}) => {
-  setFormData((prev) => ({
-    ...prev,
-    location: {
-      name: selectedLocation.name,
-      coordinates: {
-        lat: selectedLocation.lat,
-        lng: selectedLocation.lng,
+  const handleLocationSelect = (selectedLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        name: selectedLocation?.name || "",
+        coordinates: {
+          lat: selectedLocation?.lat || 0,
+          lng: selectedLocation?.lng || 0,
+        },
       },
-    },
-  }));
-};
-  
+    }));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -170,6 +195,8 @@ const handleLocationSelect = (selectedLocation: {
       console.error("Event ID is undefined.");
       return;
     }
+    const isValid = validateForm();
+    if (!isValid) return;
 
     const eventRef = doc(db, "events", id);
     try {
@@ -178,7 +205,6 @@ const handleLocationSelect = (selectedLocation: {
         date: formData.date ? new Date(formData.date) : null,
       };
       await updateDoc(eventRef, updatedEventData);
-
     } catch (error) {
       console.error("Error updating event:", error);
     }
@@ -226,7 +252,11 @@ const handleLocationSelect = (selectedLocation: {
                   handleLocationSelect={handleLocationSelect}
                   isEditing={true}
                 />
-                <HostDetails formData={formData} handleChange={handleChange} />
+                <HostDetails
+                  formData={formData}
+                  handleChange={handleChange}
+                  formErrors={formErrors}
+                />
                 <div className="mt-6 flex items-center justify-end gap-x-6">
                   <button
                     type="button"
