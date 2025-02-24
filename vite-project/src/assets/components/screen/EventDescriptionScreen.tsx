@@ -110,7 +110,6 @@ const EventDescriptionScreen = () => {
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Participants:</span>{" "}
                     {event?.participants || "Not Available"}
-                    {event?.participants}
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">

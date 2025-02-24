@@ -178,7 +178,7 @@ const EventForm = () => {
       endTime: "",
       contractType: "",
       description: "",
-      location: { name: "", coordinates: { lat: 0, lng: 0 } },
+      location: { name: "", coordinates: { ...{ lat: 0, lng: 0 } } },
       hostFirstName: "",
       hostLastName: "",
       hostPhone: "",
@@ -246,6 +246,7 @@ const EventForm = () => {
                       handleLocationSelect={handleLocationSelect}
                       imagePreview={imagePreview}
                       clearImagePreview={() => setImagePreview(null)}
+                      isEditing={false}
                     />
                   </div>
 

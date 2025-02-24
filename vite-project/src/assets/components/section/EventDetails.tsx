@@ -1,9 +1,8 @@
-import React from "react";
-import { LoadScript } from "@react-google-maps/api";
-import AutoCompleteInput from "../utils/AutoComplete"; // Ensure this component is implemented
+import { useLoadScript, Autocomplete  } from "@react-google-maps/api";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { FormData } from "../utils/Types";
 import { DeleteOutlined } from "@mui/icons-material";
+import { useEffect, useRef, useState } from "react";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const libraries: ("places" | "geometry" | "drawing" | "visualization")[] = [
@@ -17,10 +16,15 @@ interface EventDetailsProps {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => void;
-  handleLocationSelect: (AutoCompleteInput: any) => void;
+  handleLocationSelect: (selectedLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => void;
   handleCoverPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   imagePreview: string | null;
   clearImagePreview: () => void;
+  isEditing:Boolean;
 }
 
 const EventDetails = ({
@@ -30,7 +34,45 @@ const EventDetails = ({
   handleLocationSelect,
   imagePreview,
   clearImagePreview,
+  isEditing,
 }: EventDetailsProps) => {
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: apiKey,
+    libraries: libraries,
+  });
+
+
+  const [locationName, setLocationName] = useState(formData.location.name);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const handleLocationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocationName(e.target.value); // Update location input value
+  };
+
+  useEffect(() => {
+    setLocationName(formData.location.name);
+  }, [formData.location.name]);
+
+  console.log("Image ", imagePreview)
+
+  const handlePlaceSelect = () => {
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place?.geometry?.location) {
+        const selectedLocation = {
+          name: place.formatted_address || "",
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+
+        setLocationName(selectedLocation.name); // Update input field with formatted address
+        handleLocationSelect(selectedLocation); // Send structured data
+      }
+    }
+  };
+
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
       {/* Event Name */}
@@ -117,15 +159,23 @@ const EventDetails = ({
 
       {/* Event Location */}
       <div className="sm:col-span-full">
-        <label className="block text-sm font-medium text-gray-900">
-          Location
-        </label>
-        <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
-          <AutoCompleteInput
-            location={formData.location}
-            onLocationSelect={handleLocationSelect}
-          />
-        </LoadScript>
+        <label className="block text-sm font-medium text-gray-900">Location</label>
+        {isLoaded ? (
+          <Autocomplete
+            onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+            onPlaceChanged={handlePlaceSelect}
+          >
+            <input
+              type="text"
+              className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
+              placeholder="Enter location..."
+              value={locationName}
+              onChange={handleLocationInputChange}
+            />
+          </Autocomplete>
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
 
       {/* Event Description */}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { db, doc, getDoc, updateDoc } from "../../../firebase";
-import { Timestamp } from "firebase/firestore";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import EventDetails from "../section/EventDetails";
@@ -9,6 +8,7 @@ import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
 import { useParams } from "react-router-dom";
 import useEvent from "../hooks/useEvent";
+import useImage from "../hooks/useImage";
 
 interface EventLocation {
   name: string;
@@ -61,12 +61,14 @@ const EditEvent = () => {
   });
 
   const { events } = useEvent();
-  const event = events.find((e) => e.id === id);
+  const {coverPhotos, fetchCoverPhotos} = useImage("");
   const [loading, setLoading] = useState(true);
   const [isDisabled, setIsDisabled] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  console.log(event)
+  useEffect(() => {
+    fetchCoverPhotos(); 
+  }, []);
 
   useEffect(() => {
     if (!id || typeof id !== "string") {
@@ -76,13 +78,13 @@ const EditEvent = () => {
     }
   
     const event = events.find((e) => e.id === id);
-
-    console.log(event?.location.name)
   
-    if (event) {
+    if (event && coverPhotos) {
       setFormData({
         name: event.name,
-        date: event.date ? event.date.toISOString() : "",
+        date: event.date instanceof Date
+          ? event.date.toISOString().split("T")[0]
+          : "",
         startTime: event.startTime,
         endTime: event.endTime,
         description: event.description,
@@ -105,12 +107,13 @@ const EditEvent = () => {
         contractType: event.contractType || "",
         coverPhoto: null, 
       });
+      setImagePreview(coverPhotos[String(event.id)]); 
     } else {
       console.log("No such event!");
     }
   
     setLoading(false);
-  }, [id, events]);
+  }, [id, events, coverPhotos]);
 
   useEffect(() => {
     const isFormFilled =
@@ -130,6 +133,24 @@ const EditEvent = () => {
 
     setIsDisabled(!isFormFilled);
   }, [formData]);
+
+const handleLocationSelect = (selectedLocation: {
+  name: string;
+  lat: number;
+  lng: number;
+}) => {
+  setFormData((prev) => ({
+    ...prev,
+    location: {
+      name: selectedLocation.name,
+      coordinates: {
+        lat: selectedLocation.lat,
+        lng: selectedLocation.lng,
+      },
+    },
+  }));
+};
+  
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -157,10 +178,7 @@ const EditEvent = () => {
         date: formData.date ? new Date(formData.date) : null,
       };
       await updateDoc(eventRef, updatedEventData);
-      if (formData.coverPhoto) {
-        const path = `coverPhotos/${id}`;
-        await uploadImage(formData.coverPhoto, path);
-      }
+
     } catch (error) {
       console.error("Error updating event:", error);
     }
@@ -205,11 +223,8 @@ const EditEvent = () => {
                   handleCoverPhotoChange={handleCoverPhotoChange}
                   imagePreview={imagePreview}
                   clearImagePreview={() => setImagePreview(null)}
-                  handleLocationSelect={function (
-                    AutoCompleteInput: any
-                  ): void {
-                    throw new Error("Function not implemented.");
-                  }}
+                  handleLocationSelect={handleLocationSelect}
+                  isEditing={true}
                 />
                 <HostDetails formData={formData} handleChange={handleChange} />
                 <div className="mt-6 flex items-center justify-end gap-x-6">
@@ -242,7 +257,3 @@ const EditEvent = () => {
 };
 
 export default EditEvent;
-
-function uploadImage(coverPhotoFile: File, path: string) {
-  throw new Error("Function not implemented.");
-}

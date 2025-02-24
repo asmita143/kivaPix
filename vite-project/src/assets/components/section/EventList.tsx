@@ -156,7 +156,7 @@ const EventList: React.FC <EventListProps> = ({allEvents}) => {
                   )}
                   {isHomePage && (
                     <StarRating
-                      isInterested={userData?.interestedEvents?.includes(String(event.id)) || false}
+                      isInterested={(userData?.interestedEvents as string[] ?? []).includes(String(event.id))}
                       onClick={(newState: boolean) => handleStarClick(event, newState)}
                     />
                   )}
