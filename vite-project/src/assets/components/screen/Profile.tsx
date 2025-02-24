@@ -69,7 +69,7 @@ const Profile = () => {
                   Role
                 </h2>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {["Photographer", "Admin"].map((Role) => (
+                  {[userData?.role].map((Role) => (
                     <span
                       key={Role}
                       className="bg-gray-200 text-black px-3 py-1 rounded-full text-sm hover:bg-gray-700 hover:text-white transition-colors duration-300"

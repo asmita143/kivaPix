@@ -9,6 +9,8 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import useEvent from "../hooks/useEvent";
+import { Role } from "../utils/Role";
+import useUser from "../hooks/useUser";
 
 const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   const { events } = useEvent(); // Fetch events from Firebase
@@ -19,6 +21,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
   const [searchDate, setSearchDate] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const { userData } = useUser();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -61,6 +64,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
     });
 
   const isHomePage = location.pathname === "/home";
+  const isAdmin = userData?.role === Role.Admin;
 
   const sidebarItems = [
     { label: "Home", isDropdown: false, path: "/home", icon: HomeIcon },
@@ -182,19 +186,8 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
         </ul>
       </div>
 
-      {/* ✅ Button Appears Only When `showButton` is True */}
-      {showButton && (
-        <div className="p-4 mt-6 flex-row">
-          <button
-            className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            onClick={() => navigate(`/Photogallery/${id}`)}
-          >
-            View Gallery
-          </button>
-        </div>
-      )}
       {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
-      {isHomePage && (
+      {isAdmin && isHomePage && (
         <div className="p-4 mt-6 flex-row">
           <button
             className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"

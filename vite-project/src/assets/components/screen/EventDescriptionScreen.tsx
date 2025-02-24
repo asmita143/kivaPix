@@ -15,6 +15,8 @@ import {
   FaUser,
   FaUsers,
 } from "react-icons/fa";
+import useUser from "../hooks/useUser";
+import { Role } from "../utils/Role";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -27,6 +29,9 @@ const EventDescriptionScreen = () => {
   const coverPhotoUrl =
     locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
+  const { userData } = useUser();
+
+  const isAdmin = userData?.role === Role.Admin;
 
   const formattedDate =
     event?.date instanceof Date
@@ -112,7 +117,8 @@ const EventDescriptionScreen = () => {
                   {" "}
                   <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Contract type:</span> {event?.contractType || "Not Available"}
+                    <span className="font-semibold">Contract type:</span>{" "}
+                    {event?.contractType || "Not Available"}
                   </p>
                 </div>
               </div>
@@ -152,19 +158,23 @@ const EventDescriptionScreen = () => {
 
               <div className="hidden md:block w-px h-48 bg-gray-300 mx-10"></div>
               <div className="sm:hidden w-full h-px bg-gray-300 mx-10"></div>
+              <div className="flex flex-row">
+                <button
+                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
+                  onClick={() => navigate(`/Photogallery/${id}`)}
+                >
+                  View Gallery
+                </button>
+                {isAdmin && (
+                  <button
+                    className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
+                    onClick={handleEditClick}
+                  >
+                    Edit event
+                  </button>
+                )}
+              </div>
 
-              <button
-                className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
-                onClick={() => navigate(`/Photogallery/${id}`)}
-              >
-                View Gallery
-              </button>
-              <button
-                className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
-                onClick={handleEditClick}
-              >
-                Edit event
-              </button>
               {/* Host Details Section */}
             </div>
 

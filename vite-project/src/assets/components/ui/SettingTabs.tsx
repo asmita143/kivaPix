@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Tabs, Tab, Box } from "@mui/material";
+import { Role } from "../utils/Role";
+import useUser from "../hooks/useUser";
 
 interface SettingTabsProps {
   value: number;
@@ -7,6 +9,8 @@ interface SettingTabsProps {
 }
 
 const SettingTabs: React.FC<SettingTabsProps> = ({ value, onChange }) => {
+  const { userData } = useUser();
+  const isAdmin = userData?.role === Role.Admin;
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -46,12 +50,14 @@ const SettingTabs: React.FC<SettingTabsProps> = ({ value, onChange }) => {
             aria-controls="tabpanel-2"
             disableRipple
           />
-          <Tab
-            label="Profile list"
-            id="tab-2"
-            aria-controls="tabpanel-2"
-            disableRipple
-          />
+          {isAdmin && (
+            <Tab
+              label="Profile list"
+              id="tab-2"
+              aria-controls="tabpanel-2"
+              disableRipple
+            />
+          )}
         </Tabs>
       </Box>
     </Box>

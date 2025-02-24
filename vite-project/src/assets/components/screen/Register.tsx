@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
+import { Role } from "../utils/Role";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ const Register = () => {
 
     setLoading(true); // Set loading to true when registration starts
     try {
-      await register(email, password, name, about, phone); // Call register from the custom hook
+      await register(email, password, name, about, phone, Role.Photographer); // Call register from the custom hook
       if (user) {
         navigate("/home"); // Navigate to home if registration is successful
       }

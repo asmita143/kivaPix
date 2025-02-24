@@ -6,8 +6,16 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { User } from "firebase/auth"; 
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { User } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { Role } from "../utils/Role";
 
 interface UserData {
   uid: string;
@@ -16,9 +24,10 @@ interface UserData {
   email: string;
   phone: string;
   profilePic?: string;
-  notifications: [] ;
-  acceptedEvent : [] ;
-  interestedEvents : []
+  role: Role;
+  notifications: [];
+  acceptedEvent: [];
+  interestedEvents: [];
 }
 
 const useUser = () => {
@@ -101,7 +110,8 @@ const useUser = () => {
     password: string,
     name: string,
     about: string,
-    phone: string
+    phone: string,
+    role: Role.Photographer
   ) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -117,6 +127,7 @@ const useUser = () => {
         email,
         phone,
         createdAt: new Date(),
+        role,
       });
     } catch (error) {
       throw error;
