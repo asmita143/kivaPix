@@ -1,5 +1,4 @@
-import { Button, CircularProgress, Modal } from "@mui/material"
-import { useEffect, useState } from "react";
+import { CircularProgress, Modal } from "@mui/material"
 
 interface IndicatorProps {
     uploading:boolean;

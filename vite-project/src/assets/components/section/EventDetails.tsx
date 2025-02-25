@@ -72,7 +72,6 @@ const EventDetails = ({
     }
   };
 
-
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
       {/* Event Name */}
@@ -110,7 +109,7 @@ const EventDetails = ({
           <input
             type="time"
             name="startTime"
-            value={formData.startTime}
+            value={formData.startTime || ""}
             onChange={handleChange}
             className="mt-2 block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 focus:outline-indigo-600 sm:text-sm"
           />

@@ -6,7 +6,7 @@ import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 import LoadingIndicator from "../section/LoadingIndicator";
 import Sidebar from "../section/SideBar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
 
@@ -40,6 +40,7 @@ interface Event {
 
 const EditEvent = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>({
     name: "",
     date: "",
@@ -63,8 +64,8 @@ const EditEvent = () => {
   const { events } = useEvent();
   const {coverPhotos, fetchCoverPhotos} = useImage("");
   const [loading, setLoading] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchCoverPhotos(); 
@@ -115,25 +116,6 @@ const EditEvent = () => {
     setLoading(false);
   }, [id, events, coverPhotos]);
 
-  useEffect(() => {
-    const isFormFilled =
-      formData.name.trim() !== "" &&
-      formData.date !== "" &&
-      formData.contractType.trim() !== "" &&
-      formData.description.trim() !== "" &&
-      formData.location.name.trim() !== "" &&
-      formData.hostFirstName.trim() !== "" &&
-      formData.hostLastName.trim() !== "" &&
-      formData.hostPhone.trim() !== "" &&
-      formData.hostEmail.trim() !== "" &&
-      formData.hostStreetAddress.trim() !== "" &&
-      formData.hostPostalCode.trim() !== "" &&
-      formData.hostCity.trim() !== "" &&
-      formData.coverPhoto !== null;
-
-    setIsDisabled(!isFormFilled);
-  }, [formData]);
-
 const handleLocationSelect = (selectedLocation: {
   name: string;
   lat: number;
@@ -165,13 +147,14 @@ const handleLocationSelect = (selectedLocation: {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setUpdating(true)
     e.preventDefault();
     if (!id) {
       console.error("Event ID is undefined.");
       return;
     }
 
-    const eventRef = doc(db, "events", id);
+    const eventRef = doc(db, "Event", id);
     try {
       const updatedEventData = {
         ...formData,
@@ -181,6 +164,9 @@ const handleLocationSelect = (selectedLocation: {
 
     } catch (error) {
       console.error("Error updating event:", error);
+    } finally {
+      setUpdating(false)
+      navigate(`/event/${id}`)
     }
   };
 
@@ -237,14 +223,10 @@ const handleLocationSelect = (selectedLocation: {
                   </button>
                   <button
                     type="submit"
-                    disabled={isDisabled}
-                    className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 ${
-                      isDisabled
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-indigo-600 hover:bg-indigo-500"
-                    }`}
+                    disabled={updating}
+                    className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 bg-indigo-600 hover:bg-indigo-500`}
                   >
-                    Save
+                    {updating ? "Updating..." : "Update"}
                   </button>
                 </div>
               </form>
@@ -252,6 +234,18 @@ const handleLocationSelect = (selectedLocation: {
           </div>
         </main>
       </div>
+
+      {updating && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-md text-center">
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+            </div>
+            <p className="mt-4 text-lg font-semibold text-gray-800">Updating Event...</p>
+          </div>
+        </div>
+      )};
+
     </div>
   );
 };
