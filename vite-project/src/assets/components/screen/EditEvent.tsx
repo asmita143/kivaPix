@@ -105,31 +105,40 @@ const EditEvent = () => {
     const event = events.find((e) => e.id === id);
 
     if (event && coverPhotos) {
+      console.log("Fetched Event Data:", event); // Log the fetched event data
+      console.log("Cover Photos:", coverPhotos); // Log the cover photos data
+      const location = event.location || {
+        name: "",
+        coordinates: { lat: 0, lng: 0 },
+      };
+      const coordinates = location.coordinates || { lat: 0, lng: 0 };
+      console.log("Event Location:", location); // Log the location data
+
       setFormData({
-        name: event.name,
+        name: event.name || "",
         date:
           event.date instanceof Date
             ? event.date.toISOString().split("T")[0]
             : "",
-        startTime: event.startTime,
-        endTime: event.endTime,
-        description: event.description,
+        startTime: event.startTime || "",
+        endTime: event.endTime || "",
+        description: event.description || "",
         location: {
-          name: event.location.name || "",
+          name: location.name || "",
           coordinates: {
-            lat: event.location.coordinates.lat || 0,
-            lng: event.location.coordinates.lng || 0,
+            lat: coordinates.lat || 0,
+            lng: coordinates.lng || 0,
           },
         },
-        hostFirstName: event.hostFirstName,
-        hostLastName: event.hostLastName,
-        hostPhone: event.hostPhone,
-        hostEmail: event.hostEmail,
-        hostCountry: event.hostCountry,
-        hostStreetAddress: event.hostStreetAddress,
-        hostPostalCode: event.hostPostalCode,
-        hostCity: event.hostCity,
-        participants: event.participants,
+        hostFirstName: event.hostFirstName || "",
+        hostLastName: event.hostLastName || "",
+        hostPhone: event.hostPhone || "",
+        hostEmail: event.hostEmail || "",
+        hostCountry: event.hostCountry || "",
+        hostStreetAddress: event.hostStreetAddress || "",
+        hostPostalCode: event.hostPostalCode || "",
+        hostCity: event.hostCity || "",
+        participants: event.participants || 1,
         contractType: event.contractType || "",
         coverPhoto: null,
       });
@@ -158,6 +167,7 @@ const EditEvent = () => {
       formData.coverPhoto !== null;
 
     setIsDisabled(!isFormFilled);
+    console.log(isFormFilled);
   }, [formData]);
 
   const handleLocationSelect = (selectedLocation: {
@@ -267,7 +277,6 @@ const EditEvent = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={isDisabled}
                     className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 ${
                       isDisabled
                         ? "bg-gray-400 cursor-not-allowed"
