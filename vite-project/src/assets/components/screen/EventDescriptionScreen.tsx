@@ -157,24 +157,22 @@ const EventDescriptionScreen = () => {
 
               <div className="hidden md:block w-px h-48 bg-gray-300 mx-10"></div>
               <div className="sm:hidden w-full h-px bg-gray-300 mx-10"></div>
-              <div className="flex flex-row">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-0 mt-4 md:mt-0">
                 <button
-                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
+                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md hover:shadow-lg w-full md:w-auto order-last md:order-none"
                   onClick={() => navigate(`/Photogallery/${id}`)}
                 >
                   View Gallery
                 </button>
                 {isAdmin && (
                   <button
-                    className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:border-black border-2 transition duration-300 w-full md:w-auto order-last md:order-none"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-full text-base md:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md hover:shadow-lg w-full md:w-auto order-last md:order-none"
                     onClick={handleEditClick}
                   >
-                    Edit event
+                    Edit Event
                   </button>
                 )}
               </div>
-
-              {/* Host Details Section */}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
@@ -212,7 +210,7 @@ const EventDescriptionScreen = () => {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <p className="mt-3 md:mt-4 text-sm md:text-lgtext-gray-700">
+                <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
                   {event?.location?.name || "Downtown Arena, New York"}
                 </p>
               </div>
