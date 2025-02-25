@@ -62,13 +62,38 @@ const EditEvent = () => {
   });
 
   const { events } = useEvent();
-  const {coverPhotos, fetchCoverPhotos} = useImage("");
+  const { coverPhotos, fetchCoverPhotos } = useImage("");
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    phone: "",
+  });
+  const validateForm = () => {
+    let valid = true;
+    const errors = { email: "", phone: "" };
+
+    // Email Validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.hostEmail)) {
+      errors.email = "Please enter a valid email address.";
+      valid = false;
+    }
+
+    // Phone Validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.hostPhone)) {
+      errors.phone = "Please enter a valid phone number.";
+      valid = false;
+    }
+
+    setFormErrors(errors);
+    return valid;
+  };
 
   useEffect(() => {
-    fetchCoverPhotos(); 
+    fetchCoverPhotos();
   }, []);
 
   useEffect(() => {
@@ -77,42 +102,52 @@ const EditEvent = () => {
       setLoading(false);
       return;
     }
-  
+
     const event = events.find((e) => e.id === id);
-  
+
     if (event && coverPhotos) {
+      console.log("Fetched Event Data:", event); // Log the fetched event data
+      console.log("Cover Photos:", coverPhotos); // Log the cover photos data
+      const location = event.location || {
+        name: "",
+        coordinates: { lat: 0, lng: 0 },
+      };
+      const coordinates = location.coordinates || { lat: 0, lng: 0 };
+      console.log("Event Location:", location); // Log the location data
+
       setFormData({
-        name: event.name,
-        date: event.date instanceof Date
-          ? event.date.toISOString().split("T")[0]
-          : "",
-        startTime: event.startTime,
-        endTime: event.endTime,
-        description: event.description,
+        name: event.name || "",
+        date:
+          event.date instanceof Date
+            ? event.date.toISOString().split("T")[0]
+            : "",
+        startTime: event.startTime || "",
+        endTime: event.endTime || "",
+        description: event.description || "",
         location: {
-          name: event.location.name || "", 
+          name: location.name || "",
           coordinates: {
-            lat: event.location.coordinates.lat || 0, 
-            lng: event.location.coordinates.lng || 0,
+            lat: coordinates.lat || 0,
+            lng: coordinates.lng || 0,
           },
         },
-        hostFirstName: event.hostFirstName,
-        hostLastName: event.hostLastName,
-        hostPhone: event.hostPhone,
-        hostEmail: event.hostEmail,
-        hostCountry: event.hostCountry,
-        hostStreetAddress: event.hostStreetAddress,
-        hostPostalCode: event.hostPostalCode,
-        hostCity: event.hostCity,
-        participants: event.participants,
+        hostFirstName: event.hostFirstName || "",
+        hostLastName: event.hostLastName || "",
+        hostPhone: event.hostPhone || "",
+        hostEmail: event.hostEmail || "",
+        hostCountry: event.hostCountry || "",
+        hostStreetAddress: event.hostStreetAddress || "",
+        hostPostalCode: event.hostPostalCode || "",
+        hostCity: event.hostCity || "",
+        participants: event.participants || 1,
         contractType: event.contractType || "",
-        coverPhoto: null, 
+        coverPhoto: null,
       });
-      setImagePreview(coverPhotos[String(event.id)]); 
+      setImagePreview(coverPhotos[String(event.id)]);
     } else {
       console.log("No such event!");
     }
-  
+
     setLoading(false);
   }, [id, events, coverPhotos]);
 
@@ -131,8 +166,7 @@ const handleLocationSelect = (selectedLocation: {
       },
     },
   }));
-};
-  
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -153,6 +187,8 @@ const handleLocationSelect = (selectedLocation: {
       console.error("Event ID is undefined.");
       return;
     }
+    const isValid = validateForm();
+    if (!isValid) return;
 
     const eventRef = doc(db, "Event", id);
     try {
@@ -161,7 +197,6 @@ const handleLocationSelect = (selectedLocation: {
         date: formData.date ? new Date(formData.date) : null,
       };
       await updateDoc(eventRef, updatedEventData);
-
     } catch (error) {
       console.error("Error updating event:", error);
     } finally {
@@ -212,7 +247,11 @@ const handleLocationSelect = (selectedLocation: {
                   handleLocationSelect={handleLocationSelect}
                   isEditing={true}
                 />
-                <HostDetails formData={formData} handleChange={handleChange} />
+                <HostDetails
+                  formData={formData}
+                  handleChange={handleChange}
+                  formErrors={formErrors}
+                />
                 <div className="mt-6 flex items-center justify-end gap-x-6">
                   <button
                     type="button"

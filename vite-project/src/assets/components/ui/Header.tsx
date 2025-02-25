@@ -34,7 +34,7 @@ const HeaderProfile = () => {
   const navigate = useNavigate();
 
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className="relative z-30">
       <MenuButton className="flex items-center gap-2 focus:outline-none">
         <span className="font-medium hidden sm:block">{userData?.name}</span>
         <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">

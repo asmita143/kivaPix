@@ -1,4 +1,3 @@
-// src/components/RegisterPage.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
@@ -12,8 +11,8 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // Add loading state
-  const { user, register } = useUser(); // Using the custom hook for registration
+  const [loading, setLoading] = useState(false);
+  const { user, register } = useUser();
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -28,40 +27,40 @@ const Register = () => {
       return;
     }
 
-    setLoading(true); // Set loading to true when registration starts
+    setLoading(true);
     try {
-      await register(email, password, name, about, phone, Role.Photographer); // Call register from the custom hook
+      await register(email, password, name, about, phone, Role.Photographer);
       if (user) {
-        navigate("/home"); // Navigate to home if registration is successful
+        navigate("/home");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message); // Display error message
+        setError(err.message);
       } else {
         setError("An unknown error occurred");
       }
     } finally {
-      setLoading(false); // Set loading to false when the process finishes
+      setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen w-screen flex bg-gradient-to-r from-green-900 to-green-400">
-      {/* Left Section */}
-      <div className="w-2/3 flex flex-col justify-center items-center text-white">
+    <div className="h-screen w-screen flex flex-col md:flex-row">
+      {/* Background Section - Hidden on mobile screens */}
+      <div className="hidden md:flex w-2/3 bg-gradient-to-r from-green-900 to-green-400 flex-col justify-center items-center text-white">
         <h1 className="text-4xl font-bold py-3">
           "Capture Moments, Keep Memories."
         </h1>
       </div>
 
-      {/* Right Section */}
-      <div className="w-1/3 flex justify-center items-center bg-gray-100">
-        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col justify-center items-center">
+      {/* Register Section - Full height on mobile, right-aligned on larger screens */}
+      <div className="w-full md:w-1/3 flex flex-col justify-center items-center bg-gray-100 md:bg-transparent pt-10 md:pt-0">
+        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md flex flex-col justify-center items-center h-full md:h-auto">
           <h1 className="text-4xl font-bold mb-1">KivaPix</h1>
           <p className="text-gray-500 mb-6">Register to create your account</p>
 
           {/* Register Form */}
-          <form onSubmit={handleRegister} className="w-96 space-y-4">
+          <form onSubmit={handleRegister} className="w-full space-y-4">
             <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Name
@@ -146,15 +145,14 @@ const Register = () => {
                 <p>I agree to the terms and conditions</p>
               </div>
             </div>
-            {error && <p className="text-red-500 mt-4">{error}</p>}{" "}
-            {/* Display error message */}
+            {error && <p className="text-red-500 mt-4">{error}</p>}
             <div className="flex flex-col justify-center items-center py-3">
               <button
                 type="submit"
                 className={`w-full py-3 ${
                   loading ? "bg-gray-400" : "bg-green-500"
                 } text-white font-bold rounded-3xl text-xl`}
-                disabled={loading} // Disable the button while loading
+                disabled={loading}
               >
                 {loading ? "Registering..." : "Register"}
               </button>

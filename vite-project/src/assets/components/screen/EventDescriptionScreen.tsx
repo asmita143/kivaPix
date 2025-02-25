@@ -170,7 +170,7 @@ const EventDescriptionScreen = () => {
                     className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
                     onClick={handleEditClick}
                   >
-                    Edit event
+                    Edit Event
                   </button>
                 )}
               </div>
@@ -210,7 +210,7 @@ const EventDescriptionScreen = () => {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <p className="mt-3 md:mt-4 text-sm md:text-lgtext-gray-700">
+                <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
                   {event?.location?.name || "Downtown Arena, New York"}
                 </p>
               </div>
