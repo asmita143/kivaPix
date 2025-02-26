@@ -22,8 +22,28 @@ const Home: React.FC = () => {
     console.log("Sort order or criteria changed:", { sortOrder, sortBy });
   }, [sortOrder, sortBy]);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
+
+  const upcomingEvents = events.filter((event) => {
+    if (!event?.date) return false; // Skip if event.date is missing or invalid
+
+    let eventDate;
+
+    if (event.date instanceof Date) {
+        eventDate = event.date;
+    }
+    // Skip if event.date is not a valid date
+    else {
+        return false;
+    }
+    // Compare dates (ignoring time)
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate > today;
+});
+
   const filteredEvents = useMemo(() => {
-    return events
+    return upcomingEvents
       .filter((event) => {
         const locationMatch =
           event.location && event.location.name

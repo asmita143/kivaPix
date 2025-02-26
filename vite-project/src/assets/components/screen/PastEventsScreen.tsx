@@ -1,5 +1,4 @@
 import useEvent from "../hooks/useEvent";
-import useUser from "../hooks/useUser";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
 import { useState } from "react";
