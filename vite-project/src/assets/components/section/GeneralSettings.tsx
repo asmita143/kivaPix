@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, updateDoc, doc, getDoc } from "../../../firebase";
+import useImage from "../hooks/useImage"; // Import the useImage hook
 
 // Define a type for the user data
 interface UserData {
@@ -24,6 +25,14 @@ const GeneralSettings = () => {
   const [loading, setLoading] = useState(true); // To handle loading state
   const [error, setError] = useState<string | null>(null); // For storing any errors
 
+  const id = auth.currentUser?.uid || ""; // Get the id from the current user
+  const {
+    profilePicture,
+    uploadProfilePicture,
+    fetchProfilePicture,
+    uploading,
+  } = useImage("", id); // Pass the id to the useImage hook
+
   // Fetch user data from Firestore when the component mounts
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,6 +52,9 @@ const GeneralSettings = () => {
         } else {
           setError("No user data found.");
         }
+
+        // Fetch the profile picture
+        await fetchProfilePicture();
       } catch (error) {
         console.error("Error fetching user data:", error);
         setError("Error fetching user data.");
@@ -52,7 +64,7 @@ const GeneralSettings = () => {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,6 +85,14 @@ const GeneralSettings = () => {
     }
   };
 
+  const handleImageUpload = async (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      await uploadProfilePicture(file);
+      await fetchProfilePicture(); // Re-fetch the profile picture to update the state
+    }
+  };
+
   return (
     <div>
       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-lg">
@@ -83,6 +103,27 @@ const GeneralSettings = () => {
 
         {!loading && !error && (
           <div className="space-y-4">
+            {/* Profile Picture */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Profile Picture
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="w-full p-3 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {profilePicture && (
+                <img
+                  src={profilePicture}
+                  alt="Profile"
+                  className="mt-4 w-32 h-32 object-cover rounded-full"
+                />
+              )}
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Name

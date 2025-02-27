@@ -1,27 +1,35 @@
-// src/pages/Profile.tsx
-import { useState } from "react";
-import useUser from "../hooks/useUser"; // Import the useUser hook
+import { useState, useEffect } from "react";
+import useUser from "../hooks/useUser";
+import useImage from "../hooks/useImage"; // Import the useImage hook
 import HeaderSection from "../section/HeaderSection";
 import SideBar from "../section/SideBar";
 import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 
 const Profile = () => {
-  const { user, userData, loadingUserData, error, logout } = useUser(); // To store additional user data
+  const { user, userData, loadingUserData, error, logout } = useUser();
   const navigate = useNavigate();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
-  if (loadingUserData) {
+  const id = user?.uid || ""; // Get the userId from the current user
+  const { profilePicture, fetchProfilePicture, loading } = useImage("", id);
+
+  useEffect(() => {
+    if (id) {
+      fetchProfilePicture();
+    }
+  }, [id]);
+
+  if (loadingUserData || loading) {
     return <p>Loading user data...</p>;
   }
 
-  // If user is not logged in, show a message or redirect to login page
   if (!user) {
     return <p>Please log in to view your profile.</p>;
   }
 
   if (error) {
-    return <p>{error}</p>; // Show error if there's any
+    return <p>{error}</p>;
   }
 
   return (
@@ -40,11 +48,11 @@ const Profile = () => {
           <SideBar />
         </div>
         <div className="bg-gradient-to-r from-gray-300 to-gray-500 min-h-screen w-full flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in ">
+          <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 text-center mb-8 md:mb-0">
                 <img
-                  src="https://i.pravatar.cc/300"
+                  src={profilePicture || "https://i.pravatar.cc/300"}
                   alt="Profile Picture"
                   className="rounded-full w-48 h-48 mx-auto mb-4 border-4 border-gray-700 dark:border-gray-600 transition-transform duration-300 hover:scale-105"
                 />

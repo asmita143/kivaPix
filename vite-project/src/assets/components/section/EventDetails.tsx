@@ -1,4 +1,4 @@
-import { useLoadScript, Autocomplete  } from "@react-google-maps/api";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { FormData } from "../utils/Types";
 import { DeleteOutlined } from "@mui/icons-material";
@@ -24,7 +24,7 @@ interface EventDetailsProps {
   handleCoverPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   imagePreview: string | null;
   clearImagePreview: () => void;
-  isEditing:Boolean;
+  isEditing: Boolean;
 }
 
 const EventDetails = ({
@@ -36,17 +36,17 @@ const EventDetails = ({
   clearImagePreview,
   isEditing,
 }: EventDetailsProps) => {
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: apiKey,
     libraries: libraries,
   });
 
-
   const [locationName, setLocationName] = useState(formData.location.name);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
-  const handleLocationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLocationInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setLocationName(e.target.value); // Update location input value
   };
 
@@ -54,7 +54,7 @@ const EventDetails = ({
     setLocationName(formData.location.name);
   }, [formData.location.name]);
 
-  console.log("Image ", imagePreview)
+  console.log("Image ", imagePreview);
 
   const handlePlaceSelect = () => {
     if (autocompleteRef.current) {
@@ -158,7 +158,9 @@ const EventDetails = ({
 
       {/* Event Location */}
       <div className="sm:col-span-full">
-        <label className="block text-sm font-medium text-gray-900">Location</label>
+        <label className="block text-sm font-medium text-gray-900">
+          Location
+        </label>
         {isLoaded ? (
           <Autocomplete
             onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
@@ -222,7 +224,6 @@ const EventDetails = ({
                       className="sr-only"
                     />
                   </label>
-                  <p className="pl-1">or drag and drop</p>
                 </div>
                 <p className="text-xs text-gray-600">
                   PNG, JPG, GIF up to 10MB

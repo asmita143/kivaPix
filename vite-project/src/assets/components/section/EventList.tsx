@@ -14,7 +14,9 @@ interface EventListProps {
 }
 
 const EventList: React.FC<EventListProps> = ({ allEvents }) => {
-  const { coverPhotos, fetchCoverPhotos, loading } = useImage("");
+  const { user, userData } = useUser();
+  const id = user?.uid || "";
+  const { coverPhotos, fetchCoverPhotos, loading } = useImage(id, "");
   const navigate = useNavigate();
   const { updateInterestedEventsForUser, acceptEvent } = useEvent();
   const [selectedEventId, setSelectedEventId] = useState<string | null>();
@@ -24,7 +26,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
   const [selectedEventDate, setSelectedEventDate] = useState<string | null>(
     null
   );
-  const { user, userData } = useUser();
+
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
   const isAcceptedPage = location.pathname === "/events/accepted";
