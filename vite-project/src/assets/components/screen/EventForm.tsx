@@ -43,6 +43,7 @@ const EventForm = () => {
     hostCity: "",
     participants: 1,
     coverPhoto: null,
+    accepted: false,
   });
   useEffect(() => {
     const isFormFilled =
@@ -114,6 +115,7 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
+      accepted:false,
     });
 
     setCoverPhotoFile(null);
@@ -192,6 +194,7 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
+      accepted:false
     });
 
     setCoverPhotoFile(null);

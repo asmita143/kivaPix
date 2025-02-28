@@ -18,7 +18,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
   const id = user?.uid || "";
   const { coverPhotos, fetchCoverPhotos, loading } = useImage(id, "");
   const navigate = useNavigate();
-  const { updateInterestedEventsForUser, acceptEvent } = useEvent();
+  const { updateInterestedEventsForUser, acceptEvent, updateAcceptedField } = useEvent();
   const [selectedEventId, setSelectedEventId] = useState<string | null>();
   const [selectedEventLocation, setSelectedEventLocation] = useState<
     string | null
@@ -39,6 +39,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
       return;
     }
     await acceptEvent(user.uid, selectedEventId);
+    await updateAcceptedField(selectedEventId)
 
     setModalOpen(false);
   };
@@ -161,10 +162,15 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
                 <div className="mt-3 sm:mt-4 flex items-center justify-between">
                   {!isAcceptedPage && !isPastEvent && (
                     <button
-                      className="bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:border-black border-2 transition duration-300"
+                      disabled={event.accepted}
+                      className={`text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:border-black border-2 transition duration-300 ${
+                          event.accepted
+                            ? "bg-gray-400 cursor-not-allowed border-black border-2"
+                            : "bg-blue-600"
+                        }`}
                       onClick={() => handleAcceptClick(event)}
                     >
-                      Accept
+                      {event.accepted ? "Accepted" : "Accept"}
                     </button>
                   )}
                   {isHomePage && (
