@@ -17,7 +17,7 @@ interface UserData {
 const Header = () => {
   const { user, userData } = useUser();
   const id = user?.uid || ""; // Get the userId from the current user
-  const { profilePicture, fetchProfilePicture, loading } = useImage("", id);
+  const { profilePicture, fetchProfilePicture } = useImage("", id);
 
   useEffect(() => {
     if (id) {
@@ -55,7 +55,12 @@ const HeaderRight = ({
   logout: () => Promise<void>;
 }) => {
   const navigate = useNavigate();
-  const profileImage = profilePicture || "https://i.pravatar.cc/300"; // Fallback image
+  const backgroundColor = "#4CAF50";
+  const profileImage =
+    profilePicture ||
+    `https://api.dicebear.com/6.x/initials/svg?seed=${
+      userData?.name || "User"
+    }&background=${backgroundColor}`; // Fallback image
 
   return (
     <div className="flex-1 flex items-center justify-end gap-2">

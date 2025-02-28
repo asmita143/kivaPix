@@ -34,7 +34,6 @@ const EventDetails = ({
   handleLocationSelect,
   imagePreview,
   clearImagePreview,
-  isEditing,
 }: EventDetailsProps) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: apiKey,

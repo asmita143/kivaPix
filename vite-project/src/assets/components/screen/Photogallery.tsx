@@ -11,7 +11,7 @@ import AllImages from "../section/AllImagesSection";
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { uploadImage, uploading } = useImage(id || "");
+  const { uploadImage, uploading } = useImage("", id || "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +52,9 @@ const PhotoGallery = () => {
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300`}
         >
           <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 shadow-sm">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">Photo Gallery</h1>
+            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
+              Photo Gallery
+            </h1>
 
             {/* Upload Button */}
             <label htmlFor="file-upload">
@@ -76,7 +78,7 @@ const PhotoGallery = () => {
               style={{ display: "none" }}
             />
           </div>
-          <AllImages uploadedImages={uploadedImages} uploading={uploading}/>
+          <AllImages uploadedImages={uploadedImages} uploading={uploading} />
         </main>
       </div>
     </div>

@@ -10,6 +10,7 @@ const Profile = () => {
   const { user, userData, loadingUserData, error, logout } = useUser();
   const navigate = useNavigate();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const backgroundColor = "#939597";
 
   const id = user?.uid || ""; // Get the userId from the current user
   const { profilePicture, fetchProfilePicture, loading } = useImage("", id);
@@ -52,7 +53,12 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 text-center mb-8 md:mb-0">
                 <img
-                  src={profilePicture || "https://i.pravatar.cc/300"}
+                  src={
+                    profilePicture ||
+                    `https://api.dicebear.com/6.x/initials/svg?seed=${
+                      userData?.name || "User"
+                    }&background=${backgroundColor}`
+                  }
                   alt="Profile Picture"
                   className="rounded-full w-48 h-48 mx-auto mb-4 border-4 border-gray-700 dark:border-gray-600 transition-transform duration-300 hover:scale-105"
                 />

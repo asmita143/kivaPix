@@ -29,7 +29,13 @@ const EventDescriptionScreen = () => {
   const coverPhotoUrl =
     locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
-  const { userData } = useUser();
+  const { user, userData } = useUser();
+
+  const acceptedEventIds: string[] = userData?.acceptedEvent || [];
+
+  const acceptedEvents = events.filter((event) =>
+    acceptedEventIds.includes(String(event.id))
+  );
 
   const isAdmin = userData?.role === Role.Admin;
 
@@ -44,6 +50,8 @@ const EventDescriptionScreen = () => {
   const handleEditClick = () => {
     navigate(`../editEvent/${event?.id}`);
   };
+
+  const isEventAccepted = acceptedEventIds.includes(String(id));
 
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
@@ -100,8 +108,8 @@ const EventDescriptionScreen = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaClock className="text-orange-500" />
-                  <p className="text-sm md:text-lg ">
-                    <span className="font-semibold ">Time:</span>{" "}
+                  <p className="text-sm md:text-lg">
+                    <span className="font-semibold">Time:</span>{" "}
                     {event?.startTime} - {event?.endTime}
                   </p>
                 </div>
@@ -113,7 +121,6 @@ const EventDescriptionScreen = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-4">
-                  {" "}
                   <FaFileContract className="text-orange-500" />
                   <p className="text-sm md:text-lg">
                     <span className="font-semibold">Contract type:</span>{" "}
@@ -158,22 +165,25 @@ const EventDescriptionScreen = () => {
               </div>
             </div>
 
-              <div className="flex bg-white p-4 md:p-6 mt-3 rounded-lg shadow-lg gap-6 md:gap-3">
+            <div className="flex bg-white p-4 md:p-6 mt-3 rounded-lg shadow-lg gap-6 md:gap-3">
+              {(isEventAccepted || isAdmin) && (
                 <button
                   className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
-                  onClick={() => navigate(`/Photogallery/${id}`)}
+                  onClick={() => navigate(`/PhotoGallery/${id}`)}
                 >
                   View Gallery
                 </button>
-                {isAdmin && (
-                  <button
-                    className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
-                    onClick={handleEditClick}
-                  >
-                    Edit Event
-                  </button>
-                )}
-              </div>
+              )}
+
+              {isAdmin && (
+                <button
+                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
+                  onClick={handleEditClick}
+                >
+                  Edit Event
+                </button>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
               {/* Description Card */}
@@ -211,7 +221,7 @@ const EventDescriptionScreen = () => {
                   ></iframe>
                 </div>
                 <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
-                  {event?.location?.name || "Downtown Arena, New York"}
+                  {event?.location?.name || "Location not available"}
                 </p>
               </div>
             </div>
