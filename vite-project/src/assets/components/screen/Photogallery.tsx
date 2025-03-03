@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import useImage from "../hooks/useImage";
 import AllImages from "../section/AllImagesSection";
+import { QRCodeCanvas } from "qrcode.react";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -26,6 +27,8 @@ const PhotoGallery = () => {
 
     setUploadedImages((prev) => [...prev, ...uploadedUrls]);
   };
+
+  const galleryUrl = `${window.location.origin}/PhotoGallery/${id}`;
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
@@ -78,6 +81,15 @@ const PhotoGallery = () => {
               style={{ display: "none" }}
             />
           </div>
+
+          {/* QR Code Section */}
+          <div className="bg-white p-4 md:p-6 mt-6 rounded-lg shadow-lg">
+            <h2 className="text-base md:text-2xl font-bold mb-4 text-gray-800">
+              Share the Gallery
+            </h2>
+            <QRCodeCanvas value={galleryUrl} />
+          </div>
+
           <AllImages uploadedImages={uploadedImages} uploading={uploading} />
         </main>
       </div>
