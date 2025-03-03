@@ -39,6 +39,7 @@ export interface Event {
   hostCity: string;
   participants: number;
   contractType: string;
+  accepted: boolean
 }
 
 const useEvent = () => {
@@ -50,20 +51,23 @@ const useEvent = () => {
   useEffect(() => {
     const q = query(eventRef);
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.forEach((doc) => {
+      // Map all documents to an array of Event objects
+      const eventsData = snapshot.docs.map((doc) => {
         const data = doc.data();
-        const eventData = {
+        return {
           ...data,
           id: doc.id,
           date: data.date?.toDate ? data.date.toDate() : null,
-          location: data.location || {
-            name: "",
-            coordinates: { lat: 0, lng: 0 },
+          location: data.location || { 
+            name: "", 
+            coordinates: { lat: 0, lng: 0 } 
           },
         } as Event;
-        setEvents((prev) => [...prev, eventData]);
       });
+  
+      setEvents(eventsData); 
     });
+  
     return unsubscribe;
   }, []);
 
@@ -73,6 +77,7 @@ const useEvent = () => {
       const docRef = await addDoc(eventRef, {
         ...event,
         date: event.date ? Timestamp.fromDate(event.date) : null,
+        accepted: false
       });
       setEvents((prevEvents) => [...prevEvents, event]);
 
@@ -153,6 +158,17 @@ const useEvent = () => {
     }
   };
 
+  const updateAcceptedField = async (eventId: string) => {
+    try {
+      const eventRef = doc(db, "Event", eventId);
+      await updateDoc(eventRef, {
+        accepted: true,
+      });
+    } catch (error) {
+      console.error("Error updating interestedEvent field:", error);
+    }
+  };
+
   return {
     events,
     addEvent,
@@ -162,6 +178,7 @@ const useEvent = () => {
     addNotification,
     clearNotifications,
     loading,
+    updateAcceptedField
   };
 };
 
