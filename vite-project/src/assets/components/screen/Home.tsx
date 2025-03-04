@@ -8,6 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import SortList from "../ui/Sort";
 import SearchList from "../ui/Search";
+import { generateToken, messaging } from "../../../firebase";
+import { onMessage } from "firebase/messaging";
 
 const Home: React.FC = () => {
   const { events } = useEvent(); // Fetch events from Firebase
@@ -23,21 +25,20 @@ const Home: React.FC = () => {
   }, [sortOrder, sortBy]);
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0); 
+  today.setHours(0, 0, 0, 0);
 
   const upcomingEvents = events.filter((event) => {
-    if (!event?.date) return false; 
+    if (!event?.date) return false;
 
     let eventDate;
 
     if (event.date instanceof Date) {
-        eventDate = event.date;
-    }
-    else {
-        return false;
+      eventDate = event.date;
+    } else {
+      return false;
     }
     return eventDate >= today;
-});
+  });
 
   const filteredEvents = useMemo(() => {
     return upcomingEvents
@@ -72,7 +73,13 @@ const Home: React.FC = () => {
         }
         return 0;
       });
-  }, [events, searchTerm, searchDate, searchLocation, sortOrder, sortBy]); 
+  }, [events, searchTerm, searchDate, searchLocation, sortOrder, sortBy]);
+  useEffect(() => {
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log(payload);
+    });
+  }, []);
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">

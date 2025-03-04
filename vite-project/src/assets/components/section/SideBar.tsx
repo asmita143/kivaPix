@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -8,60 +8,15 @@ import EventIcon from "@mui/icons-material/Event";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import useEvent from "../hooks/useEvent";
+
 import { Role } from "../utils/Role";
 import useUser from "../hooks/useUser";
 
-const Sidebar: React.FC<{ showButton?: boolean }> = ({ showButton }) => {
-  const { events } = useEvent(); // Fetch events from Firebase
-  const { id } = useParams<{ id: string }>();
+const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchDate, setSearchDate] = useState("");
-  const [searchLocation, setSearchLocation] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+
   const { userData } = useUser();
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    if (name === "name") {
-      setSearchTerm("");
-    } else if (name === "date") {
-      setSearchDate("");
-    } else if (name === "location") {
-      setSearchLocation("");
-    }
-  };
-
-  const filteredEvents = events
-    .filter((event) => {
-      // Add extra check to ensure event.location and event.location.name are valid
-      const locationMatch =
-        event.location && event.location.name
-          ? event.location.name
-              .toLowerCase()
-              .includes(searchLocation.toLowerCase())
-          : true; // If location is undefined, treat as a match
-
-      const dateMatch = searchDate
-        ? new Date(event.date ?? "").toDateString() ===
-          new Date(searchDate).toDateString()
-        : true;
-
-      return (
-        event.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        locationMatch &&
-        dateMatch
-      );
-    })
-    .sort((a, b) => {
-      if (sortOrder === "asc") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
 
   const isHomePage = location.pathname === "/home";
   const isAdmin = userData?.role === Role.Admin;

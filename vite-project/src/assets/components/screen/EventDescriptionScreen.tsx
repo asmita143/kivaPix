@@ -29,13 +29,9 @@ const EventDescriptionScreen = () => {
   const coverPhotoUrl =
     locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
-  const { user, userData } = useUser();
+  const { userData } = useUser();
 
   const acceptedEventIds: string[] = userData?.acceptedEvent || [];
-
-  const acceptedEvents = events.filter((event) =>
-    acceptedEventIds.includes(String(event.id))
-  );
 
   const isAdmin = userData?.role === Role.Admin;
 

@@ -11,8 +11,9 @@ import { QRCodeCanvas } from "qrcode.react";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [isQrCodeExpanded, setQrCodeExpanded] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { uploadImage, uploading } = useImage("", id || "");
+  const { uploadImage, uploading } = useImage(id || "", "");
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,12 +83,40 @@ const PhotoGallery = () => {
             />
           </div>
 
-          {/* QR Code Section */}
+          {/* QR Code Section (for photographers to share the gallery) */}
           <div className="bg-white p-4 md:p-6 mt-6 rounded-lg shadow-lg">
             <h2 className="text-base md:text-2xl font-bold mb-4 text-gray-800">
               Share the Gallery
             </h2>
-            <QRCodeCanvas value={galleryUrl} />
+
+            {/* Small QR Button that toggles the expanded view */}
+            {!isQrCodeExpanded ? (
+              <Button
+                onClick={() => setQrCodeExpanded(true)}
+                variant="contained"
+                color="primary"
+                className="p-2"
+              >
+                <QRCodeCanvas value={galleryUrl} size={50} />
+              </Button>
+            ) : (
+              <div className="flex justify-center items-center flex-col">
+                {/* Large QR Code when expanded */}
+                <QRCodeCanvas value={galleryUrl} size={256} />
+                <Button
+                  onClick={() => setQrCodeExpanded(false)}
+                  variant="outlined"
+                  color="secondary"
+                  className="mt-4"
+                >
+                  Close QR Code
+                </Button>
+              </div>
+            )}
+
+            <p className="mt-4 text-gray-600">
+              Click to expand or close the QR code.
+            </p>
           </div>
 
           <AllImages uploadedImages={uploadedImages} uploading={uploading} />

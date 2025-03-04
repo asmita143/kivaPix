@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db, doc, getDoc, updateDoc } from "../../../firebase";
+import { db, doc, updateDoc } from "../../../firebase";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import EventDetails from "../section/EventDetails";
@@ -39,7 +39,7 @@ interface Event {
 }
 
 const EditEvent = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string | undefined }>();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>({
     name: "",
@@ -62,7 +62,7 @@ const EditEvent = () => {
   });
 
   const { events } = useEvent();
-  const { coverPhotos, fetchCoverPhotos } = useImage("");
+  const { coverPhotos, fetchCoverPhotos } = useImage("", id);
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
@@ -151,21 +151,21 @@ const EditEvent = () => {
     setLoading(false);
   }, [id, events, coverPhotos]);
 
-const handleLocationSelect = (selectedLocation: {
-  name: string;
-  lat: number;
-  lng: number;
-}) => {
-  setFormData((prev) => ({
-    ...prev,
-    location: {
-      name: selectedLocation.name,
-      coordinates: {
-        lat: selectedLocation.lat,
-        lng: selectedLocation.lng,
+  const handleLocationSelect = (selectedLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        name: selectedLocation.name,
+        coordinates: {
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+        },
       },
-    },
-  }));
+    }));
   };
 
   const handleChange = (
@@ -181,7 +181,7 @@ const handleLocationSelect = (selectedLocation: {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    setUpdating(true)
+    setUpdating(true);
     e.preventDefault();
     if (!id) {
       console.error("Event ID is undefined.");
@@ -200,8 +200,8 @@ const handleLocationSelect = (selectedLocation: {
     } catch (error) {
       console.error("Error updating event:", error);
     } finally {
-      setUpdating(false)
-      navigate(`/event/${id}`)
+      setUpdating(false);
+      navigate(`/event/${id}`);
     }
   };
 
@@ -273,18 +273,19 @@ const handleLocationSelect = (selectedLocation: {
           </div>
         </main>
       </div>
-
       {updating && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-md text-center">
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
-            <p className="mt-4 text-lg font-semibold text-gray-800">Updating Event...</p>
+            <p className="mt-4 text-lg font-semibold text-gray-800">
+              Updating Event...
+            </p>
           </div>
         </div>
-      )};
-
+      )}
+      ;
     </div>
   );
 };
