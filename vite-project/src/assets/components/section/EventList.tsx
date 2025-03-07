@@ -5,9 +5,9 @@ import useEvent, { Event } from "../hooks/useEvent";
 import StarRating from "../utils/starRating";
 import useUser from "../hooks/useUser";
 import { useEffect, useState } from "react";
-import AcceptEvent from "./AcceptEvent";
 import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import EventDialogueModal from "./EventDialogueModal";
 
 interface EventListProps {
   allEvents: Event[];
@@ -191,12 +191,13 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
       )}
 
       {/* Accept Event Modal */}
-      <AcceptEvent
+      <EventDialogueModal
         isOpen={isModalOpen}
         onClose={handleCancel}
         onConfirm={handleAccept}
         location={selectedEventLocation || "Unknown location"}
         date={selectedEventDate || "Unknown date"}
+        message = "accept"
       />
     </div>
   );

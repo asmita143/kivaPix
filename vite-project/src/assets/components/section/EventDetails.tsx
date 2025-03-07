@@ -73,6 +73,7 @@ const EventDetails = ({
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
+      
       {/* Event Name */}
       <div className="sm:col-span-4">
         <label className="block text-sm font-medium text-gray-900">

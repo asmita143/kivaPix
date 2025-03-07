@@ -10,6 +10,7 @@ import {
   query,
   Timestamp,
   updateDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 interface EventLocation {
@@ -169,6 +170,20 @@ const useEvent = () => {
     }
   };
 
+  const deleteEvent = async (eventId: string) => {
+    setLoading(true);
+    try {
+      const eventDocRef = doc(db, "Event", eventId);
+      await deleteDoc(eventDocRef); 
+      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId)); 
+      console.log("Event deleted successfully!", eventId);
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     events,
     addEvent,
@@ -178,7 +193,8 @@ const useEvent = () => {
     addNotification,
     clearNotifications,
     loading,
-    updateAcceptedField
+    updateAcceptedField,
+    deleteEvent
   };
 };
 
