@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { onSnapshot, collection, getFirestore, getDoc, doc, updateDoc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getMessaging,getToken } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,5 +21,20 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+export const messaging = getMessaging(app);
 
+export const generateToken = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey:
+          "BBES-PN54D8zwc8dDVtBX_VWCmcPu4IbmdAH0fWrdRUsF_w12IhGiqOx-zlVQ3rA4Z-HgyQPGXHvOpde8BolRAE",
+      });
+      console.log("FCM Token:", token);
+    }
+  } catch (error) {
+    console.error("Failed to get FCM token:", error);
+  }
+};
 export { auth, db, storage, onSnapshot, collection, getDoc,doc, updateDoc };

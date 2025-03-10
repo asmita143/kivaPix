@@ -8,6 +8,22 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Register Firebase Messaging Service Worker -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js") // Correct path
+          .then((registration) => {
+            console.log(
+              "Service Worker registered with scope:",
+              registration.scope
+            );
+          })
+          .catch((err) => {
+            console.log("Service Worker registration failed:", err);
+          });
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
