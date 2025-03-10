@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+
 import "../../../App.css";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
@@ -38,7 +38,6 @@ const Setting = () => {
   const [value, setValue] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
 
   const { userData, allUsers, loadingUserData, loadingAllUsers, error } =
     useUser();

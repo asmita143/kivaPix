@@ -156,6 +156,7 @@ const useImage = (eventId: string, id: string) => {
         setProfilePicture(url);
         setProfilePictureName(profilePicRef.name);
       }
+      console.log(profilePictureName);
     } catch (error) {
       console.error("Error fetching profile picture:", error);
     } finally {

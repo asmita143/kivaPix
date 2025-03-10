@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, updateDoc, doc, getDoc } from "../../../firebase";
 import useImage from "../hooks/useImage"; // Import the useImage hook
+import useUser from "../hooks/useUser";
 
 // Define a type for the user data
 interface UserData {
@@ -24,6 +25,8 @@ const GeneralSettings = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true); // To handle loading state
   const [error, setError] = useState<string | null>(null); // For storing any errors
+  const { userData } = useUser();
+  const backgroundColor = "#939597";
 
   const id = auth.currentUser?.uid || ""; // Get the id from the current user
   const {
@@ -108,18 +111,29 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Profile Picture
               </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploading}
-                className="w-full p-3 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+
+              {/* Show profile picture always */}
               {profilePicture && (
                 <img
-                  src={profilePicture}
+                  src={
+                    profilePicture ||
+                    `https://api.dicebear.com/6.x/initials/svg?seed=${
+                      userData?.name || "User"
+                    }&background=${backgroundColor}`
+                  }
                   alt="Profile"
                   className="mt-4 w-32 h-32 object-cover rounded-full"
+                />
+              )}
+
+              {/* Show file input only when editing */}
+              {isEditing && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                  className="mt-2 w-full p-3 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               )}
             </div>
@@ -173,19 +187,6 @@ const GeneralSettings = () => {
                 type="text"
                 name="about"
                 value={formData.about}
-                onChange={handleChange}
-                disabled={!isEditing}
-                className="w-full p-3 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
-              </label>
-              <input
-                type="text"
-                name="password"
-                value={formData.password}
                 onChange={handleChange}
                 disabled={!isEditing}
                 className="w-full p-3 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"

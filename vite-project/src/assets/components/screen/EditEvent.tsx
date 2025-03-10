@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db, doc, getDoc, updateDoc } from "../../../firebase";
+import { db, doc, updateDoc } from "../../../firebase";
 import HeaderSection from "../section/HeaderSection";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import EventDetails from "../section/EventDetails";
@@ -9,6 +9,8 @@ import Sidebar from "../section/SideBar";
 import { useNavigate, useParams } from "react-router-dom";
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
+import EventDialogueModal from "../section/EventDialogueModal";
+import SuccessModal from "../section/SuccessModal";
 
 interface EventLocation {
   name: string;
@@ -39,7 +41,7 @@ interface Event {
 }
 
 const EditEvent = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams<{ id: string | undefined }>();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>({
     name: "",
@@ -61,11 +63,13 @@ const EditEvent = () => {
     coverPhoto: null,
   });
 
-  const { events } = useEvent();
-  const { coverPhotos, fetchCoverPhotos } = useImage("");
+  const { events,deleteEvent } = useEvent();
+  const { coverPhotos, fetchCoverPhotos } = useImage("", id);
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({
     email: "",
     phone: "",
@@ -151,21 +155,21 @@ const EditEvent = () => {
     setLoading(false);
   }, [id, events, coverPhotos]);
 
-const handleLocationSelect = (selectedLocation: {
-  name: string;
-  lat: number;
-  lng: number;
-}) => {
-  setFormData((prev) => ({
-    ...prev,
-    location: {
-      name: selectedLocation.name,
-      coordinates: {
-        lat: selectedLocation.lat,
-        lng: selectedLocation.lng,
+  const handleLocationSelect = (selectedLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        name: selectedLocation.name,
+        coordinates: {
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+        },
       },
-    },
-  }));
+    }));
   };
 
   const handleChange = (
@@ -181,7 +185,7 @@ const handleLocationSelect = (selectedLocation: {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    setUpdating(true)
+    setUpdating(true);
     e.preventDefault();
     if (!id) {
       console.error("Event ID is undefined.");
@@ -200,8 +204,8 @@ const handleLocationSelect = (selectedLocation: {
     } catch (error) {
       console.error("Error updating event:", error);
     } finally {
-      setUpdating(false)
-      navigate(`/event/${id}`)
+      setUpdating(false);
+      navigate(`/event/${id}`);
     }
   };
 
@@ -215,6 +219,23 @@ const handleLocationSelect = (selectedLocation: {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
     }
+  };
+
+  const handleDelete = async () => {
+    await deleteEvent(id);
+
+    setModalOpen(false);
+    setSuccessModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    console.log("Cancelled!");
+    setModalOpen(false);
+  };
+
+  const handleSuccessModalClose = () => {
+    setSuccessModalOpen(false);
+    navigate("/home");
   };
 
   return (
@@ -252,39 +273,73 @@ const handleLocationSelect = (selectedLocation: {
                   handleChange={handleChange}
                   formErrors={formErrors}
                 />
-                <div className="mt-6 flex items-center justify-end gap-x-6">
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="inline-flex justify-center rounded-md border border-transparent bg-gray-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-600"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={updating}
-                    className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 bg-indigo-600 hover:bg-indigo-500`}
-                  >
-                    {updating ? "Updating..." : "Update"}
-                  </button>
+                <div className="mt-6 flex flex-col items-center justify-center gap-y-4">
+                  {/* Row for Submit and Cancel buttons */}
+                  <div className="flex gap-x-4">
+                    <button
+                      type="button"
+                      onClick={() => {}}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-gray-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={updating}
+                      className={`inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                        updating ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      {updating ? "Updating..." : "Update"}
+                    </button>
+                  </div>
+
+                  {/* Row for Delete button */}
+                  <div className="w-full bg-white p-4 rounded-md shadow-sm">
+                    <button
+                      type="button"
+                      disabled={updating}
+                      onClick={() => setModalOpen(true)}
+                      className={`w-full justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-red-600 shadow-sm  ${
+                        updating ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      Delete this event
+                    </button>
+                  </div>
                 </div>
               </form>
             )}
           </div>
         </main>
       </div>
-
       {updating && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-md text-center">
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
             </div>
-            <p className="mt-4 text-lg font-semibold text-gray-800">Updating Event...</p>
+            <p className="mt-4 text-lg font-semibold text-gray-800">
+              Updating Event...
+            </p>
           </div>
         </div>
-      )};
+      )}
+      ;
+      <EventDialogueModal
+        isOpen={isModalOpen}
+        onClose={handleCancel}
+        onConfirm={handleDelete}
+        location={formData.location.name || "Unknown location"}
+        date={formData.date || "Unknown date"}
+        message = "delete"
+      />
 
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={handleSuccessModalClose}
+        message="The event has been successfully deleted."
+      />
     </div>
   );
 };
