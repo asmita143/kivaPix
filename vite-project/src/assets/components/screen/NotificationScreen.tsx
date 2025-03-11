@@ -10,6 +10,8 @@ import useImage from "../hooks/useImage";
 import imageNotAvailable from "../../images/NotAvailable.png";
 import { NotificationsActive } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
+import { getMessaging, onMessage } from "firebase/messaging";
+import { messaging } from "../../../firebase"; // Assuming Firebase is initialized here
 
 const Notification: React.FC = () => {
   const navigate = useNavigate();
@@ -31,12 +33,25 @@ const Notification: React.FC = () => {
   const clearAllNotifications = async () => {
     if (userId) {
       await clearNotifications(userId);
-
       window.location.reload();
     }
   };
 
-  useEffect(() => {}, []);
+  // Listen for background notifications
+  useEffect(() => {
+    // Foreground notification handler
+    const unsubscribe = onMessage(messaging, (payload) => {
+      const { notification } = payload;
+      if (notification) {
+        console.log("New foreground notification:", notification);
+        // Handle notification display in your app, e.g., show alert, update UI, etc.
+      }
+    });
+
+    return () => {
+      unsubscribe(); // Cleanup the listener
+    };
+  }, []);
 
   return (
     <div className="app-container bg-gray-100 h-screen flex flex-colitems">
@@ -66,7 +81,7 @@ const Notification: React.FC = () => {
           <div className="flex-col w-1/2">
             <div className="sticky top-0 bg-white rounded-lg p-2 md:p-3 ">
               <div className="flex justify-between border-b-2 border-orange-200">
-                <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black  pb-2">
+                <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black pb-2">
                   Notification
                 </h1>
                 {showNotifications.length > 0 && (

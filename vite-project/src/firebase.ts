@@ -5,6 +5,7 @@ import { getStorage } from "firebase/storage";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -13,7 +14,7 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-  vapidKey:import.meta.env.VITE_FIREBASE_VAPID_KEY
+  vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
 };
 
 // Initialize Firebase
@@ -25,18 +26,10 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 export const messaging = getMessaging(app);
 
-export const generateToken = async () => {
-  try {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      const token = await getToken(messaging, {
-        vapidKey:
-          "BBES-PN54D8zwc8dDVtBX_VWCmcPu4IbmdAH0fWrdRUsF_w12IhGiqOx-zlVQ3rA4Z-HgyQPGXHvOpde8BolRAE",
-      });
-      console.log("FCM Token:", token);
-    }
-  } catch (error) {
-    console.error("Failed to get FCM token:", error);
-  }
-};
-export { auth, db, storage, onSnapshot, collection, getDoc,doc, updateDoc };
+
+
+
+// Export Firebase services
+export { auth, db, storage, onSnapshot, collection, getDoc, doc, updateDoc };
+
+

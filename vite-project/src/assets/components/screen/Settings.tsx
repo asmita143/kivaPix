@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
 import useUser from "../hooks/useUser";
 import ResponsiveText from "../ui/Font";
+import NotificationSetting from "../section/NotificationSetting";
 
 interface TabPanelProps {
   children: ReactNode;
@@ -106,6 +107,7 @@ const Setting = () => {
                   Notification Settings
                 </h2>
                 <ResponsiveText text="Choose your preferences for email, push notifications, and more." />
+                <NotificationSetting />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={2}>
                 <h2 className="text-lg font-semibold text-black mb-2">

@@ -27,10 +27,10 @@ messaging.onBackgroundMessage((payload) => {
   console.log("Received background message ", payload);
 
   // Customize the notification as needed
-  const notificationTitle = payload.notification.title;
+  const notificationTitle = "New event uploaded!";
   const notificationOptions = {
     body: payload.notification.body,
-    icon: "/firebase-logo.png", // Add your icon here
+    icon: payload.notification.icon,
   };
 
   // Display the notification
