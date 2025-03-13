@@ -37,22 +37,6 @@ const Notification: React.FC = () => {
     }
   };
 
-  // Listen for background notifications
-  useEffect(() => {
-    // Foreground notification handler
-    const unsubscribe = onMessage(messaging, (payload) => {
-      const { notification } = payload;
-      if (notification) {
-        console.log("New foreground notification:", notification);
-        // Handle notification display in your app, e.g., show alert, update UI, etc.
-      }
-    });
-
-    return () => {
-      unsubscribe(); // Cleanup the listener
-    };
-  }, []);
-
   return (
     <div className="app-container bg-gray-100 h-screen flex flex-colitems">
       {/* Top Header Section */}

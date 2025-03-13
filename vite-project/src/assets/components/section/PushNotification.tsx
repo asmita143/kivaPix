@@ -1,10 +1,16 @@
 import { getToken } from "firebase/messaging";
 import { setDoc, doc } from "firebase/firestore";
-import { db, messaging } from "../../../firebase";
+import { db, messaging } from "../../../firebase"; // Ensure the import path is correct
 
 // Function to request push notification permission and save token to Firestore
-const requestPushNotificationPermission = async (userId: string) => {
+export const requestPushNotificationPermission = async (userId: string) => {
   try {
+    console.log("User ID received:", userId);
+    // Check if userId is valid
+    if (!userId || typeof userId !== "string" || userId.trim() === "") {
+      throw new Error("User ID is invalid or not provided.");
+    }
+
     // Request notification permission from the user
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
@@ -19,16 +25,17 @@ const requestPushNotificationPermission = async (userId: string) => {
 
     if (token) {
       // Save the token to Firestore under the user's document
-      await setDoc(
-        doc(db, "users", userId),
-        { fcmToken: token },
-        { merge: true }
-      );
+      const userRef = doc(db, "users", userId); // Ensure the path is correct
+
+      await setDoc(userRef, { fcmToken: token }, { merge: true });
       console.log("FCM Token stored successfully:", token);
+    } else {
+      console.error("Failed to get FCM token.");
     }
   } catch (error) {
-    console.error("Error getting push notification permission:", error);
+    console.error(
+      "Error getting push notification permission or storing token:",
+      error
+    );
   }
 };
-
-export { requestPushNotificationPermission };

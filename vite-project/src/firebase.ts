@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { onSnapshot, collection, getFirestore, getDoc, doc, updateDoc } from "firebase/firestore";
+import { onSnapshot, collection, getFirestore, getDoc, doc,setDoc, updateDoc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging } from "firebase/messaging";
 
 
 // Firebase configuration
@@ -30,6 +30,6 @@ export const messaging = getMessaging(app);
 
 
 // Export Firebase services
-export { auth, db, storage, onSnapshot, collection, getDoc, doc, updateDoc };
+export { auth, db, storage, onSnapshot, collection, getDoc, doc,setDoc, updateDoc };
 
 
