@@ -10,7 +10,7 @@ import Sidebar from "../section/SideBar";
 import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 import useUser from "../hooks/useUser";
-import { requestPushNotificationPermission } from "../section/PushNotification";
+import { requestNotificationPermission } from "../section/PushNotification";
 
 const EventForm = () => {
   const { user } = useUser();
@@ -83,7 +83,7 @@ const EventForm = () => {
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) return;
-    await requestPushNotificationPermission(id);
+    await requestNotificationPermission(id);
     const eventData = {
       ...formData,
       date: formData.date ? new Date(formData.date) : null,

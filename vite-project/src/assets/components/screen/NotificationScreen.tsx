@@ -60,7 +60,7 @@ const Notification: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <main className="p-3 flex justify-center w-full min-h-0 transition-all duration-300">
+        <main className="p-3 flex justify-center w-full min-h-0 traFnsition-all duration-300">
           {/* Top Part: Sticky Header */}
           <div className="flex-col w-1/2">
             <div className="sticky top-0 bg-white rounded-lg p-2 md:p-3 ">

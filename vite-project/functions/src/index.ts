@@ -44,6 +44,13 @@ export const sendNewEventNotification = onDocumentCreated(
             icon: 'https://firebasestorage.googleapis.com/v0/b/kivapix-24d9b.firebasestorage.app/o/icons%2Ficon_kivapix.png?alt=media&token=4a44b2b8-5782-48f1-9212-a8b916acfd0d',
           },
         },
+        webpush:{notification: {
+          title: eventTitle,
+          body: eventBody,
+          click_action: "https://firebasestorage.googleapis.com/v0/b/kivapix-24d9b.firebasestorage.app/o/icons%2Ficon_kivapix.png?alt=media&token=4a44b2b8-5782-48f1-9212-a8b916acfd0d"
+        },
+        },
+        data:{eventId,click_action:"https://firebasestorage.googleapis.com/v0/b/kivapix-24d9b.firebasestorage.app/o/icons%2Ficon_kivapix.png?alt=media&token=4a44b2b8-5782-48f1-9212-a8b916acfd0d"}
       };
 
       console.log('Notification Payload to be sent:', JSON.stringify(notificationPayload));
@@ -54,7 +61,11 @@ export const sendNewEventNotification = onDocumentCreated(
           tokens, // Array of FCM tokens
           notification: notificationPayload.notification,
           android: notificationPayload.android,
+          webpush:notificationPayload.webpush,
+          data:notificationPayload.data
         });
+        console.log('FCM RESPONSE:',response);
+        
 
         if (response.failureCount > 0) {
           const failedTokens = response.responses

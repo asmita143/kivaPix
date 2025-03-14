@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import useUser from "../hooks/useUser";
-import { requestPushNotificationPermission } from "./PushNotification";
+
+import useUser from "../hooks/useUser"; // Custom hook to get user data
+import { registerServiceWorkerAndRequestPermission } from "./PushNotification";
 
 const NotificationSetting = () => {
-  const { userId, loadingUserData, error } = useUser(); // Use the custom hook
+  const { userId, loadingUserData, error } = useUser(); // Use the custom hook to fetch userId
   const [notificationEnabled, setNotificationEnabled] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for the notification process
 
   useEffect(() => {
-    console.log("User ID from hook:", userId); // Log userId for debugging
+    if (userId) {
+      console.log("User ID from hook:", userId);
+    }
   }, [userId]);
 
   const handleCheckboxChange = async (
@@ -21,28 +25,39 @@ const NotificationSetting = () => {
 
     console.log("User ID before requesting permission:", userId);
 
-    // Handle checkbox change logic
+    // Handle checkbox logic: enabling notifications
     if (event.target.checked) {
+      setLoading(true); // Start loading
       try {
-        await requestPushNotificationPermission(userId);
-        setNotificationEnabled(true); // Update state if the permission is granted
+        await registerServiceWorkerAndRequestPermission(userId); // Pass the userId to the function
+        setNotificationEnabled(true); // Update state if permission is granted
+        alert("Notification permission granted!");
       } catch (error) {
         console.error("Error during checkbox change:", error);
+        alert("Failed to enable notifications.");
+      } finally {
+        setLoading(false); // Stop loading
       }
     } else {
       setNotificationEnabled(false); // Update state if unchecked
+      alert("Notifications disabled");
     }
   };
 
   return (
     <div>
-      {/* Make sure the checkbox is only interactive once the user is available */}
-      <input
-        type="checkbox"
-        onChange={handleCheckboxChange}
-        disabled={loadingUserData || error !== null} // Disable checkbox while loading or if there's an error
-        checked={notificationEnabled}
-      />
+      <label>
+        Enable Notifications
+        <input
+          type="checkbox"
+          onChange={handleCheckboxChange}
+          disabled={loadingUserData || loading || error !== null} // Disable if loading or error
+          checked={notificationEnabled}
+        />
+      </label>
+      {loading && <p>Loading... Please wait.</p>}
+      {loadingUserData && <p>Loading user data...</p>}
+      {error && <p style={{ color: "red" }}>{`Error: ${error}`}</p>}
     </div>
   );
 };
