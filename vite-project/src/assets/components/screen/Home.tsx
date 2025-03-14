@@ -9,9 +9,6 @@ import { useEffect, useMemo, useState } from "react";
 import SortList from "../ui/Sort";
 import SearchList from "../ui/Search";
 
-import { generateToken, messaging } from "../../../firebase";
-import { onMessage } from "firebase/messaging";
-
 const Home: React.FC = () => {
   const { events } = useEvent(); // Fetch events from Firebase
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -20,17 +17,6 @@ const Home: React.FC = () => {
   const [searchLocation, setSearchLocation] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("name"); // Default sort by name
-
-  useEffect(() => {
-    generateToken();
-    onMessage(messaging, (payload) => {
-      console.log("Foreground notification received:", payload);
-
-      if (payload.notification) {
-        alert(`${payload.notification.title}: ${payload.notification.body}`);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     console.log("Sort order or criteria changed:", { sortOrder, sortBy });

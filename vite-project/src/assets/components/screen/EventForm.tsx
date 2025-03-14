@@ -10,6 +10,7 @@ import Sidebar from "../section/SideBar";
 import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 import useUser from "../hooks/useUser";
+import { requestNotificationPermission } from "../section/PushNotification";
 
 const EventForm = () => {
   const { user } = useUser();
@@ -82,7 +83,7 @@ const EventForm = () => {
     e.preventDefault();
     const isValid = validateForm();
     if (!isValid) return;
-
+    await requestNotificationPermission(id);
     const eventData = {
       ...formData,
       date: formData.date ? new Date(formData.date) : null,
@@ -115,7 +116,7 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
-      accepted:false,
+      accepted: false,
     });
 
     setCoverPhotoFile(null);
@@ -194,7 +195,7 @@ const EventForm = () => {
       hostCity: "",
       participants: 1,
       coverPhoto: null,
-      accepted:false
+      accepted: false,
     });
 
     setCoverPhotoFile(null);

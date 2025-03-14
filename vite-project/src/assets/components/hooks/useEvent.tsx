@@ -10,7 +10,7 @@ import {
   query,
   Timestamp,
   updateDoc,
-  deleteDoc
+  deleteDoc,
 } from "firebase/firestore";
 
 interface EventLocation {
@@ -40,7 +40,7 @@ export interface Event {
   hostCity: string;
   participants: number;
   contractType: string;
-  accepted: boolean
+  accepted: boolean;
 }
 
 const useEvent = () => {
@@ -59,16 +59,16 @@ const useEvent = () => {
           ...data,
           id: doc.id,
           date: data.date?.toDate ? data.date.toDate() : null,
-          location: data.location || { 
-            name: "", 
-            coordinates: { lat: 0, lng: 0 } 
+          location: data.location || {
+            name: "",
+            coordinates: { lat: 0, lng: 0 },
           },
         } as Event;
       });
-  
-      setEvents(eventsData); 
+
+      setEvents(eventsData);
     });
-  
+
     return unsubscribe;
   }, []);
 
@@ -78,7 +78,7 @@ const useEvent = () => {
       const docRef = await addDoc(eventRef, {
         ...event,
         date: event.date ? Timestamp.fromDate(event.date) : null,
-        accepted: false
+        accepted: false,
       });
       setEvents((prevEvents) => [...prevEvents, event]);
 
@@ -124,8 +124,6 @@ const useEvent = () => {
       });
 
       await Promise.all(updatePromises);
-
-      console.log("Notifications added for all users!");
     } catch (error) {
       console.error("Error updating notifications:", error);
     } finally {
@@ -174,8 +172,10 @@ const useEvent = () => {
     setLoading(true);
     try {
       const eventDocRef = doc(db, "Event", eventId);
-      await deleteDoc(eventDocRef); 
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId)); 
+      await deleteDoc(eventDocRef);
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.id !== eventId)
+      );
       console.log("Event deleted successfully!", eventId);
     } catch (error) {
       console.error("Error deleting event:", error);
@@ -194,7 +194,7 @@ const useEvent = () => {
     clearNotifications,
     loading,
     updateAcceptedField,
-    deleteEvent
+    deleteEvent,
   };
 };
 

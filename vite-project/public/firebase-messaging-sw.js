@@ -1,7 +1,6 @@
 // Give the service worker access to Firebase Messaging.
 // Note that you can only use Firebase Messaging here. Other Firebase libraries
 // are not available in the service worker.
-// Replace 10.13.2 with latest version of the Firebase JS SDK.
 importScripts(
   "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
 );
@@ -27,12 +26,44 @@ messaging.onBackgroundMessage((payload) => {
   console.log("Received background message ", payload);
 
   // Customize the notification as needed
-  const notificationTitle = payload.notification.title;
+  const notificationTitle = "Discover new event";
   const notificationOptions = {
     body: payload.notification.body,
-    icon: "/firebase-logo.png", // Add your icon here
+    icon:
+      payload.notification.icon ||
+      "https://firebasestorage.googleapis.com/v0/b/kivapix-24d9b.firebasestorage.app/o/icons%2Ficon_kivapix.png?alt=media&token=4a44b2b8-5782-48f1-9212-a8b916acfd0d",
   };
 
   // Display the notification
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Handle foreground messages (optional, if you want to handle messages when the app is in the foreground)
+messaging.onMessage((payload) => {
+  console.log("Received foreground message", payload);
+
+  const notificationTitle = "Discover new event";
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon:
+      payload.notification.icon ||
+      "https://firebasestorage.googleapis.com/v0/b/kivapix-24d9b.firebasestorage.app/o/icons%2Ficon_kivapix.png?alt=media&token=4a44b2b8-5782-48f1-9212-a8b916acfd0d",
+  };
+
+  if (Notification.permission === "granted") {
+    new Notification(notificationTitle, notificationOptions);
+  }
+});
+
+// Handle notification click event
+self.addEventListener("notificationclick", (event) => {
+  console.log("Notification clicked:", event.notification);
+
+  // Replace with the correct URL of your app/page
+  const url = "http://localhost:5173/home";
+
+  event.notification.close();
+
+  // Open the URL in the browser when notification is clicked
+  event.waitUntil(clients.openWindow(url));
 });

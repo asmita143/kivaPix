@@ -7,7 +7,14 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { User } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { Role } from "../utils/Role";
 
 interface UserData {
@@ -85,6 +92,19 @@ const useUser = () => {
     getAllUsers();
   }, []);
 
+  const updateUserProfile = async (
+    uid: string,
+    updatedData: Partial<UserData>
+  ) => {
+    try {
+      const userRef = doc(db, "users", uid);
+      await updateDoc(userRef, updatedData);
+      console.log("User data updated successfully!");
+    } catch (error) {
+      console.error("Error updating user data: ", error);
+    }
+  };
+
   const login = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -147,6 +167,7 @@ const useUser = () => {
     login,
     register,
     logout,
+    updateUserProfile,
   };
 };
 
