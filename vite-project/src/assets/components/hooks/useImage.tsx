@@ -12,6 +12,7 @@ const useImage = (eventId: string, id: string) => {
   const [images, setImages] = useState<string[]>([]);
   const [printImages, setPrintImages] = useState<string[]>([]);
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [profilePictures, setProfilePictures] = useState<{ [userId: string]: string }>({});
   const [profilePictureName, setProfilePictureName] = useState<string | null>(
     null
   );
@@ -164,6 +165,41 @@ const useImage = (eventId: string, id: string) => {
     }
   };
 
+  const fetchAllProfilePictures = async () => {
+    setLoading(true);
+    try {
+      const folderRef = ref(storage, "profilePictures");
+      const listResult = await listAll(folderRef);
+
+      const profilePicturePromises  = listResult.prefixes.map(
+        async (subFolderRef) => {
+          const userId = subFolderRef.name; 
+          const subFolderList = await listAll(subFolderRef);
+          if (subFolderList.items.length > 0) {
+            const fileRef = subFolderList.items[0];
+            const url = await getDownloadURL(fileRef);
+            return { [userId]: url };
+          }
+          return null;
+        }
+      );
+
+      const profilePictureResults  = await Promise.all(profilePicturePromises);
+
+      const mapping = profilePictureResults
+        .filter((result) => result !== null)
+        .reduce((acc, result) => {
+          Object.assign(acc, result!);
+          return acc;
+        }, {} as { [userId: string]: string });
+      setProfilePictures(mapping);
+    } catch (error) {
+      console.error("Error fetching profile pictures:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteImage = async (imageName: string, path: string) => {
     setDeleteLoading(true);
     try {
@@ -219,6 +255,8 @@ const useImage = (eventId: string, id: string) => {
     uploadProfilePicture,
     fetchProfilePicture,
     deleteProfilePicture,
+    profilePictures,
+    fetchAllProfilePictures
   };
 };
 

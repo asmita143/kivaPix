@@ -1,4 +1,4 @@
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useEffect } from "react";
 
 import "../../../App.css";
 import HeaderSection from "../section/HeaderSection";
@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
 import useUser from "../hooks/useUser";
 import ResponsiveText from "../ui/Font";
+import useImage from "../hooks/useImage";
 
 interface TabPanelProps {
   children: ReactNode;
@@ -38,6 +39,11 @@ const Setting = () => {
   const [value, setValue] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const { fetchAllProfilePictures, profilePictures, loading } = useImage("","");
+
+  useEffect(() => {
+    fetchAllProfilePictures();
+  }, [fetchAllProfilePictures]);
 
   const { userData, allUsers, loadingUserData, loadingAllUsers, error } =
     useUser();
@@ -134,7 +140,7 @@ const Setting = () => {
                         className="flex flex-col lg:flex-row items-center bg-gray-100 p-3 rounded-xl shadow-lg"
                       >
                         <img
-                          src={user.profilePic || "https://i.pravatar.cc/100"}
+                          src={profilePictures[user.uid] || `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name || "User"}`}
                           alt={`${user.name} Profile`}
                           className="rounded-full w-16 h-16 lg:mr-4 mb-2 lg:mb-0"
                         />
@@ -144,7 +150,7 @@ const Setting = () => {
                           </h3>
                           <ResponsiveText text={user.about} />
                           <p className="text-gray-600 mb-1 text-sm">
-                            <strong>Email:</strong>{" "}
+                            <strong>Email: </strong>{" "}
                             <a
                               href={`mailto:${user.email}`}
                               className="text-blue-500"
@@ -158,7 +164,7 @@ const Setting = () => {
                               href={`tel:${user.phone}`}
                               className="text-blue-500"
                             >
-                              {user.phone}
+                              {user.phone || "Not available"}
                             </a>
                           </p>
                         </div>
