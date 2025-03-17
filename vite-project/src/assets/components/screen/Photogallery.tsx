@@ -3,11 +3,11 @@ import SideBar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
 import HeaderSection from "../section/HeaderSection";
 import { Upload as UploadIcon } from "@mui/icons-material";
-import { Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import useImage from "../hooks/useImage";
 import AllImages from "../section/AllImagesSection";
 import { QRCodeCanvas } from "qrcode.react";
+import { Button } from "@radix-ui/themes";
 
 const PhotoGallery = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -55,23 +55,18 @@ const PhotoGallery = () => {
         <main
           className={`flex flex-col p-3 w-full min-h-screen transition-all duration-300`}
         >
-          <div className="flex p-2 md:p-3 w-full justify-between items-center shadow-lg rounded-lg sticky top-0 shadow-sm">
+          <div className="flex w-full justify-between items-center sticky top-0">
             <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
               Photo Gallery
             </h1>
 
             {/* Upload Button */}
-            <label htmlFor="file-upload">
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<UploadIcon />}
-                component="span"
-                disabled={uploading}
-                className="px-2 sm:px-4"
-              >
-                <span className="hidden sm:inline">Upload Images</span>
-              </Button>
+            <label
+              htmlFor="file-upload"
+              className="bg-blue-600 text-white hover:bg-blue-700 py-2 px-3 rounded-md inline-flex items-center gap-2 hover:cursor-pointer"
+            >
+              <UploadIcon />{" "}
+              <span className="hidden sm:inline">Upload Images</span>
             </label>
             <input
               id="file-upload"
@@ -84,37 +79,20 @@ const PhotoGallery = () => {
           </div>
 
           {/* QR Code Section (for photographers to share the gallery) */}
-          <div className="bg-white p-4 md:p-6 mt-6 rounded-lg shadow-lg">
-            <h2 className="text-base md:text-2xl font-bold mb-4 text-gray-800">
+          <div className="bg-white p-4 md:p-6 mt-6 rounded-lg">
+            <h2 className="text-base md:text-xl font-semibold mb-4">
               Share the Gallery
             </h2>
 
             {/* Small QR Button that toggles the expanded view */}
-            {!isQrCodeExpanded ? (
-              <Button
-                onClick={() => setQrCodeExpanded(true)}
-                variant="contained"
-                color="primary"
-                className="p-2"
-              >
-                <QRCodeCanvas value={galleryUrl} size={50} />
-              </Button>
-            ) : (
-              <div className="flex justify-center items-center flex-col">
-                {/* Large QR Code when expanded */}
-                <QRCodeCanvas value={galleryUrl} size={256} />
-                <Button
-                  onClick={() => setQrCodeExpanded(false)}
-                  variant="outlined"
-                  color="secondary"
-                  className="mt-4"
-                >
-                  Close QR Code
-                </Button>
-              </div>
-            )}
+            <QRCodeCanvas
+              value={galleryUrl}
+              size={isQrCodeExpanded ? 256 : 50}
+              onClick={() => setQrCodeExpanded((prev) => !prev)}
+              className="hover:cursor-pointer transition-smooth"
+            />
 
-            <p className="mt-4 text-gray-600">
+            <p className="mt-4 text-gray-500 text-sm">
               Click to expand or close the QR code.
             </p>
           </div>

@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import SortList from "../ui/Sort";
 import SearchList from "../ui/Search";
+import EventHeader from "../section/EventHeader";
 
 const Home: React.FC = () => {
   const { events } = useEvent(); // Fetch events from Firebase
@@ -98,14 +99,10 @@ const Home: React.FC = () => {
         {/* Main Content */}
         <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4 relative">
           {/* Top Part: Sticky Header */}
-          <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3 bg-white z-10">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              Upcoming Events
-            </h1>
-          </div>
+          <EventHeader title="Upcoming Events" />
 
           {/* Search and Sort Section */}
-          <div className="flex items-center justify-end gap-2 mb-4 relative z-20">
+          <div className="flex items-center justify-end gap-2 mb-4">
             <SearchList
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}

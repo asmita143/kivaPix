@@ -9,6 +9,8 @@ import {
   registerServiceWorkerAndRequestPermission,
 } from "./assets/components/section/PushNotification";
 import useUser from "./assets/components/hooks/useUser";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 
 // Ensure the service worker is registered before using Firebase Messaging
 registerServiceWorker();
@@ -37,7 +39,9 @@ const App = () => {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <App /> {/* Wrap your App component */}
+      <Theme>
+        <App /> {/* Wrap your App component */}
+      </Theme>
     </BrowserRouter>
   </StrictMode>
 );

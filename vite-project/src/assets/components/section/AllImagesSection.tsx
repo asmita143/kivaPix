@@ -8,6 +8,7 @@ import { getStorage, ref, uploadBytes } from "firebase/storage";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import SingleImage from "./SingleImage";
 import LoadingIndicator from "./LoadingIndicator";
+import { Button } from "@radix-ui/themes";
 
 interface AllImagesProps {
   uploadedImages: string[] | null;
@@ -107,35 +108,31 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
   };
 
   return (
-    <main className="flex flex-col w-full min-h-screen transition-all duration-300 bg-gray-100 p-4">
+    <div className="flex flex-col w-full min-h-screen transition-smooth py-6 bg-gray-100">
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <div className="flex space-x-4 p-1">
-          <button
+        <div className="flex space-x-2 p-1">
+          <Button
+            variant={activeTab === "all" ? "solid" : "soft"}
+            color="indigo"
+            size="2"
             onClick={() => setActiveTab("all")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === "all"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
           >
-            <CollectionsIcon className="mr-2" />
+            <CollectionsIcon />
             <span className="hidden sm:inline">All Images</span>
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={activeTab === "print" ? "solid" : "soft"}
+            color="indigo"
+            size="2"
             onClick={() => setActiveTab("print")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTab === "print"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
           >
-            <Print className="mr-2" />
+            <Print />
             <span className="hidden sm:inline">Printing Queue</span>
-          </button>
+          </Button>
         </div>
 
-        {selectedImages.length > 0 && (
+        {selectedImages.length >= 0 && (
           <div className="flex items-center space-x-4 bg-white p-1 rounded-lg shadow-md mt-4 sm:mt-0">
             <ClearOutlined
               style={{ color: "black", cursor: "pointer", font: "revert" }}
@@ -241,7 +238,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
         saving={false}
         event={false}
       />
-    </main>
+    </div>
   );
 };
 

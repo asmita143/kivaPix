@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import useUser from "../hooks/useUser";
 import { Role } from "../utils/Role";
+import { Button } from "@radix-ui/themes";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -89,9 +90,23 @@ const EventDescriptionScreen = () => {
             </div>
           </div>
 
+          <div className="flex gap-2 mt-4">
+            {(isEventAccepted || isAdmin) && (
+              <Button onClick={() => navigate(`/PhotoGallery/${id}`)}>
+                View Gallery
+              </Button>
+            )}
+
+            {isAdmin && (
+              <Button color="orange" onClick={handleEditClick}>
+                Edit Event
+              </Button>
+            )}
+          </div>
+
           {/* Event Details Section */}
-          <div className="mt-8 sm:px-2">
-            <div className="flex flex-col md:flex-row justify-between bg-white p-4 md:p-6 rounded-lg shadow-lg gap-6 md:gap-0">
+          <div className="mt-8">
+            <div className="flex flex-col md:flex-row justify-between bg-white p-4 md:p-6 rounded-lggap-6 md:gap-0">
               <div className="flex-1 space-y-3 md:space-y-4 w-full">
                 <h2 className="text-base md:text-xl lg:text-2xl font-bold text-gray-800">
                   Event Details
@@ -159,26 +174,6 @@ const EventDescriptionScreen = () => {
                   </a>
                 </div>
               </div>
-            </div>
-
-            <div className="flex bg-white p-4 md:p-6 mt-3 rounded-lg shadow-lg gap-6 md:gap-3">
-              {(isEventAccepted || isAdmin) && (
-                <button
-                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
-                  onClick={() => navigate(`/PhotoGallery/${id}`)}
-                >
-                  View Gallery
-                </button>
-              )}
-
-              {isAdmin && (
-                <button
-                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs sm:text-base md:text-lg hover:border-black border-2 transition duration-300 w-1/2 sm:w-auto order-last md:order-none"
-                  onClick={handleEditClick}
-                >
-                  Edit Event
-                </button>
-              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">

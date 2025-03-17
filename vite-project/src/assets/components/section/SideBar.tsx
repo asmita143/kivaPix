@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import EventIcon from "@mui/icons-material/Event";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventRepeatIcon from "@mui/icons-material/EventRepeat";
-import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
+import {
+  NotificationsActive,
+  Home,
+  Event,
+  EventAvailable,
+  EventRepeat,
+  Add,
+  StarBorder,
+  Settings,
+  PersonOutline,
+} from "@mui/icons-material";
 
 import { Role } from "../utils/Role";
 import useUser from "../hooks/useUser";
+import { Button } from "@radix-ui/themes";
 
-const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
+const Sidebar: React.FC<{ isVisible?: boolean }> = ({ isVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,7 +26,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
   const isAdmin = userData?.role === Role.Admin;
 
   const sidebarItems = [
-    { label: "Home", isDropdown: false, path: "/home", icon: HomeIcon },
+    { label: "Home", isDropdown: false, path: "/home", icon: Home },
     {
       label: "Events",
       isDropdown: true,
@@ -30,34 +34,34 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
         {
           label: "Accepted",
           path: "/events/accepted",
-          icon: EventAvailableIcon,
+          icon: EventAvailable,
         },
         {
           label: "Interested",
           path: "/events/interested",
-          icon: StarBorderPurple500Icon,
+          icon: StarBorder,
         },
-        { label: "Past Events", path: "/events/past", icon: EventRepeatIcon },
+        { label: "Past Events", path: "/events/past", icon: EventRepeat },
       ],
-      icon: EventIcon,
+      icon: Event,
     },
     {
       label: "Notifications",
       isDropdown: false,
       path: "/notifications",
-      icon: NotificationsActiveIcon,
+      icon: NotificationsActive,
     },
     {
       label: "Settings",
       isDropdown: false,
       path: "/settings",
-      icon: SettingsIcon,
+      icon: Settings,
     },
     {
       label: "Profile",
       isDropdown: false,
       path: "/profile",
-      icon: PersonOutlineIcon,
+      icon: PersonOutline,
     },
   ];
 
@@ -75,7 +79,7 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
   );
 
   return (
-    <div className="w-64 bg-[#FAF9F6] px-4 h-screen pt-6 b-black-100">
+    <div className="w-64 bg-white px-4 h-screen pt-6 b-black-100">
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-900">Menu</h1>
         <ul className="mt-4 space-y-2">
@@ -122,12 +126,12 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
                     <li
                       key={dropdownIndex}
                       className={`px-4 py-2 flex items-center gap-5 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200
-                        ${
-                          location.pathname === dropdownItem.path
-                            ? "bg-gray-300 rounded-md hover:bg-gray-300"
-                            : ""
-                        }
-                        `}
+                      ${
+                        location.pathname === dropdownItem.path
+                          ? "bg-gray-300 rounded-md hover:bg-gray-300"
+                          : ""
+                      }
+                      `}
                       onClick={() => navigate(dropdownItem.path)}
                     >
                       {dropdownItem.icon && <dropdownItem.icon className="" />}
@@ -144,12 +148,11 @@ const Sidebar: React.FC<{ showButton?: boolean }> = ({}) => {
       {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
       {isAdmin && isHomePage && (
         <div className="p-4 mt-6 flex-row">
-          <button
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          <Button
             onClick={() => navigate("/eventForm")} // Navigate to event creation page
           >
-            + Create Event
-          </button>
+            <Add /> Create Event
+          </Button>
         </div>
       )}
     </div>

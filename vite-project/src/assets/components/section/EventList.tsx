@@ -5,9 +5,10 @@ import useEvent, { Event } from "../hooks/useEvent";
 import StarRating from "../utils/starRating";
 import useUser from "../hooks/useUser";
 import { useEffect, useState } from "react";
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
+import { CalendarMonth, LocationOn } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import EventDialogueModal from "./EventDialogueModal";
+import { Button } from "@radix-ui/themes";
 
 interface EventListProps {
   allEvents: Event[];
@@ -18,7 +19,8 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
   const id = user?.uid || "";
   const { coverPhotos, fetchCoverPhotos, loading } = useImage(id, "");
   const navigate = useNavigate();
-  const { updateInterestedEventsForUser, acceptEvent, updateAcceptedField } = useEvent();
+  const { updateInterestedEventsForUser, acceptEvent, updateAcceptedField } =
+    useEvent();
   const [selectedEventId, setSelectedEventId] = useState<string | null>();
   const [selectedEventLocation, setSelectedEventLocation] = useState<
     string | null
@@ -39,7 +41,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
       return;
     }
     await acceptEvent(user.uid, selectedEventId);
-    await updateAcceptedField(selectedEventId)
+    await updateAcceptedField(selectedEventId);
 
     setModalOpen(false);
   };
@@ -132,25 +134,25 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
 
               {/* Event Details */}
               <div className="p-3 sm:p-4">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-800 truncate">
+                <h3 className="text-lg sm:text-xl font-medium line-clamp-1">
                   {event.name}
                 </h3>
-                <p className="mt-1 sm:mt-2 text-sm text-gray-600 truncate">
+                <p className="mt-1 sm:mt-2 text-sm text-neutral-600 line-clamp-1">
                   {event.description ||
                     "Join us for an unforgettable experience!"}
                 </p>
 
                 {/* Location and Date */}
                 <div className="mt-3 sm:mt-4 space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <FaMapMarkerAlt className="text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600 truncate">
+                  <div className="flex items-center space-x-2 ">
+                    <LocationOn fontSize="small" />
+                    <p className="text-xs sm:text-sm line-clamp-1">
                       {event.location?.name || "No location available"}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FaCalendarAlt className="text-gray-500" />
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <CalendarMonth fontSize="small" />
+                    <p className="text-xs sm:text-sm">
                       {event.date
                         ? new Date(event.date).toLocaleDateString()
                         : "No date available"}
@@ -161,17 +163,12 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
                 {/* Accept Button and Star Rating */}
                 <div className="mt-3 sm:mt-4 flex items-center justify-between">
                   {!isAcceptedPage && !isPastEvent && (
-                    <button
+                    <Button
                       disabled={event.accepted}
-                      className={`text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-semibold hover:border-black border-2 transition duration-300 ${
-                          event.accepted
-                            ? "bg-gray-400 cursor-not-allowed border-black border-2"
-                            : "bg-blue-600"
-                        }`}
                       onClick={() => handleAcceptClick(event)}
                     >
                       {event.accepted ? "Accepted" : "Accept"}
-                    </button>
+                    </Button>
                   )}
                   {isHomePage && (
                     <StarRating
@@ -197,7 +194,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
         onConfirm={handleAccept}
         location={selectedEventLocation || "Unknown location"}
         date={selectedEventDate || "Unknown date"}
-        message = "accept"
+        message="accept"
       />
     </div>
   );
