@@ -1,8 +1,8 @@
 import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
-import RouteConfig from "./route"; // Import your RouteConfig
+import { BrowserRouter } from "react-router-dom";
+import RouteConfig from "./route";
 import {
   listenForMessages,
   registerServiceWorker,
@@ -12,15 +12,17 @@ import useUser from "./assets/components/hooks/useUser";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 
-// Ensure the service worker is registered before using Firebase Messaging
-registerServiceWorker();
-
 const App = () => {
-  const { userId } = useUser(); // Custom hook to get userId
+  const { userId } = useUser(); // Get the userId from the custom hook
+
+  const isGuest = !userId; // Determine if the user is a guest (no userId)
 
   useEffect(() => {
-    // Check if userId is available before initializing push notifications
-    if (userId) {
+    // Register the service worker globally
+    registerServiceWorker();
+
+    // Only register notifications for logged-in users (not guests)
+    if (userId && !isGuest) {
       console.log("User ID received in App:", userId);
 
       // Register the service worker and request notification permission
@@ -29,18 +31,19 @@ const App = () => {
       // Start listening for foreground messages
       listenForMessages();
     } else {
-      console.log("User ID not available, skipping push notification setup.");
+      console.log("Guest or no user ID, skipping push notification setup.");
     }
-  }, [userId]); // Only trigger effect when userId changes
+  }, [userId, isGuest]); // Trigger effect when userId changes or guest status updates
 
   return <RouteConfig />;
 };
 
+// Mount the app to the root element
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Theme>
-        <App /> {/* Wrap your App component */}
+        <App />
       </Theme>
     </BrowserRouter>
   </StrictMode>

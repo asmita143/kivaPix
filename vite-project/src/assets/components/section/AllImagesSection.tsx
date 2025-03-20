@@ -13,6 +13,7 @@ import { Button } from "@radix-ui/themes";
 interface AllImagesProps {
   uploadedImages: string[] | null;
   uploading: boolean;
+  isGuest: boolean;
 }
 
 const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {

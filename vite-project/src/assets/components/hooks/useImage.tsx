@@ -12,7 +12,9 @@ const useImage = (eventId: string, id: string) => {
   const [images, setImages] = useState<string[]>([]);
   const [printImages, setPrintImages] = useState<string[]>([]);
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
-  const [profilePictures, setProfilePictures] = useState<{ [userId: string]: string }>({});
+  const [profilePictures, setProfilePictures] = useState<{
+    [userId: string]: string;
+  }>({});
   const [profilePictureName, setProfilePictureName] = useState<string | null>(
     null
   );
@@ -171,9 +173,9 @@ const useImage = (eventId: string, id: string) => {
       const folderRef = ref(storage, "profilePictures");
       const listResult = await listAll(folderRef);
 
-      const profilePicturePromises  = listResult.prefixes.map(
+      const profilePicturePromises = listResult.prefixes.map(
         async (subFolderRef) => {
-          const userId = subFolderRef.name; 
+          const userId = subFolderRef.name;
           const subFolderList = await listAll(subFolderRef);
           if (subFolderList.items.length > 0) {
             const fileRef = subFolderList.items[0];
@@ -184,7 +186,7 @@ const useImage = (eventId: string, id: string) => {
         }
       );
 
-      const profilePictureResults  = await Promise.all(profilePicturePromises);
+      const profilePictureResults = await Promise.all(profilePicturePromises);
 
       const mapping = profilePictureResults
         .filter((result) => result !== null)
@@ -235,6 +237,10 @@ const useImage = (eventId: string, id: string) => {
       setLoading(false);
     }
   };
+  const getUploadedImages = async () => {
+    await fetchImages(); // ✅ Refresh state by fetching images
+    return images; // ✅ Return updated images
+  };
 
   return {
     images,
@@ -256,7 +262,8 @@ const useImage = (eventId: string, id: string) => {
     fetchProfilePicture,
     deleteProfilePicture,
     profilePictures,
-    fetchAllProfilePictures
+    fetchAllProfilePictures,
+    getUploadedImages,
   };
 };
 

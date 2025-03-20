@@ -28,6 +28,9 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const handleGuestLogin = () => {
+    navigate("/photo-gallery"); // Navigate guest to the photo gallery or any guest-restricted page
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col md:flex-row">

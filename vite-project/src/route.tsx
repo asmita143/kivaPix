@@ -1,5 +1,5 @@
 // src/route.tsx
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./assets/components/screen/Login";
 import Home from "./assets/components/screen/Home";
 import Register from "./assets/components/screen/Register";
@@ -14,14 +14,18 @@ import AllProfiles from "./assets/components/screen/AllProfiles";
 import EventDescriptionScreen from "./assets/components/screen/EventDescriptionScreen";
 import EditEvent from "./assets/components/screen/EditEvent";
 import PastEvents from "./assets/components/screen/PastEventsScreen";
+import useUser from "./assets/components/hooks/useUser";
+import GuestGallery from "./assets/components/screen/GuestGallery";
 
 const RouteConfig = () => {
+  const { isGuest } = useUser();
   return (
     <Routes>
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/Register" element={<Register />} />
       <Route path="/PhotoGallery/:id" element={<PhotoGallery />} />
+      <Route path="/guest-gallery/:id" element={<GuestGallery />} />{" "}
       <Route path="/" element={<Login />} /> {/* Default route */}
       <Route path="/event/:id" element={<EventDescriptionScreen />} />
       <Route path="/eventform" element={<EventForm />} />
@@ -33,6 +37,10 @@ const RouteConfig = () => {
       <Route path="/allProfiles" element={<AllProfiles />} />
       <Route path="/editEvent/:id" element={<EditEvent />} />
       <Route path="/events/past" element={<PastEvents />} />
+      <Route
+        path="/photo-gallery/:id"
+        element={isGuest ? <Navigate to="/login" /> : <PhotoGallery />}
+      />
     </Routes>
   );
 };
