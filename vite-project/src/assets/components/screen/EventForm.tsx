@@ -16,7 +16,7 @@ const EventForm = () => {
   const { user } = useUser();
   const id = user?.uid || "";
   const { addEvent, addNotification, eventUploading } = useEvent();
-  const { uploadImage, uploading } = useImage(id, "");
+  const { uploadImage, uploading } = useImage("", id);
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarVisible, setSidebarVisible] = useState(false);

@@ -9,11 +9,8 @@ import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
 import useUser from "../hooks/useUser";
 import ResponsiveText from "../ui/Font";
-<<<<<<< HEAD
 import useImage from "../hooks/useImage";
-=======
 import NotificationSetting from "../section/NotificationSetting";
->>>>>>> feature-firebase-notifications
 
 interface TabPanelProps {
   children: ReactNode;
