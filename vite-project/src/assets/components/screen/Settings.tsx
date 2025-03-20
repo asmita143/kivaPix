@@ -9,8 +9,8 @@ import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
 import useUser from "../hooks/useUser";
 import ResponsiveText from "../ui/Font";
-import useImage from "../hooks/useImage";
 import NotificationSetting from "../section/NotificationSetting";
+import useImage from "../hooks/useImage";
 
 interface TabPanelProps {
   children: ReactNode;
@@ -40,7 +40,10 @@ const Setting = () => {
   const [value, setValue] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
-  const { fetchAllProfilePictures, profilePictures, loading } = useImage("","");
+  const { fetchAllProfilePictures, profilePictures, loading } = useImage(
+    "",
+    ""
+  );
 
   useEffect(() => {
     fetchAllProfilePictures();
@@ -142,7 +145,12 @@ const Setting = () => {
                         className="flex flex-col lg:flex-row items-center bg-gray-100 p-3 rounded-xl shadow-lg"
                       >
                         <img
-                          src={profilePictures[user.uid] || `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name || "User"}`}
+                          src={
+                            profilePictures[user.uid] ||
+                            `https://api.dicebear.com/6.x/initials/svg?seed=${
+                              user?.name || "User"
+                            }`
+                          }
                           alt={`${user.name} Profile`}
                           className="rounded-full w-16 h-16 lg:mr-4 mb-2 lg:mb-0"
                         />

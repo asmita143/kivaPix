@@ -1,9 +1,8 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import useUser from "../hooks/useUser"; // Import user data hook
 import { useNavigate } from "react-router-dom";
 import useImage from "../hooks/useImage";
 import { useEffect } from "react";
+import { DropdownMenu } from "@radix-ui/themes";
 
 // Define the UserData interface
 interface UserData {
@@ -15,7 +14,7 @@ interface UserData {
 }
 
 const Header = () => {
-  const { user, userData } = useUser();
+  const { user, userData, logout } = useUser();
   const id = user?.uid || ""; // Get the userId from the current user
   const { profilePicture, fetchProfilePicture } = useImage("", id);
 
@@ -26,23 +25,19 @@ const Header = () => {
   }, [id]);
 
   return (
-    <div className="w-full flex items-center justify-center p-[0.1rem] bg-neutral-50 border-b border-black">
+    <div className="w-full flex items-center justify-between py-1.5 px-3 bg-neutral-50 border-b border-black">
       <HeaderLeft />
       <HeaderRight
         userData={userData}
         profilePicture={profilePicture}
-        logout={useUser().logout}
+        logout={logout}
       />
     </div>
   );
 };
 
 const HeaderLeft = () => {
-  return (
-    <div className="font-bold flex-none w-1/4 text-xl px-16 lg:px-10 cursor-pointer hover:text-green-500 transition duration-200">
-      KIVAPIX
-    </div>
-  );
+  return <div className="font-medium text-lg">KivaPix</div>;
 };
 
 const HeaderRight = ({
@@ -63,44 +58,32 @@ const HeaderRight = ({
     }&background=${backgroundColor}`; // Fallback image
 
   return (
-    <div className="flex-1 flex items-center justify-end gap-2">
-      <Menu as="div" className="relative z-30">
-        <MenuButton className="flex items-center gap-2 focus:outline-none">
-          <span className="font-medium hidden sm:block">
-            {userData?.name || "User"}
-          </span>
-          <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
-            <img
-              src={profileImage}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <ChevronDownIcon className="w-5 h-5 text-gray-500" />
-        </MenuButton>
-
-        {/* Dropdown Menu */}
-        <MenuItems className="absolute right-0 z-10 mt-2 w-48 bg-white shadow-lg rounded-md p-2 ring-1 ring-gray-300 focus:outline-none">
-          <MenuItem
-            as="a"
-            href="/profile"
-            className="block px-4 py-2 text-sm data-focus:bg-gray-100"
-          >
-            Profile
-          </MenuItem>
-          <MenuItem
-            as="button"
-            onClick={async () => {
-              await logout();
-              navigate("/login");
-            }}
-            className="block w-full text-left px-4 py-2 text-sm data-focus:bg-gray-100"
-          >
-            Logout
-          </MenuItem>
-        </MenuItems>
-      </Menu>
-    </div>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <div className="cursor-pointer flex items-center gap-1.5 py-1.5 bg-neutral-100 px-2 rounded-md">
+          <img
+            src={profileImage}
+            alt="Profile"
+            className="size-8 rounded-full object-cover"
+          />
+          <span className="hidden sm:block">{userData?.name}</span>
+        </div>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content className="min-w-36">
+        <DropdownMenu.Item onClick={() => navigate("/profile")}>
+          Profile
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          onClick={async () => {
+            await logout();
+            navigate("/login");
+          }}
+          color="red"
+        >
+          Logout
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 };
 

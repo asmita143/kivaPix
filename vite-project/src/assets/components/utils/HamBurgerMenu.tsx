@@ -1,4 +1,5 @@
 // HamburgerMenu.tsx
+import { Close, Menu } from "@mui/icons-material";
 import { Dispatch, SetStateAction } from "react";
 
 interface HamburgerMenuProps {
@@ -17,11 +18,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
         className="absolute top-2 left-0 z-30 p-2 bg-white text-black rounded-md lg:hidden"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
       >
-        {isSidebarVisible ? (
-          <span className="text-xl">✕</span> // Close icon
-        ) : (
-          <span className="text-xl">☰</span> // Hamburger icon
-        )}
+        {isSidebarVisible ? <Close /> : <Menu />}
       </button>
     </div>
   );

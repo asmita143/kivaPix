@@ -45,19 +45,25 @@ const NotificationSetting = () => {
   };
 
   return (
-    <div>
-      <label>
-        Enable Notifications
+    <div className="flex flex-col gap-2 px-0 py-4  bg-white">
+      <label className="flex items-center gap-2 text-m font-medium text-gray-700">
         <input
           type="checkbox"
           onChange={handleCheckboxChange}
-          disabled={loadingUserData || loading || error !== null} // Disable if loading or error
+          disabled={loadingUserData || loading || error !== null}
           checked={notificationEnabled}
+          className="h-5 w-5 rounded border-gray-300 text-blue-500 focus:ring-blue-400 disabled:opacity-50"
         />
+        Enable Notifications
       </label>
-      {loading && <p>Loading... Please wait.</p>}
-      {loadingUserData && <p>Loading user data...</p>}
-      {error && <p style={{ color: "red" }}>{`Error: ${error}`}</p>}
+
+      {loading && (
+        <p className="text-blue-500 animate-pulse">Loading... Please wait.</p>
+      )}
+      {loadingUserData && (
+        <p className="text-blue-500 animate-pulse">Loading user data...</p>
+      )}
+      {error && <p className="text-red-500">{`Error: ${error}`}</p>}
     </div>
   );
 };
