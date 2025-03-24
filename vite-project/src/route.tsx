@@ -16,31 +16,33 @@ import EditEvent from "./assets/components/screen/EditEvent";
 import PastEvents from "./assets/components/screen/PastEventsScreen";
 import useUser from "./assets/components/hooks/useUser";
 import GuestGallery from "./assets/components/screen/GuestGallery";
+import ProtectedRoute from "./ProtectedRoute";
 
 const RouteConfig = () => {
   const { isGuest } = useUser();
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
-      <Route path="/Register" element={<Register />} />
-      <Route path="/PhotoGallery/:id" element={<PhotoGallery />} />
-      <Route path="/guest-gallery/:id" element={<GuestGallery />} />{" "}
+      <Route path="/register" element={<Register />} />
+      <Route path="/guest-gallery/:id" element={<GuestGallery />} />
       <Route path="/" element={<Login />} /> {/* Default route */}
-      <Route path="/event/:id" element={<EventDescriptionScreen />} />
-      <Route path="/eventform" element={<EventForm />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/events/interested" element={<InterestedEvents />} />
-      <Route path="/events/accepted" element={<AcceptedEvents />} />
-      <Route path="/notifications" element={<Notification />} />
-      <Route path="/settings" element={<Setting />} />
-      <Route path="/allProfiles" element={<AllProfiles />} />
-      <Route path="/editEvent/:id" element={<EditEvent />} />
-      <Route path="/events/past" element={<PastEvents />} />
-      <Route
-        path="/photo-gallery/:id"
-        element={isGuest ? <Navigate to="/login" /> : <PhotoGallery />}
-      />
+
+      {/* Protected routes */}
+      <Route element={<ProtectedRoute isGuest={isGuest} />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/event/:id" element={<EventDescriptionScreen />} />
+        <Route path="/eventform" element={<EventForm />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/events/interested" element={<InterestedEvents />} />
+        <Route path="/events/accepted" element={<AcceptedEvents />} />
+        <Route path="/notifications" element={<Notification />} />
+        <Route path="/settings" element={<Setting />} />
+        <Route path="/allProfiles" element={<AllProfiles />} />
+        <Route path="/editEvent/:id" element={<EditEvent />} />
+        <Route path="/events/past" element={<PastEvents />} />
+        <Route path="/PhotoGallery/:id" element={<PhotoGallery />} />
+      </Route>
     </Routes>
   );
 };
