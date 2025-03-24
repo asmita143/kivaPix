@@ -155,6 +155,7 @@ const useUser = () => {
       throw error;
     }
   };
+
   // Determine if the current user is a guest (no user logged in)
   const isGuest = !user;
 
