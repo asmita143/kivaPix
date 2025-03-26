@@ -186,9 +186,8 @@ const useImage = (eventId: string, id: string) => {
         }
       );
 
-      const profilePictureResults = await Promise.all(profilePicturePromises);
-
-      const mapping = profilePictureResults
+  const profilePictureResults = await Promise.all(profilePicturePromises);
+    const mapping = profilePictureResults
         .filter((result) => result !== null)
         .reduce((acc, result) => {
           Object.assign(acc, result!);

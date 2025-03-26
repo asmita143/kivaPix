@@ -133,7 +133,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
           </Button>
         </div>
 
-        {selectedImages.length >= 0 && (
+        {selectedImages.length > 0 && (
           <div className="flex items-center space-x-4 bg-white p-1 rounded-lg shadow-md mt-4 sm:mt-0">
             <ClearOutlined
               style={{ color: "black", cursor: "pointer", font: "revert" }}
