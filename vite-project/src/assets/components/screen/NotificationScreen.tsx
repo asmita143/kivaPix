@@ -58,9 +58,9 @@ const Notification: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <main className="p-3 flex justify-center w-full min-h-0 traFnsition-all duration-300">
+        <main className="p-3 flex justify-center w-full min-h-0 transition-all duration-300">
           {/* Top Part: Sticky Header */}
-          <div className="flex-col w-1/2">
+          <div className="flex-col w-full md:w-1/2">
             <div className="sticky top-0 bg-white rounded-lg p-2 md:p-3 ">
               <div className="flex justify-between border-b-2 border-orange-200">
                 <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black pb-2">

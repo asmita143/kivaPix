@@ -126,7 +126,7 @@ const Profile = () => {
                     navigate("/login");
                   }
                 }}
-                className="flex-3 py-3 mb-5 bg-red-500 text-white font-bold rounded-3xl text-l"
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors duration-300"
               >
                 Logout
               </button>
