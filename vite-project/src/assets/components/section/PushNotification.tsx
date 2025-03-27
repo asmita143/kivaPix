@@ -28,7 +28,7 @@ export const registerServiceWorker = async () => {
 
 // Function to request push notification permission
 export const requestNotificationPermission = async (
-  userId: string
+  _userId: string
 ): Promise<boolean> => {
   const permission = await Notification.requestPermission();
   if (permission === "granted") {

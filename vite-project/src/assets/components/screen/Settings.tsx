@@ -40,10 +40,7 @@ const Setting = () => {
   const [value, setValue] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
-  const { fetchAllProfilePictures, profilePictures, loading } = useImage(
-    "",
-    ""
-  );
+  const { fetchAllProfilePictures, profilePictures } = useImage("", "");
 
   useEffect(() => {
     fetchAllProfilePictures();
@@ -52,7 +49,10 @@ const Setting = () => {
   const { userData, allUsers, loadingUserData, loadingAllUsers, error } =
     useUser();
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (
+    _event: React.SyntheticEvent<{}>,
+    newValue: number
+  ) => {
     setValue(newValue);
   };
 

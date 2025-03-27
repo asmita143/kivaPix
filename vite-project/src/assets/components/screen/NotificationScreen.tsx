@@ -5,13 +5,11 @@ import useUser from "../hooks/useUser";
 import HeaderSection from "../section/HeaderSection";
 import Sidebar from "../section/SideBar";
 import HamburgerMenu from "../utils/HamBurgerMenu";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useImage from "../hooks/useImage";
 import imageNotAvailable from "../../images/NotAvailable.png";
 import { NotificationsActive } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
-import { getMessaging, onMessage } from "firebase/messaging";
-import { messaging } from "../../../firebase"; // Assuming Firebase is initialized here
 
 const Notification: React.FC = () => {
   const navigate = useNavigate();

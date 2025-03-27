@@ -1,5 +1,5 @@
 // src/route.tsx
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Login from "./assets/components/screen/Login";
 import Home from "./assets/components/screen/Home";
 import Register from "./assets/components/screen/Register";
@@ -27,7 +27,6 @@ const RouteConfig = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/guest-gallery/:id" element={<GuestGallery />} />
       <Route path="/" element={<Login />} /> {/* Default route */}
-
       {/* Protected routes */}
       <Route element={<ProtectedRoute isGuest={isGuest} />}>
         <Route path="/home" element={<Home />} />

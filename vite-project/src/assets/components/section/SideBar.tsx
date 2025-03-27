@@ -16,7 +16,7 @@ import { Role } from "../utils/Role";
 import useUser from "../hooks/useUser";
 import { Button } from "@radix-ui/themes";
 
-const Sidebar: React.FC<{ isVisible?: boolean }> = ({ isVisible }) => {
+const Sidebar: React.FC<{ isVisible?: boolean }> = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
