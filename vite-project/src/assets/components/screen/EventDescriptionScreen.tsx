@@ -1,7 +1,4 @@
 import "../../../App.css";
-import HeaderSection from "../section/HeaderSection";
-import Sidebar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import imageNotAvailable from "../../images/NotAvailable.png";
@@ -18,6 +15,7 @@ import {
 import useUser from "../hooks/useUser";
 import { Role } from "../utils/Role";
 import { Button } from "@radix-ui/themes";
+import { MainLayout } from "../layout/MainLayout";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -53,26 +51,7 @@ const EventDescriptionScreen = () => {
   return (
     <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
       {/* Top Header Section */}
-      <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        {/* Hamburger Menu Button */}
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <Sidebar />
-        </div>
-
-        {/* Main Content */}
+      <MainLayout>
         <main className="flex flex-col flex-1 min-h-0 p-6 transition-all duration-300 overflow-y-auto">
           {/* Hero Image Section */}
           <div className="relative w-full h-[10rem] sm:h-[20rem] flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
@@ -92,13 +71,20 @@ const EventDescriptionScreen = () => {
 
           <div className="flex gap-2 mt-4">
             {(isEventAccepted || isAdmin) && (
-              <Button style={{ cursor: 'pointer' }}  onClick={() => navigate(`/PhotoGallery/${id}`)}>
+              <Button
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate(`/PhotoGallery/${id}`)}
+              >
                 View Gallery
               </Button>
             )}
 
             {isAdmin && (
-              <Button style={{ cursor: 'pointer' }} color="orange" onClick={handleEditClick}>
+              <Button
+                style={{ cursor: "pointer" }}
+                color="orange"
+                onClick={handleEditClick}
+              >
                 Edit Event
               </Button>
             )}
@@ -218,7 +204,9 @@ const EventDescriptionScreen = () => {
             </div>
           </div>
         </main>
-      </div>
+      </MainLayout>
+
+      {/* Main Content */}
     </div>
   );
 };

@@ -57,7 +57,7 @@ const useImage = (eventId: string, id: string) => {
       if (existingFiles.items.length > 0) {
         await deleteObject(existingFiles.items[0]);
       }
-      
+
       const fileRef = ref(storage, `profilePictures/${id}/${file.name}`);
       await uploadBytes(fileRef, file);
       console.log("Profile picture uploaded:", file.name);
@@ -160,8 +160,9 @@ const useImage = (eventId: string, id: string) => {
       const folderRef = ref(storage, `profilePictures/${id}`);
       const imageList = await listAll(folderRef);
 
-
       if (imageList.items.length > 0) {
+        console.log(imageList.items);
+
         const profilePicRef = imageList.items[0];
         const url = await getDownloadURL(profilePicRef);
         setProfilePicture(url);
@@ -194,8 +195,8 @@ const useImage = (eventId: string, id: string) => {
         }
       );
 
-  const profilePictureResults = await Promise.all(profilePicturePromises);
-    const mapping = profilePictureResults
+      const profilePictureResults = await Promise.all(profilePicturePromises);
+      const mapping = profilePictureResults
         .filter((result) => result !== null)
         .reduce((acc, result) => {
           Object.assign(acc, result!);

@@ -1,9 +1,5 @@
 import { useState, ReactNode, useEffect } from "react";
-
 import "../../../App.css";
-import HeaderSection from "../section/HeaderSection";
-import Sidebar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
 import SettingTabs from "../ui/SettingTabs";
 import Box from "@mui/material/Box";
 import GeneralSettings from "../section/GeneralSettings";
@@ -11,6 +7,7 @@ import useUser from "../hooks/useUser";
 import ResponsiveText from "../ui/Font";
 import NotificationSetting from "../section/NotificationSetting";
 import useImage from "../hooks/useImage";
+import { MainLayout } from "../layout/MainLayout";
 
 interface TabPanelProps {
   children: ReactNode;
@@ -36,7 +33,6 @@ const CustomTabPanel = ({
 );
 
 const Setting = () => {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [value, setValue] = useState(0);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,19 +79,7 @@ const Setting = () => {
 
   return (
     <div className="app-container bg-gray-100 w-full h-full flex flex-col">
-      <HeaderSection />
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <Sidebar />
-        </div>
+      <MainLayout>
         <main className="flex flex-col p-4 w-full flex-grow min-h-0 transition-all duration-300 overflow-y-auto">
           <div className="flex-grow w-full flex-col items-center justify-center p-4">
             <div className="w-full max-w-full overflow-x-auto">
@@ -219,7 +203,7 @@ const Setting = () => {
             </div>
           </div>
         </main>
-      </div>
+      </MainLayout>
     </div>
   );
 };

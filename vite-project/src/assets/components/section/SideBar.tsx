@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   NotificationsActive,
@@ -10,13 +10,20 @@ import {
   StarBorder,
   Settings,
   PersonOutline,
+  ChevronRightOutlined,
+  Close,
 } from "@mui/icons-material";
 
 import { Role } from "../utils/Role";
 import useUser from "../hooks/useUser";
 import { Button } from "@radix-ui/themes";
 
-const Sidebar: React.FC<{ isVisible?: boolean }> = ({}) => {
+interface SidebarProps {
+  isVisible: boolean;
+  setIsVisible: Dispatch<SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isVisible, setIsVisible }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,82 +86,99 @@ const Sidebar: React.FC<{ isVisible?: boolean }> = ({}) => {
   );
 
   return (
-    <div className="w-64 bg-white px-4 h-screen pt-6 b-black-100">
-      <div className="p-4">
-        <h1 className="text-xl font-bold text-gray-900">Menu</h1>
-        <ul className="mt-4 space-y-2">
-          {sidebarItems.map((item, index) => (
-            <li key={index}>
-              <div
-                className={`px-4 py-3 hover:shadow-md flex items-center gap-10 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
+    <div
+      className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
+        isVisible ? "translate-x-0" : "-translate-x-full"
+      } lg:translate-x-0 lg:static`}
+    >
+      <div className="w-64 bg-white px-2 h-screen pt-2 b-neutral-100">
+        <div className="p-2">
+          <div className="flex justify-between">
+            <p className="text-xl font-semibold text-gray-900">Menu</p>
+            <Button
+              size="1"
+              color="gray"
+              variant="ghost"
+              className="!cursor-pointer lg:!hidden"
+              onClick={() => setIsVisible(!isVisible)}
+            >
+              <Close />
+            </Button>
+          </div>
+          <ul className="mt-4">
+            {sidebarItems.map((item, index) => (
+              <li key={index}>
+                <div
+                  className={`px-4 py-2 rounded-md flex items-center gap-6 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
                   ${item.isDropdown ? "relative" : ""}
                   ${
                     location.pathname === item.path
                       ? "bg-gray-300 rounded-md hover:bg-gray-300"
                       : ""
                   }
-                  `}
-                onClick={() => {
-                  if (!item.isDropdown && item.path) {
-                    navigate(item.path);
-                  } else {
-                    toggleDropdown(index);
+                    `}
+                  onClick={() => {
+                    if (!item.isDropdown && item.path) {
+                      navigate(item.path);
+                    } else {
+                      toggleDropdown(index);
+                    }
+                  }}
+                  role="button"
+                  aria-expanded={openDropdown === index}
+                  aria-label={
+                    item.isDropdown ? `${item.label} dropdown` : item.label
                   }
-                }}
-                role="button"
-                aria-expanded={openDropdown === index}
-                aria-label={
-                  item.isDropdown ? `${item.label} dropdown` : item.label
-                }
-              >
-                {item.icon && <item.icon className="" />}
-                <span>{item.label}</span>
+                >
+                  {item.icon && <item.icon className="!size-5" />}
+                  <span>{item.label}</span>
 
-                {item.isDropdown && (
-                  <span
-                    className={`transform transition-transform duration-200${
-                      openDropdown === index ? "rotate-180" : "rotate-0"
-                    }`}
-                  >
-                    ▼
-                  </span>
-                )}
-              </div>
-              {item.isDropdown && openDropdown === index && (
-                <ul className="ml-7 mt-1 space-y-1">
-                  {item.dropdownItems?.map((dropdownItem, dropdownIndex) => (
-                    <li
-                      key={dropdownIndex}
-                      className={`px-4 py-2 flex items-center gap-5 text-gray-700 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200
+                  {item.isDropdown && (
+                    <ChevronRightOutlined
+                      className={`transition-all duration-200 ${
+                        openDropdown === index ? "rotate-90" : "rotate-0"
+                      }`}
+                    />
+                  )}
+                </div>
+                {item.isDropdown && openDropdown === index && (
+                  <ul className="ml-6">
+                    {item.dropdownItems?.map((dropdownItem, dropdownIndex) => (
+                      <li
+                        key={dropdownIndex}
+                        className={`px-4 py-2 rounded-md flex items-center gap-6 hover:text-black hover:bg-gray-100 cursor-pointer transition duration-200
                       ${
                         location.pathname === dropdownItem.path
                           ? "bg-gray-300 rounded-md hover:bg-gray-300"
                           : ""
                       }
                       `}
-                      onClick={() => navigate(dropdownItem.path)}
-                    >
-                      {dropdownItem.icon && <dropdownItem.icon className="" />}
-                      {dropdownItem.label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
-      {isAdmin && isHomePage && (
-        <div className="p-4 mt-6 flex-row">
-          <Button
-            onClick={() => navigate("/eventForm")} // Navigate to event creation page
-          >
-            <Add /> Create Event
-          </Button>
+                        onClick={() => navigate(dropdownItem.path)}
+                      >
+                        {dropdownItem.icon && (
+                          <dropdownItem.icon className="!size-5" />
+                        )}
+                        {dropdownItem.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
+
+        {/* ✅ "Create Event" Button - Visible ONLY on Homepage */}
+        {isAdmin && isHomePage && (
+          <div className="p-4 mt-6 flex-row">
+            <Button
+              onClick={() => navigate("/eventForm")} // Navigate to event creation page
+            >
+              <Add /> Create Event
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

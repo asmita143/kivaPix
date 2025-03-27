@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import useUser from "../hooks/useUser";
 import useImage from "../hooks/useImage"; // Import the useImage hook
-import HeaderSection from "../section/HeaderSection";
-import SideBar from "../section/SideBar";
 import { useNavigate } from "react-router-dom";
-import HamburgerMenu from "../utils/HamBurgerMenu";
+import { MainLayout } from "../layout/MainLayout";
 
 const Profile = () => {
   const { user, userData, loadingUserData, error, logout } = useUser();
   const navigate = useNavigate();
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
   const backgroundColor = "#939597";
 
   const id = user?.uid || ""; // Get the userId from the current user
@@ -35,21 +33,10 @@ const Profile = () => {
 
   return (
     <div className="app-container">
-      <HeaderSection />
-      <div className="layout flex">
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white shadow-md transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <SideBar />
-        </div>
+      <MainLayout>
+        {" "}
         <div className="bg-gradient-to-r from-gray-300 to-gray-500 min-h-screen w-full flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full p-8 transition-all duration-300 animate-fade-in">
+          <div className="bg-white dark:bg-gray-800 flex-grow overflow-auto p-3 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full transition-all duration-300 animate-fade-in">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 text-center mb-8 md:mb-0">
                 <img
@@ -133,7 +120,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
+      </MainLayout>
     </div>
   );
 };

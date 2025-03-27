@@ -1,16 +1,14 @@
-import HeaderSection from "../section/HeaderSection";
-import HamburgerMenu from "../utils/HamBurgerMenu";
 import React, { useEffect, useState } from "react";
 
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
 import LoadingIndicator from "../section/LoadingIndicator";
-import Sidebar from "../section/SideBar";
 
 import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 import useUser from "../hooks/useUser";
 import { requestNotificationPermission } from "../section/PushNotification";
+import { MainLayout } from "../layout/MainLayout";
 
 const EventForm = () => {
   const { user } = useUser();
@@ -19,7 +17,6 @@ const EventForm = () => {
   const { uploadImage, uploading } = useImage("", id);
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [formErrors, setFormErrors] = useState({
     email: "",
@@ -212,27 +209,8 @@ const EventForm = () => {
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
-      {/* Top Header Section */}
-      <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        {/* Hamburger Menu Button */}
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <Sidebar />
-        </div>
-
-        {/* Main Content */}
+      <MainLayout>
+        {" "}
         <main className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
           {/* Bottom Part: Scrollable Grid View */}
           <div className="overflow-y-auto bg-white rounded-lg shadow-lg p-4 w-full  lg:w-1/3 ">
@@ -304,7 +282,7 @@ const EventForm = () => {
             />
           </div>
         </main>
-      </div>
+      </MainLayout>
     </div>
   );
 };

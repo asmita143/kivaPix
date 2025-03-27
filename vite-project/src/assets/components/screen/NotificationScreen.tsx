@@ -2,19 +2,15 @@ import { useNavigate } from "react-router-dom";
 import "../../../App.css";
 import useEvent from "../hooks/useEvent";
 import useUser from "../hooks/useUser";
-import HeaderSection from "../section/HeaderSection";
-import Sidebar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
-import { useState } from "react";
 import useImage from "../hooks/useImage";
 import imageNotAvailable from "../../images/NotAvailable.png";
 import { NotificationsActive } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
+import { MainLayout } from "../layout/MainLayout";
 
 const Notification: React.FC = () => {
   const navigate = useNavigate();
   const { coverPhotos } = useImage("", "");
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { events, clearNotifications, loading } = useEvent();
   const { userData, userId } = useUser();
 
@@ -37,26 +33,8 @@ const Notification: React.FC = () => {
 
   return (
     <div className="app-container bg-gray-100 h-screen flex flex-colitems">
-      {/* Top Header Section */}
-      <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        {/* Hamburger Menu Button */}
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <Sidebar />
-        </div>
-
+      <MainLayout>
+        {" "}
         {/* Main Content */}
         <main className="p-3 flex justify-center w-full min-h-0 transition-all duration-300">
           {/* Top Part: Sticky Header */}
@@ -124,7 +102,7 @@ const Notification: React.FC = () => {
             </div>
           </div>
         </main>
-      </div>
+      </MainLayout>
     </div>
   );
 };

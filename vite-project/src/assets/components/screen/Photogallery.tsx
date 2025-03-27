@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import SideBar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
-import HeaderSection from "../section/HeaderSection";
 import { Upload as UploadIcon } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import useImage from "../hooks/useImage";
 import AllImages from "../section/AllImagesSection";
 import { QRCodeCanvas } from "qrcode.react";
 import useUser from "../hooks/useUser";
+import { MainLayout } from "../layout/MainLayout";
 
 const PhotoGallery = () => {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isQrCodeExpanded, setQrCodeExpanded] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { uploadImage, uploading } = useImage(id || "", "");
@@ -51,28 +48,7 @@ const PhotoGallery = () => {
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      {/* Header */}
-      <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
-      <div className="flex flex-grow bg-gray-100">
-        {/* Hamburger Menu */}
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-
-        {/* Sidebar */}
-        <div
-          id="sidebar"
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <SideBar />
-        </div>
-
-        {/* Main Section */}
+      <MainLayout>
         <main className="flex flex-col p-3 w-full min-h-screen transition-all duration-300">
           {/* Title & Upload */}
           <div className="flex w-full justify-between items-center sticky top-0">
@@ -126,7 +102,7 @@ const PhotoGallery = () => {
             isGuest={false}
           />
         </main>
-      </div>
+      </MainLayout>
     </div>
   );
 };

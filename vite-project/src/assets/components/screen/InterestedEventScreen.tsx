@@ -1,18 +1,16 @@
 import "../../../App.css";
 import useEvent from "../hooks/useEvent";
 import useUser from "../hooks/useUser";
-import HeaderSection from "../section/HeaderSection";
+
 import EventList from "../section/EventList";
-import Sidebar from "../section/SideBar";
-import HamburgerMenu from "../utils/HamBurgerMenu";
 import { useEffect, useMemo, useState } from "react";
 import SortList from "../ui/Sort";
 import SearchList from "../ui/Search";
+import { MainLayout } from "../layout/MainLayout";
 
 const InterestedEvents: React.FC = () => {
   const { events } = useEvent();
   const { userData, loadingUserData } = useUser();
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchDate, setSearchDate] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
@@ -92,25 +90,8 @@ const InterestedEvents: React.FC = () => {
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
       {/* Top Header Section */}
-      <HeaderSection />
-
-      {/* Sidebar & Main Layout */}
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        {/* Hamburger Menu Button */}
-        <HamburgerMenu
-          setSidebarVisible={setSidebarVisible}
-          isSidebarVisible={isSidebarVisible}
-        />
-
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-20 w-64 bg-white transform transition-transform duration-300 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0 lg:static`}
-        >
-          <Sidebar />
-        </div>
-
+      <MainLayout>
+        {" "}
         {/* Main Content */}
         <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4 relative">
           {/* Top Part: Sticky Header */}
@@ -141,7 +122,7 @@ const InterestedEvents: React.FC = () => {
           {/* Filtered Interested Events */}
           <EventList allEvents={filteredEvents} />
         </main>
-      </div>
+      </MainLayout>
     </div>
   );
 };

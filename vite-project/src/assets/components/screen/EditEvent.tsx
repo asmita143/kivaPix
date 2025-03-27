@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { db, doc, updateDoc } from "../../../firebase";
-import HeaderSection from "../section/HeaderSection";
-import HamburgerMenu from "../utils/HamBurgerMenu";
+
 import EventDetails from "../section/EventDetails";
 import HostDetails from "../section/HostDetails";
 import LoadingIndicator from "../section/LoadingIndicator";
-import Sidebar from "../section/SideBar";
+
 import { useNavigate, useParams } from "react-router-dom";
 import useEvent from "../hooks/useEvent";
 import useImage from "../hooks/useImage";
 import EventDialogueModal from "../section/EventDialogueModal";
 import SuccessModal from "../section/SuccessModal";
+import { MainLayout } from "../layout/MainLayout";
 
 interface EventLocation {
   name: string;
@@ -63,7 +63,7 @@ const EditEvent = () => {
     coverPhoto: null,
   });
 
-  const { events,deleteEvent } = useEvent();
+  const { events, deleteEvent } = useEvent();
   const { coverPhotos, fetchCoverPhotos } = useImage("", id);
   const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -240,10 +240,7 @@ const EditEvent = () => {
 
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      <HeaderSection />
-      <div className="flex flex-grow bg-gray-100 min-h-0">
-        <HamburgerMenu setSidebarVisible={() => {}} isSidebarVisible={false} />
-        <Sidebar />
+      <MainLayout>
         <main className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
           <div className="overflow-y-auto bg-white rounded-lg shadow-lg p-4 w-full lg:w-1/3">
             {loading ? (
@@ -312,7 +309,7 @@ const EditEvent = () => {
             )}
           </div>
         </main>
-      </div>
+      </MainLayout>
       {updating && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-md text-center">
@@ -332,9 +329,8 @@ const EditEvent = () => {
         onConfirm={handleDelete}
         location={formData.location.name || "Unknown location"}
         date={formData.date || "Unknown date"}
-        message = "delete"
+        message="delete"
       />
-
       <SuccessModal
         isOpen={isSuccessModalOpen}
         onClose={handleSuccessModalClose}

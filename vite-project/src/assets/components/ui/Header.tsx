@@ -1,8 +1,9 @@
 import useUser from "../hooks/useUser"; // Import user data hook
 import { useNavigate } from "react-router-dom";
 import useImage from "../hooks/useImage";
-import { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { DropdownMenu } from "@radix-ui/themes";
+import HamburgerMenu from "../utils/HamBurgerMenu";
 
 // Define the UserData interface
 interface UserData {
@@ -13,7 +14,15 @@ interface UserData {
   role?: string;
 }
 
-const Header = () => {
+interface HeaderProps {
+  setSidebarVisible: Dispatch<SetStateAction<boolean>>;
+  isSidebarVisible: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  setSidebarVisible,
+  isSidebarVisible,
+}) => {
   const { user, userData, logout } = useUser();
   const id = user?.uid || ""; // Get the userId from the current user
   const { profilePicture, fetchProfilePicture } = useImage("", id);
@@ -25,8 +34,14 @@ const Header = () => {
   }, [id]);
 
   return (
-    <div className="w-full flex items-center justify-between py-1.5 px-3 bg-neutral-50 border-b border-black">
-      <HeaderLeft />
+    <div className="w-full flex items-center justify-between py-1.5 px-4 bg-neutral-50 border-b border-neutral-200">
+      <div className="flex items-center">
+        <HamburgerMenu
+          setSidebarVisible={setSidebarVisible}
+          isSidebarVisible={isSidebarVisible}
+        />
+        <HeaderLeft />
+      </div>
       <HeaderRight
         userData={userData}
         profilePicture={profilePicture}
