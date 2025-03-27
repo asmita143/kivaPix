@@ -49,59 +49,56 @@ const PhotoGallery = () => {
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
       <MainLayout>
-        <main className="flex flex-col p-3 w-full min-h-screen transition-all duration-300">
-          {/* Title & Upload */}
-          <div className="flex w-full justify-between items-center sticky top-0">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              Photo Gallery
-            </h1>
+        <div className="flex w-full justify-between items-center sticky top-0">
+          <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
+            Photo Gallery
+          </h1>
 
-            {/* Upload Button */}
-            {!isGuest && (
-              <label
-                htmlFor="file-upload"
-                className="bg-blue-600 text-white hover:bg-blue-700 py-2 px-3 rounded-md inline-flex items-center gap-2 hover:cursor-pointer"
-              >
-                <UploadIcon />
-                <span className="hidden sm:inline">Upload Images</span>
-              </label>
-            )}
-            <input
-              id="file-upload"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-            />
-          </div>
-
-          {/* QR Code Section */}
-          <div className="bg-white p-4 md:p-6 mt-6 rounded-lg">
-            <h2 className="text-base md:text-xl font-semibold mb-4">
-              Share the Gallery
-            </h2>
-
-            {/* QR Code */}
-            <QRCodeCanvas
-              value={guestGalleryUrl}
-              size={isQrCodeExpanded ? 256 : 100} // Adjusted for better visibility
-              onClick={() => setQrCodeExpanded((prev) => !prev)}
-              className="hover:cursor-pointer transition-smooth"
-            />
-
-            <p className="mt-4 text-gray-500 text-sm">
-              Click to expand or close the QR code.
-            </p>
-          </div>
-
-          {/* Display All Images */}
-          <AllImages
-            uploadedImages={uploadedImages}
-            uploading={uploading}
-            isGuest={false}
+          {/* Upload Button */}
+          {!isGuest && (
+            <label
+              htmlFor="file-upload"
+              className="bg-blue-600 text-white hover:bg-blue-700 py-2 px-3 rounded-md inline-flex items-center gap-2 hover:cursor-pointer"
+            >
+              <UploadIcon />
+              <span className="hidden sm:inline">Upload Images</span>
+            </label>
+          )}
+          <input
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            style={{ display: "none" }}
           />
-        </main>
+        </div>
+
+        {/* QR Code Section */}
+        <div className="bg-white p-4 md:p-6 mt-6 rounded-lg">
+          <h2 className="text-base md:text-xl font-semibold mb-4">
+            Share the Gallery
+          </h2>
+
+          {/* QR Code */}
+          <QRCodeCanvas
+            value={guestGalleryUrl}
+            size={isQrCodeExpanded ? 256 : 100} // Adjusted for better visibility
+            onClick={() => setQrCodeExpanded((prev) => !prev)}
+            className="hover:cursor-pointer transition-smooth"
+          />
+
+          <p className="mt-4 text-gray-500 text-sm">
+            Click to expand or close the QR code.
+          </p>
+        </div>
+
+        {/* Display All Images */}
+        <AllImages
+          uploadedImages={uploadedImages}
+          uploading={uploading}
+          isGuest={false}
+        />
       </MainLayout>
     </div>
   );

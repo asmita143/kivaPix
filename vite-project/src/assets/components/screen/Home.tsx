@@ -72,34 +72,29 @@ const Home: React.FC = () => {
   }, [events, searchTerm, searchDate, searchLocation, sortOrder, sortBy]);
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      <MainLayout>
-        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4 relative">
-          {/* Top Part: Sticky Header */}
-          <EventHeader title="Upcoming Events" />
+    <MainLayout>
+      <EventHeader title="Upcoming Events" />
 
-          {/* Search and Sort Section */}
-          <div className="flex items-center justify-end gap-2 mb-4">
-            <SearchList
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              searchDate={searchDate}
-              setSearchDate={setSearchDate}
-              searchLocation={searchLocation}
-              setSearchLocation={setSearchLocation}
-            />
-            <SortList
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-            />
-          </div>
+      {/* Search and Sort Section */}
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <SearchList
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchDate={searchDate}
+          setSearchDate={setSearchDate}
+          searchLocation={searchLocation}
+          setSearchLocation={setSearchLocation}
+        />
+        <SortList
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+      </div>
 
-          <EventList allEvents={filteredEvents} />
-        </main>
-      </MainLayout>
-    </div>
+      <EventList allEvents={filteredEvents} />
+    </MainLayout>
   );
 };
 

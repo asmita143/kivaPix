@@ -40,7 +40,7 @@ const GuestGallery = () => {
   }
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
+    <div className="px-8 app-container bg-gray-100 w-screen h-screen">
       <h1 className="text-center text-xl font-bold mt-6">
         Guest Photo Gallery
       </h1>

@@ -1,5 +1,4 @@
 import "../../../App.css";
-import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import imageNotAvailable from "../../images/NotAvailable.png";
 import useEvent from "../hooks/useEvent";
@@ -24,7 +23,6 @@ const EventDescriptionScreen = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const { events = [] } = useEvent();
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
   const coverPhotoUrl =
     locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
@@ -49,165 +47,157 @@ const EventDescriptionScreen = () => {
   const isEventAccepted = acceptedEventIds.includes(String(id));
 
   return (
-    <div className="app-container bg-gray-100 w-screen min-h-screen flex flex-col">
-      {/* Top Header Section */}
-      <MainLayout>
-        <main className="flex flex-col flex-1 min-h-0 p-6 transition-all duration-300 overflow-y-auto">
-          {/* Hero Image Section */}
-          <div className="relative w-full h-[10rem] sm:h-[20rem] flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
-            <img
-              src={coverPhotoUrl}
-              alt={event?.name}
-              className="w-full h-full object-cover"
-            />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black opacity-40"></div>
-            <div className="absolute bottom-6 left-6">
-              <h1 className="text-xl sm:text-4xl font-bold text-white">
-                {event?.name}
-              </h1>
+    <MainLayout>
+      <div className="relative w-full h-[10rem] sm:h-[20rem] flex-shrink-0 rounded-lg overflow-hidden shadow-lg">
+        <img
+          src={coverPhotoUrl}
+          alt={event?.name}
+          className="w-full h-full object-cover"
+        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute bottom-6 left-6">
+          <h1 className="text-xl sm:text-4xl font-bold text-white">
+            {event?.name}
+          </h1>
+        </div>
+      </div>
+
+      <div className="flex gap-2 mt-4">
+        {(isEventAccepted || isAdmin) && (
+          <Button
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(`/PhotoGallery/${id}`)}
+          >
+            View Gallery
+          </Button>
+        )}
+
+        {isAdmin && (
+          <Button
+            style={{ cursor: "pointer" }}
+            color="orange"
+            onClick={handleEditClick}
+          >
+            Edit Event
+          </Button>
+        )}
+      </div>
+
+      {/* Event Details Section */}
+      <div className="mt-8">
+        <div className="flex flex-col md:flex-row justify-between bg-white rounded-lg p-4 md:p-6 rounded-lggap-6 md:gap-0">
+          <div className="flex-1 space-y-3 md:space-y-4 w-full">
+            <h2 className="text-base md:text-xl lg:text-2xl font-bold text-gray-800">
+              Event Details
+            </h2>
+            <div className="flex items-center space-x-4">
+              <FaCalendarDay className="text-orange-500" />
+              <p className="text-sm md:text-lg">
+                <span className="font-semibold">Date:</span> {formattedDate}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaClock className="text-orange-500" />
+              <p className="text-sm md:text-lg">
+                <span className="font-semibold">Time:</span> {event?.startTime}{" "}
+                - {event?.endTime}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaUsers className="text-orange-500" />
+              <p className="text-sm md:text-lg">
+                <span className="font-semibold">Participants:</span>{" "}
+                {event?.participants || "Not Available"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaFileContract className="text-orange-500" />
+              <p className="text-sm md:text-lg">
+                <span className="font-semibold">Contract type:</span>{" "}
+                {event?.contractType || "Not Available"}
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-2 mt-4">
-            {(isEventAccepted || isAdmin) && (
-              <Button
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/PhotoGallery/${id}`)}
+          <div>
+            <div className="hidden md:block w-px h-48 bg-gray-300 mx-20"></div>
+            <div className="md:hidden w-full h-px bg-gray-300 mx-10"></div>
+          </div>
+
+          <div className="flex-1 space-y-3 md:space-y-4 w-full">
+            <h2 className="text-base md:text-2xl font-bold text-gray-800">
+              Host Details
+            </h2>
+            <div className="flex items-center space-x-4">
+              <FaUser className="text-orange-500" />
+              <p className="text-sm md:text-lg text-gray-700">
+                {event?.hostFirstName} {event?.hostLastName}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaPhone className="text-orange-500" />
+              <a
+                href={`tel:${event?.hostPhone}`}
+                className="text-sm md:text-lg text-gray-700"
               >
-                View Gallery
-              </Button>
-            )}
-
-            {isAdmin && (
-              <Button
-                style={{ cursor: "pointer" }}
-                color="orange"
-                onClick={handleEditClick}
+                {event?.hostPhone || "Not Available"}
+              </a>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaEnvelope className="text-orange-500" />
+              <a
+                href={`mailto:${event?.hostEmail}`}
+                className="text-sm md:text-lg text-gray-700"
               >
-                Edit Event
-              </Button>
-            )}
-          </div>
-
-          {/* Event Details Section */}
-          <div className="mt-8">
-            <div className="flex flex-col md:flex-row justify-between bg-white p-4 md:p-6 rounded-lggap-6 md:gap-0">
-              <div className="flex-1 space-y-3 md:space-y-4 w-full">
-                <h2 className="text-base md:text-xl lg:text-2xl font-bold text-gray-800">
-                  Event Details
-                </h2>
-                <div className="flex items-center space-x-4">
-                  <FaCalendarDay className="text-orange-500" />
-                  <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Date:</span> {formattedDate}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaClock className="text-orange-500" />
-                  <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Time:</span>{" "}
-                    {event?.startTime} - {event?.endTime}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaUsers className="text-orange-500" />
-                  <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Participants:</span>{" "}
-                    {event?.participants || "Not Available"}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaFileContract className="text-orange-500" />
-                  <p className="text-sm md:text-lg">
-                    <span className="font-semibold">Contract type:</span>{" "}
-                    {event?.contractType || "Not Available"}
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <div className="hidden md:block w-px h-48 bg-gray-300 mx-20"></div>
-                <div className="md:hidden w-full h-px bg-gray-300 mx-10"></div>
-              </div>
-
-              <div className="flex-1 space-y-3 md:space-y-4 w-full">
-                <h2 className="text-base md:text-2xl font-bold text-gray-800">
-                  Host Details
-                </h2>
-                <div className="flex items-center space-x-4">
-                  <FaUser className="text-orange-500" />
-                  <p className="text-sm md:text-lg text-gray-700">
-                    {event?.hostFirstName} {event?.hostLastName}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaPhone className="text-orange-500" />
-                  <a
-                    href={`tel:${event?.hostPhone}`}
-                    className="text-sm md:text-lg text-gray-700"
-                  >
-                    {event?.hostPhone || "Not Available"}
-                  </a>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaEnvelope className="text-orange-500" />
-                  <a
-                    href={`mailto:${event?.hostEmail}`}
-                    className="text-sm md:text-lg text-gray-700"
-                  >
-                    {event?.hostEmail || "Not Available"}
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
-              {/* Description Card */}
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-orange-500">
-                <h2 className="text-base md:text-2xl font-bold mb-4 text-gray-800">
-                  About the Event
-                </h2>
-                <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
-                  {event?.description ||
-                    "Join us for an unforgettable experience filled with music, networking, and fun!"}
-                </p>
-              </div>
-
-              {/* Map Card */}
-              <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-blue-500">
-                <h2 className="text-base md:text-2xl font-bold mb-6 text-gray-800">
-                  Location
-                </h2>
-                <div
-                  className="relative w-full"
-                  style={{ paddingBottom: "56.25%", height: 0 }}
-                >
-                  <iframe
-                    src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lng}`}
-                    width="100%"
-                    height="100%"
-                    style={{
-                      border: 0,
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                    }}
-                    loading="lazy"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
-                  {event?.location?.name || "Location not available"}
-                </p>
-              </div>
+                {event?.hostEmail || "Not Available"}
+              </a>
             </div>
           </div>
-        </main>
-      </MainLayout>
+        </div>
 
-      {/* Main Content */}
-    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-6">
+          {/* Description Card */}
+          <div className="bg-white p-4 md:p-6 rounded-lg transition-shadow duration-300 border-l-4 border-orange-500">
+            <h2 className="text-base md:text-2xl font-bold mb-4 text-gray-800">
+              About the Event
+            </h2>
+            <p className="text-gray-700 leading-relaxed text-sm md:text-lg">
+              {event?.description ||
+                "Join us for an unforgettable experience filled with music, networking, and fun!"}
+            </p>
+          </div>
+
+          {/* Map Card */}
+          <div className="bg-white p-4 md:p-6 rounded-lg transition-shadow duration-300 border-l-4 border-blue-500">
+            <h2 className="text-base md:text-2xl font-bold mb-6 text-gray-800">
+              Location
+            </h2>
+            <div
+              className="relative w-full"
+              style={{ paddingBottom: "56.25%", height: 0 }}
+            >
+              <iframe
+                src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${lat},${lng}`}
+                width="100%"
+                height="100%"
+                style={{
+                  border: 0,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                }}
+                loading="lazy"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <p className="mt-3 md:mt-4 text-sm md:text-lg text-gray-700">
+              {event?.location?.name || "Location not available"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 

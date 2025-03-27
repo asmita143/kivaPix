@@ -11,7 +11,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         <Sidebar
           isVisible={isSidebarVisible}
           setIsVisible={setSidebarVisible}
@@ -23,7 +23,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               setSidebarVisible={setSidebarVisible}
             />
           </div>
-          <div className="py-2 px-4">{children}</div>
+          <main className="py-2 px-4 h-[93dvh] overflow-y-auto">
+            {children}
+          </main>
         </div>
       </div>
     </>

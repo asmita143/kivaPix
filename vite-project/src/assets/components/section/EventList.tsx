@@ -80,7 +80,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto min-h-0 p-6">
+    <div className="flex-1 overflow-y-auto min-h-0">
       {loading ? ( // Show loading indicator if loading is true
         <div className="flex items-center justify-center h-[70vh]">
           <CircularProgress color="primary" />
@@ -91,17 +91,17 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
       ) : allEvents.length === 0 ? (
         <p className="text-center text-gray-600">No events yet.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
           {allEvents.map((event) => (
             <div
               key={event.id}
-              className="relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105"
+              className="relative group bg-white rounded-lg overflow-hidden"
             >
               {/* Event Image */}
               <img
                 src={coverPhotos[String(event.id)] || imageNotAvailable}
                 alt={event.name}
-                className="aspect-[4/3] w-full h-[10rem]  object-cover cursor-pointer border-b-2 border-gray-100"
+                className="aspect-[4/3] w-full h-[10rem] group-hover:scale-105 transition-all duration-300 ease-in-out object-cover cursor-pointer border-b-2 border-gray-100"
                 onClick={() =>
                   event.id &&
                   handleEventClick(

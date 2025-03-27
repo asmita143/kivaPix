@@ -23,7 +23,7 @@ const GeneralSettings = () => {
     password: "",
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true); // To handle loading state
+  const [loading, setLoading] = useState(false); // To handle loading state
   const [error, setError] = useState<string | null>(null); // For storing any errors
   const { userData } = useUser();
   const backgroundColor = "#939597";
@@ -48,7 +48,7 @@ const GeneralSettings = () => {
       try {
         const userRef = doc(db, "users", auth.currentUser.uid);
         const docSnap = await getDoc(userRef);
-
+        setLoading(true);
         if (docSnap.exists()) {
           const userData = docSnap.data() as UserData;
           setFormData(userData);
@@ -98,7 +98,7 @@ const GeneralSettings = () => {
 
   return (
     <div>
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-lg">
+      <div className="bg-white dark:bg-gray-800 border border-neutral-200 rounded-lg p-6 w-full max-w-lg">
         {loading && (
           <p className="text-gray-600 dark:text-gray-300">Loading...</p>
         )}

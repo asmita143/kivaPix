@@ -109,11 +109,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, setIsVisible }) => {
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 <div
-                  className={`px-4 py-2 rounded-md flex items-center gap-6 text-black hover:bg-gray-100 cursor-pointer transition duration-200 
+                  className={`px-4 py-2 rounded-md flex items-center gap-6 text-black hover:bg-neutral-100 cursor-pointer transition duration-200 
                   ${item.isDropdown ? "relative" : ""}
                   ${
                     location.pathname === item.path
-                      ? "bg-gray-300 rounded-md hover:bg-gray-300"
+                      ? "bg-neutral-100 rounded-md"
                       : ""
                   }
                     `}

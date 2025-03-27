@@ -208,82 +208,79 @@ const EventForm = () => {
   };
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-colitems">
-      <MainLayout>
-        {" "}
-        <main className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
-          {/* Bottom Part: Scrollable Grid View */}
-          <div className="overflow-y-auto bg-white rounded-lg shadow-lg p-4 w-full  lg:w-1/3 ">
-            <div className="flex gap-6 p-4">
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col space-y-6 w-full items-center"
-              >
-                <div className="space-y-12">
+    <MainLayout>
+      <div className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
+        {/* Bottom Part: Scrollable Grid View */}
+        <div className="overflow-y-auto bg-white rounded-lg shadow-lg p-4 w-full  lg:w-1/3 ">
+          <div className="flex gap-6 p-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col space-y-6 w-full items-center"
+            >
+              <div className="space-y-12">
+                <h2 className="text-base/7 font-semibold text-gray-900">
+                  Create a new event
+                </h2>
+                <div className="pb-2">
+                  <EventDetails
+                    formData={formData}
+                    handleChange={handleChange}
+                    handleCoverPhotoChange={handleCoverPhotoChange}
+                    handleLocationSelect={handleLocationSelect}
+                    imagePreview={imagePreview}
+                    clearImagePreview={() => setImagePreview(null)}
+                    isEditing={false}
+                  />
+                </div>
+
+                {/* Host Information */}
+                <div className="border-b border-gray-900/10 pb-9">
                   <h2 className="text-base/7 font-semibold text-gray-900">
-                    Create a new event
+                    Hosted by
                   </h2>
-                  <div className="pb-2">
-                    <EventDetails
+                  <div className="mt-10 grid">
+                    <HostDetails
                       formData={formData}
                       handleChange={handleChange}
-                      handleCoverPhotoChange={handleCoverPhotoChange}
-                      handleLocationSelect={handleLocationSelect}
-                      imagePreview={imagePreview}
-                      clearImagePreview={() => setImagePreview(null)}
-                      isEditing={false}
+                      formErrors={formErrors}
                     />
                   </div>
-
-                  {/* Host Information */}
-                  <div className="border-b border-gray-900/10 pb-9">
-                    <h2 className="text-base/7 font-semibold text-gray-900">
-                      Hosted by
-                    </h2>
-                    <div className="mt-10 grid">
-                      <HostDetails
-                        formData={formData}
-                        handleChange={handleChange}
-                        formErrors={formErrors}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Submit & Cancel Buttons */}
-                  <div className="mt-6 flex items-center justify-end gap-x-6">
-                    <button
-                      type="button"
-                      onClick={handleCancel}
-                      className="inline-flex justify-center rounded-md border border-transparent bg-gray-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-600"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isDisabled}
-                      className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 ${
-                        isDisabled
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-indigo-600 hover:bg-indigo-500"
-                      }`}
-                    >
-                      Save
-                    </button>
-                  </div>
                 </div>
-              </form>
-            </div>
-            <LoadingIndicator
-              uploading={false}
-              copyImage={false}
-              deleteLoading={false}
-              saving={false}
-              event={eventUploading || uploading}
-            />
+
+                {/* Submit & Cancel Buttons */}
+                <div className="mt-6 flex items-center justify-end gap-x-6">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="inline-flex justify-center rounded-md border border-transparent bg-gray-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isDisabled}
+                    className={`rounded-md px-3 py-2 text-sm font-semibold text-white focus:outline-indigo-600 ${
+                      isDisabled
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-indigo-600 hover:bg-indigo-500"
+                    }`}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-        </main>
-      </MainLayout>
-    </div>
+          <LoadingIndicator
+            uploading={false}
+            copyImage={false}
+            deleteLoading={false}
+            saving={false}
+            event={eventUploading || uploading}
+          />
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 

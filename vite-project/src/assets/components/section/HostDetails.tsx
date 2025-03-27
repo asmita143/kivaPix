@@ -13,7 +13,7 @@ const HostDetails: React.FC<HostDetailsProps> = ({
   formErrors = { email: "", phone: "" },
 }) => {
   return (
-    <div className="host-details">
+    <div className="host-details w-full px-4">
       <div className="sm:col-span-4 mb-4">
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-900">

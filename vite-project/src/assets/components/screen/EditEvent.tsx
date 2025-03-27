@@ -241,7 +241,7 @@ const EditEvent = () => {
   return (
     <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
       <MainLayout>
-        <main className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
+        <div className="bg-gradient-to-r from-gray-300 to-gray-500 flex flex-col items-center justify-center p-2 w-full flex-grow min-h-0 transition-all duration-300">
           <div className="overflow-y-auto bg-white rounded-lg shadow-lg p-4 w-full lg:w-1/3">
             {loading ? (
               <LoadingIndicator
@@ -308,7 +308,7 @@ const EditEvent = () => {
               </form>
             )}
           </div>
-        </main>
+        </div>
       </MainLayout>
       {updating && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

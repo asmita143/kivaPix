@@ -4,6 +4,7 @@ import EventList from "../section/EventList";
 import SortList from "../ui/Sort";
 import SearchList from "../ui/Search";
 import { MainLayout } from "../layout/MainLayout";
+import EventHeader from "../section/EventHeader";
 
 const PastEvents: React.FC = () => {
   const { events } = useEvent();
@@ -67,40 +68,30 @@ const PastEvents: React.FC = () => {
   }, [pastEvents, sortOrder, sortBy, searchTerm, searchDate, searchLocation]);
 
   return (
-    <div className="app-container bg-gray-100 w-screen h-screen flex flex-col">
-      <MainLayout>
-        {/* Main Content */}
-        <main className="flex flex-col p-3 w-full flex-grow min-h-0 transition-all duration-300 gap-4 relative">
-          {/* Top Part: Sticky Header */}
-          <div className="sticky top-0 flex-none shadow-lg rounded-lg p-2 md:p-3 bg-white z-10">
-            <h1 className="font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-black">
-              Previous Events
-            </h1>
-          </div>
+    <MainLayout>
+      <EventHeader title="Previous Events" />
 
-          {/* Search and Sort Section */}
-          <div className="flex items-center justify-end gap-2 mb-4 relative z-20">
-            <SearchList
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              searchDate={searchDate}
-              setSearchDate={setSearchDate}
-              searchLocation={searchLocation}
-              setSearchLocation={setSearchLocation}
-            />
-            <SortList
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-            />
-          </div>
+      {/* Search and Sort Section */}
+      <div className="flex items-center justify-end gap-2 mb-4 ">
+        <SearchList
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchDate={searchDate}
+          setSearchDate={setSearchDate}
+          searchLocation={searchLocation}
+          setSearchLocation={setSearchLocation}
+        />
+        <SortList
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+      </div>
 
-          {/* Past Events List */}
-          <EventList allEvents={filteredAndSortedEvents} />
-        </main>
-      </MainLayout>
-    </div>
+      {/* Past Events List */}
+      <EventList allEvents={filteredAndSortedEvents} />
+    </MainLayout>
   );
 };
 

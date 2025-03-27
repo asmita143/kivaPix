@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
   }, [id]);
 
   return (
-    <div className="w-full flex items-center justify-between py-1.5 px-4 bg-neutral-50 border-b border-neutral-200">
+    <div className="w-full sticky top-0 flex items-center justify-between py-1.5 px-4 bg-neutral-50 border-b border-neutral-200">
       <div className="flex items-center">
         <HamburgerMenu
           setSidebarVisible={setSidebarVisible}
