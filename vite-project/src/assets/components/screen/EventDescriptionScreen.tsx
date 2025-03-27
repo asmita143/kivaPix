@@ -92,13 +92,13 @@ const EventDescriptionScreen = () => {
 
           <div className="flex gap-2 mt-4">
             {(isEventAccepted || isAdmin) && (
-              <Button onClick={() => navigate(`/PhotoGallery/${id}`)}>
+              <Button style={{ cursor: 'pointer' }}  onClick={() => navigate(`/PhotoGallery/${id}`)}>
                 View Gallery
               </Button>
             )}
 
             {isAdmin && (
-              <Button color="orange" onClick={handleEditClick}>
+              <Button style={{ cursor: 'pointer' }} color="orange" onClick={handleEditClick}>
                 Edit Event
               </Button>
             )}

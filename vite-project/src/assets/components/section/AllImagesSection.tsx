@@ -116,6 +116,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
           <Button
             variant={activeTab === "all" ? "solid" : "soft"}
             color="indigo"
+            style={{ cursor: 'pointer' }}
             size="2"
             onClick={() => setActiveTab("all")}
           >
@@ -125,6 +126,7 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
           <Button
             variant={activeTab === "print" ? "solid" : "soft"}
             color="indigo"
+            style={{ cursor: 'pointer' }}
             size="2"
             onClick={() => setActiveTab("print")}
           >

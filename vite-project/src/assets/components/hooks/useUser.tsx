@@ -37,10 +37,12 @@ const useUser = () => {
   const [loadingUserData, setLoadingUserData] = useState<boolean>(true);
   const [loadingAllUsers, setLoadingAllUsers] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setIsLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -157,7 +159,7 @@ const useUser = () => {
   };
 
   // Determine if the current user is a guest (no user logged in)
-  const isGuest = !user;
+  const isGuest = !user && !isLoading;
 
   return {
     user,
@@ -171,6 +173,7 @@ const useUser = () => {
     register,
     logout,
     updateUserProfile,
+    isLoading,
     isGuest,
   };
 };

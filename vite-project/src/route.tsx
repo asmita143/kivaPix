@@ -19,7 +19,7 @@ import GuestGallery from "./assets/components/screen/GuestGallery";
 import ProtectedRoute from "./ProtectedRoute";
 
 const RouteConfig = () => {
-  const { isGuest } = useUser();
+  const { isGuest, isLoading  } = useUser();
   return (
     <Routes>
       {/* Public routes */}
@@ -28,7 +28,7 @@ const RouteConfig = () => {
       <Route path="/guest-gallery/:id" element={<GuestGallery />} />
       <Route path="/" element={<Login />} /> {/* Default route */}
       {/* Protected routes */}
-      <Route element={<ProtectedRoute isGuest={isGuest} />}>
+      <Route element={<ProtectedRoute isGuest={isGuest} isLoading={isLoading}/>}>
         <Route path="/home" element={<Home />} />
         <Route path="/event/:id" element={<EventDescriptionScreen />} />
         <Route path="/eventform" element={<EventForm />} />
