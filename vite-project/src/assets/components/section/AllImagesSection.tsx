@@ -16,7 +16,7 @@ interface AllImagesProps {
   isGuest: boolean;
 }
 
-const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
+const AllImages = ({ uploadedImages = [], uploading, isGuest }: AllImagesProps) => {
   const { id } = useParams<{ id: string }>();
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [singleImage, setSingleImage] = useState<string | null>(null);
@@ -123,16 +123,19 @@ const AllImages = ({ uploadedImages = [], uploading }: AllImagesProps) => {
             <CollectionsIcon />
             <span className="hidden sm:inline">All Images</span>
           </Button>
-          <Button
-            variant={activeTab === "print" ? "solid" : "soft"}
-            color="indigo"
-            style={{ cursor: 'pointer' }}
-            size="2"
-            onClick={() => setActiveTab("print")}
-          >
-            <Print />
+          {!isGuest &&
+            <Button
+              variant={activeTab === "print" ? "solid" : "soft"}
+              color="indigo"
+              style={{ cursor: 'pointer' }}
+              size="2"
+              onClick={() => setActiveTab("print")}
+            >
+              <Print />
             <span className="hidden sm:inline">Printing Queue</span>
-          </Button>
+            </Button>   
+          }
+
         </div>
 
         {selectedImages.length > 0 && (
