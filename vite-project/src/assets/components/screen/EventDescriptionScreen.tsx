@@ -15,6 +15,7 @@ import useUser from "../hooks/useUser";
 import { Role } from "../utils/Role";
 import { Button } from "@radix-ui/themes";
 import { MainLayout } from "../layout/MainLayout";
+import { useEffect, useState } from "react";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -22,11 +23,12 @@ const EventDescriptionScreen = () => {
   const locationForImage = useLocation();
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
-  const { events = [] } = useEvent();
+  const { events = [], unassignEvent, updateAcceptedField, eventAcceptedBy } = useEvent();
   const coverPhotoUrl =
     locationForImage.state?.coverPhotoUrl || imageNotAvailable;
   const event = events.find((e) => e.id === id);
-  const { userData } = useUser();
+  const { userData, allUsers } = useUser();
+  const [acceptedUserName, setAcceptedUserName] = useState<string | null>(null);
 
   const acceptedEventIds: string[] = userData?.acceptedEvent || [];
 
@@ -45,6 +47,22 @@ const EventDescriptionScreen = () => {
   };
 
   const isEventAccepted = acceptedEventIds.includes(String(id));
+  
+  useEffect(() => {
+    if (event?.acceptedBy) {
+      const acceptor = allUsers.find((user) => user.uid === event.acceptedBy);
+      setAcceptedUserName(acceptor?.name || null);
+    }
+  }, [event, allUsers]);
+
+  const handleUnassign = async () => {
+    const acceptor = allUsers.find((user) => user.uid === event?.acceptedBy);
+    await unassignEvent(String(acceptor?.uid), String(event?.id))
+    await updateAcceptedField(String(event?.id), false)
+    await eventAcceptedBy("", String(event?.id))
+
+    setAcceptedUserName(null)
+  };
 
   return (
     <MainLayout>
@@ -84,9 +102,24 @@ const EventDescriptionScreen = () => {
         )}
       </div>
 
+      {acceptedUserName && (
+        <div className="flex mt-5 bg-green-200 w-fit rounded-lg p-4 gap-5 items-center">
+          <p>This event has been accepted by <strong>{acceptedUserName}</strong></p>
+          {(isAdmin || isEventAccepted) && (
+            <Button
+              style={{ cursor: "pointer" }}
+              color="orange"
+              onClick={handleUnassign}
+            >
+              Unassign
+            </Button>
+          )}
+        </div>
+      )}
+
       {/* Event Details Section */}
-      <div className="mt-8">
-        <div className="flex flex-col md:flex-row justify-between bg-white rounded-lg p-4 md:p-6 rounded-lggap-6 md:gap-0">
+      <div className="mt-5">
+        <div className="flex flex-col md:flex-row justify-between bg-white rounded-lg p-4 md:p-6 rounded-lg gap-6 md:gap-0">
           <div className="flex-1 space-y-3 md:space-y-4 w-full">
             <h2 className="text-base md:text-xl lg:text-2xl font-bold text-gray-800">
               Event Details

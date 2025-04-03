@@ -41,6 +41,7 @@ export interface Event {
   participants: number;
   contractType: string;
   accepted: boolean;
+  acceptedBy?: String;
 }
 
 const useEvent = () => {
@@ -157,11 +158,33 @@ const useEvent = () => {
     }
   };
 
-  const updateAcceptedField = async (eventId: string) => {
+  const unassignEvent = async (userId: string, eventId: string) => {
+    try {
+      const userRef = doc(db, "users", userId);
+      await updateDoc(userRef, {
+        acceptedEvent: arrayRemove(eventId),
+      });
+    } catch (error) {
+      console.error("Error removing event from acceptedEvent field:", error);
+    }
+  };
+
+  const eventAcceptedBy = async (userId: string, eventId: string) => {
     try {
       const eventRef = doc(db, "Event", eventId);
       await updateDoc(eventRef, {
-        accepted: true,
+        acceptedBy: userId,
+      });
+    } catch (error) {
+      console.error("Error ", error);
+    }
+  }
+
+  const updateAcceptedField = async (eventId: string, value: boolean) => {
+    try {
+      const eventRef = doc(db, "Event", eventId);
+      await updateDoc(eventRef, {
+        accepted: value,
       });
     } catch (error) {
       console.error("Error updating interestedEvent field:", error);
@@ -190,6 +213,8 @@ const useEvent = () => {
     eventUploading,
     updateInterestedEventsForUser,
     acceptEvent,
+    unassignEvent,
+    eventAcceptedBy,
     addNotification,
     clearNotifications,
     loading,

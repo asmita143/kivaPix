@@ -19,7 +19,7 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
   const id = user?.uid || "";
   const { coverPhotos, fetchCoverPhotos, loading } = useImage(id, "");
   const navigate = useNavigate();
-  const { updateInterestedEventsForUser, acceptEvent, updateAcceptedField } =
+  const { updateInterestedEventsForUser, acceptEvent, updateAcceptedField, eventAcceptedBy } =
     useEvent();
   const [selectedEventId, setSelectedEventId] = useState<string | null>();
   const [selectedEventLocation, setSelectedEventLocation] = useState<
@@ -41,7 +41,8 @@ const EventList: React.FC<EventListProps> = ({ allEvents }) => {
       return;
     }
     await acceptEvent(user.uid, selectedEventId);
-    await updateAcceptedField(selectedEventId);
+    await updateAcceptedField(selectedEventId, true);
+    await eventAcceptedBy(user.uid, selectedEventId )
 
     setModalOpen(false);
   };
