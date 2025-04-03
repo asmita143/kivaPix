@@ -33,10 +33,10 @@ const Profile = () => {
 
   return (
     <MainLayout>
-      <div className="p-32">
+      <div className="p-8 md:p-32">
         <div className="bg-gradient-to-r from-gray-100 to-gray-300 overflow-auto px-8 py-10 max-h-[calc(100vh-4rem)] rounded-xl shadow-2xl max-w-4xl w-full transition-all duration-300 animate-fade-in">
           <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/3 text-center mb-8 md:mb-0">
+            <div className="w-full md:w-1/3 text-center mb-4 md:mb-0">
               <img
                 src={
                   profilePicture ||

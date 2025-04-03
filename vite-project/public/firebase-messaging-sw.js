@@ -60,7 +60,7 @@ self.addEventListener("notificationclick", (event) => {
   console.log("Notification clicked:", event.notification);
 
   // Replace with the correct URL of your app/page
-  const url = "http://localhost:5173/home";
+  const url = "https://kivapix-24d9b.web.app";
 
   event.notification.close();
 
