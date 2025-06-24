@@ -61,7 +61,7 @@ npm install
 npm start
 ```
 
-### 📌 Status
+## 📌 Status
 ✅ Most core features implemented
 #### Future enhancements possible, including:
 - Calendar integration
