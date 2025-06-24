@@ -35,7 +35,7 @@ KivaPix is a responsive event-based web application designed for photographers a
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: HTML, CSS, JavaScript
+- **Frontend**: HTML, CSS, JavaScript, TypeScript
 - **Backend**: Node.js , Firebase 
 - **Database**: Firebase Firestore 
 - **Image Handling**: IMG.LY image editor 
