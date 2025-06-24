@@ -1,4 +1,4 @@
-# KivaPix 📸
+# KivaPix 📸 - Photography Event Management System
 
 KivaPix is a responsive event-based web application designed for photographers and event organizers. The platform allows event creation, image sharing, photo editing, user interaction, and a streamlined way for photographers to find and accept assignments.
 
