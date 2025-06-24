@@ -60,6 +60,12 @@ npm install
 ```bash
 npm start
 ```
+### 📌 Status
+✅ Most core features implemented
+#### Future enhancements possible, including:
+- Calendar integration
+- Chat between the admin and photographers
+- Payment or booking module
 
-### 📝 License
+## 📝 License
 - This project is licensed under the MIT License.
